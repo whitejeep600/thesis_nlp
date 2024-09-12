@@ -1,11 +1,11 @@
-params.yaml
-
 checkpoints/*
 runs/*
 data/*
 
 src/playground.py
+
 notes.txt
+params.yaml
 
 download_train_plots_from_server.sh
 
