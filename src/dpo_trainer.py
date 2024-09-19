@@ -3,13 +3,18 @@ from __future__ import annotations
 from pathlib import Path
 
 import torch
+from torch.nn.functional import logsigmoid
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from src.constants import INPUT_IDS, ORIGINAL_SENTENCE, TrainMode
 from src.generative_bart import GenerativeBart
-from src.utils import undo_batch_torch_repeat_interleave_2
+from src.utils import (
+    get_generation_length_until_first_stop_token,
+    sequence_logprob,
+    undo_batch_torch_repeat_interleave_2,
+)
 
 
 class RewardAndMetrics:
@@ -35,9 +40,83 @@ class DPORewardAndMetricCalculator:
         raise NotImplementedError
 
 
+class RawGeneration:
+    def __init__(
+        self,
+        generated_token_ids: torch.Tensor,
+        generation_probs: torch.Tensor,
+        reference_probs: torch.Tensor,
+        stop_token_id: int,
+    ):
+        real_length = get_generation_length_until_first_stop_token(
+            generated_token_ids, stop_token_id
+        )
+        self.generated_token_ids = generated_token_ids[:real_length]
+        self.generation_probs = generation_probs[:real_length]
+        self.reference_probs = reference_probs[:real_length]
+
+
+class Generation:
+    def __init__(
+        self,
+        generation_text: str,
+        reward_and_metrics: RewardAndMetrics,
+        generation_probs: torch.Tensor,
+        reference_probs: torch.Tensor,
+    ):
+        self.generation_text = generation_text
+        self.reward_and_metrics = reward_and_metrics
+        self.generation_probs = generation_probs
+        self.reference_probs = reference_probs
+
+        log_prob = sequence_logprob(generation_probs)
+        reference_log_prob = sequence_logprob(reference_probs)
+
+        log_ratio = log_prob - reference_log_prob
+
+        self.log_ratio = log_ratio
+
+
+class SampleProcessingResults:
+    def __init__(
+        self,
+        prompt: str,
+        sample_generation_texts: tuple[str, str],
+        sample_rewards_and_metrics: tuple[RewardAndMetrics, RewardAndMetrics],
+        sample_raw_generations: tuple[RawGeneration, RawGeneration],
+        dpo_beta: float,
+    ):
+        if sample_rewards_and_metrics[0].reward > sample_rewards_and_metrics[1].reward:
+            preferred_index, dispreferred_index = 0, 1
+        else:
+            preferred_index, dispreferred_index = 1, 0
+
+        self.preferred = Generation(
+            generation_text=sample_generation_texts[preferred_index],
+            reward_and_metrics=sample_rewards_and_metrics[preferred_index],
+            generation_probs=sample_raw_generations[preferred_index].generation_probs,
+            reference_probs=sample_raw_generations[preferred_index].reference_probs,
+        )
+        self.dispreferred = Generation(
+            generation_text=sample_generation_texts[dispreferred_index],
+            reward_and_metrics=sample_rewards_and_metrics[dispreferred_index],
+            generation_probs=sample_raw_generations[dispreferred_index].generation_probs,
+            reference_probs=sample_raw_generations[dispreferred_index].reference_probs,
+        )
+
+        self.prompt = prompt
+
+        self.loss = -1 * logsigmoid(
+            dpo_beta * (self.preferred.log_ratio - self.dispreferred.log_ratio)
+        )
+
+
 class BatchProcessingResults:
-    def __init__(self):
-        pass
+    def __init__(self, batch_sample_processing_results: list[SampleProcessingResults]):
+        self.batch_sample_processing_results = batch_sample_processing_results
+        self.loss = torch.stack(
+            [processing_results.loss for processing_results in batch_sample_processing_results]
+        ).mean()
 
 
 class DPOTrainer:
@@ -85,22 +164,11 @@ class DPOTrainer:
     def sample_two_sequences_per_sample(
         self,
         batch_input_ids: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    ) -> list[tuple[RawGeneration, RawGeneration]]:
         """
         batch_input_ids has the shape (batch_size, sequence_length), with
         sequence_length being the length that the dataset tokenizer pads
         or truncates to.
-        Three tensors of shapes (batch_size, 2, max_generation_length)
-        and twice (batch_size, 2, max_generation_length), respectively, are returned.
-        The first of these are the generated output ids, and the rest are the
-        corresponding generation and reference probabilities (shorter because the first generated
-        token is the start token, without generation probability). The first dimension
-        corresponds to the index in the batch. Size 2 in dimension 2 comes
-        from the fact that two generations are sampled per input sample.
-        max_generation_length does not exceed the Trainer's max_len, but it can
-        also be smaller if the generation was terminated before reaching max_len.
-        This is done to save computation, if end tokens have been generated for each
-        input sequence.
 
         """
 
@@ -112,7 +180,7 @@ class DPOTrainer:
 
         # Decoded sequences are initialized to a [2 * batch_size, 1] tensor of start tokens.
         all_decoded_ids = (
-            torch.Tensor([[self.trained_model.start_token] for _ in range(len(batch_input_ids))])
+            torch.Tensor([[self.trained_model.start_token_id] for _ in range(len(batch_input_ids))])
             .int()
             .to(self.trained_model.device)
         )
@@ -120,7 +188,7 @@ class DPOTrainer:
         all_generation_probabilities: list[torch.Tensor] = []
         all_reference_probabilities: list[torch.Tensor] = []
 
-        for _ in range(self.max_len - 1):  # -1 from the initialization above
+        for _ in range(self.max_len - 1):  # -1 because of the initialization above
             new_logits = self.trained_model.bert(
                 input_ids=batch_input_ids,
                 decoder_input_ids=all_decoded_ids,
@@ -157,47 +225,94 @@ class DPOTrainer:
             all_generation_probabilities.append(next_ids_generation_probabilities)
             all_reference_probabilities.append(next_ids_reference_probabilities)
 
-            if (next_ids == self.trained_model.stop_token).all():
+            if (next_ids == self.trained_model.stop_token_id).all():
                 break
 
         generation_probs_tensor = torch.stack(all_generation_probabilities, dim=-1)
         reference_probs_tensor = torch.stack(all_reference_probabilities, dim=-1)
 
-        return (
-            undo_batch_torch_repeat_interleave_2(all_decoded_ids),
-            undo_batch_torch_repeat_interleave_2(generation_probs_tensor),
-            undo_batch_torch_repeat_interleave_2(reference_probs_tensor),
-        )
+        return [
+            (
+                RawGeneration(
+                    sample_decoded_ids[0],
+                    sample_generation_probs[0],
+                    sample_reference_probs[0],
+                    self.reference_model.stop_token_id,
+                ),
+                RawGeneration(
+                    sample_decoded_ids[1],
+                    sample_generation_probs[1],
+                    sample_reference_probs[1],
+                    self.reference_model.stop_token_id,
+                ),
+            )
+            for (sample_decoded_ids, sample_generation_probs, sample_reference_probs) in zip(
+                undo_batch_torch_repeat_interleave_2(all_decoded_ids),
+                undo_batch_torch_repeat_interleave_2(generation_probs_tensor),
+                undo_batch_torch_repeat_interleave_2(reference_probs_tensor),
+            )
+        ]
 
-    def process_batch(self, batch: dict) -> BatchProcessingResults:
-        # calculate batch loss and backpropagate if needed
-        decoded_ids, generation_probs, reference_probs = self.sample_two_sequences_per_sample(
-            batch[INPUT_IDS]
-        )
+    def process_batch(self, batch: dict, mode: TrainMode) -> BatchProcessingResults:
+        batch_raw_generations = self.sample_two_sequences_per_sample(batch[INPUT_IDS])
         batch_decoded_sequences = [
-            self.trained_model.decode(decoded_ids[i]) for i in range(len(decoded_ids))
+            (
+                str(
+                    self.trained_model.decode(
+                        torch.unflatten(
+                            sample_generations[0].generated_token_ids, dim=0, sizes=[1, -1]
+                        )
+                    )[0]
+                ),
+                str(
+                    self.trained_model.decode(
+                        torch.unflatten(
+                            sample_generations[1].generated_token_ids, dim=0, sizes=[1, -1]
+                        )
+                    )[0]
+                ),
+            )
+            for sample_generations in batch_raw_generations
         ]
         batch_original_sequences = batch[ORIGINAL_SENTENCE]
 
-        # sample_rewards_and_metrics = [
-        #     self.metric_calculator.get_rewards_and_metrics(prompt, generations)
-        #     for (prompt, generations) in zip(batch_original_sequences, batch_decoded_sequences)
-        # ]
+        batch_sample_rewards_and_metrics = [
+            self.metric_calculator.get_rewards_and_metrics(prompt, generations)
+            for (prompt, generations) in zip(batch_original_sequences, batch_decoded_sequences)
+        ]
+        batch_sample_processing_results = [
+            SampleProcessingResults(
+                prompt=prompt,
+                sample_generation_texts=sample_generation_texts,
+                sample_rewards_and_metrics=sample_rewards,
+                sample_raw_generations=sample_raw_generations,
+                dpo_beta=self.beta,
+            )
+            for (
+                prompt,
+                sample_generation_texts,
+                sample_rewards,
+                sample_raw_generations,
+            ) in zip(
+                batch_original_sequences,
+                batch_decoded_sequences,
+                batch_sample_rewards_and_metrics,
+                batch_raw_generations,
+            )
+        ]
 
-        # for each sample in the batch get a SampleProcessingResults object which
-        # stores the prompt, and two Generation objects, named preferred and dispreferred.
-        # each Generation has a MetricsAndRewards, also its text, generation probabilities
-        # and reference probabilities.
-        # during initialization (I think?) each SampleProcessingResult can calculate its loss.
-        # Then BatchProcessingResults can do that too. It should be possible to backpropagate
-        # and also store the batch loss for future purposes (plotting and stuff).
-        # but also careful so that the Generations don't unnecessarily store info
-        # on the gpu, god forbid any computation graphs
-        return BatchProcessingResults()
+        batch_results = BatchProcessingResults(batch_sample_processing_results)
+        if mode == TrainMode.train:
+            self.trained_model_optimizer.zero_grad()
+            batch_results.loss.backward()
+            self.trained_model_optimizer.step()
+
+        return batch_results
 
     def iteration(self, mode: TrainMode) -> None:
         dataloader = self.dataloaders[mode]
         self.trained_model.set_mode(mode)
+        torch.set_grad_enabled(mode == mode.train)
 
         n_batches_to_process = (
             self.n_max_train_batches_per_epoch
@@ -214,7 +329,7 @@ class DPOTrainer:
             leave=False,
             position=1,
         ):
-            batch_processing_results = self.process_batch(batch)
+            batch_processing_results = self.process_batch(batch, mode)
             epoch_all_batch_results.append(batch_processing_results)
             if mode == TrainMode.train and batch_no + 1 == n_batches_to_process:
                 break

@@ -41,14 +41,11 @@ def _prepare_dataloaders(
     dataset_paths: dict[TrainMode, Path],
     tokenizer: PreTrainedTokenizer,
     max_len: int,
+    min_len: int,
     batch_size: int,
 ) -> dict[TrainMode, DataLoader]:
     datasets = {
-        mode: SST2Dataset(
-            dataset_paths[mode],
-            tokenizer,
-            max_len,
-        )
+        mode: SST2Dataset(dataset_paths[mode], tokenizer, max_len, min_len)
         for mode in dataset_paths.keys()
     }
     dataloaders = {
@@ -95,6 +92,7 @@ def main(
     train_split_path: Path,
     eval_split_path: Path,
     max_len: int,
+    min_len: int,
     batch_size: int,
     n_epochs: int,
     lr: float,
@@ -122,7 +120,7 @@ def main(
         TrainMode.train: train_split_path,
         TrainMode.eval: eval_split_path,
     }
-    dataloaders = _prepare_dataloaders(dataset_paths, echo.tokenizer, max_len, batch_size)
+    dataloaders = _prepare_dataloaders(dataset_paths, echo.tokenizer, max_len, min_len, batch_size)
 
     run_save_dir, all_runs_log_path = _prepare_run_save_dir_and_log_file(
         echo_runs_save_dir, training_log_filename
@@ -167,6 +165,7 @@ if __name__ == "__main__":
         train_split_path=Path(echo_params["train_split_path"]),
         eval_split_path=Path(echo_params["eval_split_path"]),
         max_len=int(echo_params["max_len"]),
+        min_len=int(echo_params["min_len"]),
         batch_size=int(echo_params["batch_size"]),
         n_epochs=int(echo_params["n_epochs"]),
         lr=float(echo_params["lr"]),

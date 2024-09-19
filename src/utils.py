@@ -38,3 +38,16 @@ def undo_batch_torch_repeat_interleave_2(t: torch.Tensor) -> torch.Tensor:
     repetition_0 = t[[2 * i for i in range(dim_target_size)], :]
     repetition_1 = t[[2 * i + 1 for i in range(dim_target_size)], :]
     return torch.stack((repetition_0, repetition_1), dim=1)
+
+
+def sequence_logprob(token_probabilities: torch.Tensor) -> torch.Tensor:
+    return torch.sum(torch.log(token_probabilities)).reshape(1)
+
+
+def get_generation_length_until_first_stop_token(
+    token_ids: torch.Tensor, stop_token_id: int
+) -> int:
+    for i in range(len(token_ids)):
+        if token_ids[i] == stop_token_id:
+            return i
+    return len(token_ids)

@@ -22,8 +22,8 @@ class GenerativeBart:
         self.bert.to(device)
         self.device = device
         self.tokenizer = BartTokenizer.from_pretrained(model_name)
-        self.stop_token = self.token_to_tokenizer_id("</s>")
-        self.start_token = self.token_to_tokenizer_id("<s>")
+        self.stop_token_id = self.token_to_tokenizer_id("</s>")
+        self.start_token_id = self.token_to_tokenizer_id("<s>")
 
     def token_to_tokenizer_id(self, word: str) -> int:
         return self.tokenizer.encode(word)[1]
