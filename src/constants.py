@@ -17,3 +17,10 @@ class TrainMode(Enum):
 
 # Reward and metric names
 REWARD = "reward"
+
+SIMILARITY = "semantic_similarity"
+
+
+# Miscellaneous
+PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH = 16
+MODEL_RESPONSE = "model_response"

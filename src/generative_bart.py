@@ -37,5 +37,5 @@ class GenerativeBart:
         else:
             self.bert.eval()
 
-    def decode(self, generated_ids: torch.Tensor) -> list[list[str]]:
-        return self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+    def decode_single_sequence(self, generated_ids: torch.Tensor) -> str:
+        return self.tokenizer.decode(generated_ids, skip_special_tokens=True)

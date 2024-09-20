@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import torch
 import yaml
@@ -8,14 +9,18 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizer
 
-from src.constants import TrainMode
+from src.constants import SIMILARITY, TrainMode
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
 from src.sst2_dataset import SST2Dataset
 from src.text_evaluation_models.semantic_similarity_evaluators import (
     EmbeddingBasedSemanticSimilarityEvaluator,
 )
-from src.utils import get_available_torch_devices, get_next_run_subdir_name
+from src.utils import (
+    get_available_torch_devices,
+    get_current_git_commit_id,
+    get_next_run_subdir_name,
+)
 
 
 def _assign_model_devices() -> tuple[torch.device, torch.device]:
@@ -81,9 +86,13 @@ class EchoDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         similarity_score_0, similarity_score_1 = self.similarity_evaluator.evaluate_many_to_one(
             many=list(generations), one=prompt
         )
-        return RewardAndMetrics(reward=similarity_score_0, metrics={}), RewardAndMetrics(
-            reward=similarity_score_1, metrics={}
+        rewards_and_metrics_0 = RewardAndMetrics(
+            reward=similarity_score_0, metrics={SIMILARITY: similarity_score_0}
         )
+        rewards_and_metrics_1 = RewardAndMetrics(
+            reward=similarity_score_1, metrics={SIMILARITY: similarity_score_1}
+        )
+        return rewards_and_metrics_0, rewards_and_metrics_1
 
 
 def main(
@@ -101,6 +110,7 @@ def main(
     n_max_train_samples_per_epoch: int | None,
     echo_runs_save_dir: Path,
     training_log_filename: str,
+    params_to_save: dict[str, Any],
 ) -> None:
     """
     The sst2 training set is relatively large, and takes a lot of time for the trainer to process,
@@ -135,6 +145,8 @@ def main(
         device=control_models_device,
     )
 
+    params_to_save.update({"commit_id": get_current_git_commit_id()})
+
     trainer = DPOTrainer(
         trained_model=echo,
         reference_model=reference_model,
@@ -148,6 +160,7 @@ def main(
         beta=dpo_beta,
         temperature=temperature,
         lr=lr,
+        params_to_save=params_to_save,
         n_max_train_batches_per_epoch=n_max_train_batches_per_epoch,
     )
     trainer.run_training()
@@ -178,4 +191,5 @@ if __name__ == "__main__":
         ),
         echo_runs_save_dir=Path(echo_params["echo_runs_save_dir"]),
         training_log_filename=echo_params["training_log_filename"],
+        params_to_save=echo_params,
     )
