@@ -17,7 +17,6 @@ class TrainMode(Enum):
 
 # Reward and metric names
 REWARD = "reward"
-
 SIMILARITY = "semantic_similarity"
 
 

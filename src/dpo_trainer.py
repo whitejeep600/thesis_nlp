@@ -26,8 +26,8 @@ from src.constants import (
 )
 from src.generative_bart import GenerativeBart
 from src.utils import (
-    _moving_average_with_left_side_padding,
     get_generation_length_until_first_stop_token,
+    moving_average_with_left_side_padding,
     sequence_log_prob,
     undo_batch_torch_repeat_interleave_2,
 )
@@ -97,8 +97,13 @@ class Generation:
 
         self.log_ratio = log_ratio
 
+    def remove_tensors_required_for_loss_only(self) -> None:
+        self.generation_probs = torch.Tensor()
+        self.reference_probs = torch.Tensor()
+        self.log_ratio = torch.Tensor()
 
-class SampleProcessingResults:
+
+class SampleProcessingResult:
     def __init__(
         self,
         prompt: str,
@@ -133,13 +138,28 @@ class SampleProcessingResults:
             dpo_beta * (self.preferred.log_ratio - self.dispreferred.log_ratio)
         )
 
+    def remove_tensors_required_for_loss_only(self) -> None:
+        self.loss = torch.Tensor()
+        for generation in [self.preferred, self.dispreferred]:
+            generation.remove_tensors_required_for_loss_only()
 
-class BatchProcessingResults:
-    def __init__(self, batch_sample_processing_results: list[SampleProcessingResults]):
-        self.batch_sample_processing_results = batch_sample_processing_results
+
+class BatchProcessingResult:
+    def __init__(self, sample_processing_results: list[SampleProcessingResult]):
+        self.sample_processing_results = sample_processing_results
         self.loss = torch.stack(
-            [processing_results.loss for processing_results in batch_sample_processing_results]
+            [processing_result.loss for processing_result in sample_processing_results]
         ).mean()
+
+    def remove_tensors_required_for_loss_only(self) -> None:
+        """
+        It is convenient to store these tensors here while processing the batch and
+        backpropagating, but afterwards they should be removed as they are no longer
+        necessary, and waste GPU memory.
+        """
+        self.loss = self.loss.detach().cpu()
+        for sample_processing_result in self.sample_processing_results:
+            sample_processing_result.remove_tensors_required_for_loss_only()
 
 
 def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics:
@@ -154,11 +174,11 @@ def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics
 
 def _calculate_moving_average_metrics(metrics: list[RewardAndMetrics]) -> list[RewardAndMetrics]:
     metric_names = list(metrics[0].metrics.keys())
-    reward_moving_averages = _moving_average_with_left_side_padding(
+    reward_moving_averages = moving_average_with_left_side_padding(
         [m.reward for m in metrics], window_length=PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH
     )
     metrics_moving_averages = {
-        key: _moving_average_with_left_side_padding(
+        key: moving_average_with_left_side_padding(
             [m.metrics[key] for m in metrics], window_length=PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH
         )
         for key in metric_names
@@ -174,31 +194,31 @@ def _calculate_moving_average_metrics(metrics: list[RewardAndMetrics]) -> list[R
     ]
 
 
-def _get_all_metrics_from_epoch_processing_results(
-    epoch_processing_results: list[BatchProcessingResults],
+def _get_all_metrics_from_epoch_processing_result(
+    epoch_processing_result: list[BatchProcessingResult],
 ) -> list[RewardAndMetrics]:
     return [
         generation.reward_and_metrics
-        for batch_results in epoch_processing_results
-        for sample_results in batch_results.batch_sample_processing_results
-        for generation in [sample_results.preferred, sample_results.dispreferred]
+        for batch_result in epoch_processing_result
+        for sample_result in batch_result.sample_processing_results
+        for generation in [sample_result.preferred, sample_result.dispreferred]
     ]
 
 
-def _epoch_processing_results_to_dataframe(
-    all_batch_results: list[BatchProcessingResults],
+def _epoch_processing_result_to_dataframe(
+    epoch_result: list[BatchProcessingResult],
 ) -> pd.DataFrame:
     return [
         {
-            ID: sample_results.sample_id,
-            ORIGINAL_SENTENCE: sample_results.prompt,
+            ID: sample_result.sample_id,
+            ORIGINAL_SENTENCE: sample_result.prompt,
             MODEL_RESPONSE: generation.generation_text,
             REWARD: generation.reward_and_metrics.reward,
             **generation.reward_and_metrics.metrics,
         }
-        for single_batch_results in all_batch_results
-        for sample_results in single_batch_results.batch_sample_processing_results
-        for generation in [sample_results.preferred, sample_results.dispreferred]
+        for batch_result in epoch_result
+        for sample_result in batch_result.sample_processing_results
+        for generation in [sample_result.preferred, sample_result.dispreferred]
     ]
 
 
@@ -254,7 +274,7 @@ class DPOTrainer:
         self.lr = lr
         self.n_max_train_batches_per_epoch = n_max_train_batches_per_epoch
 
-        self.all_epoch_processing_results: dict[TrainMode, list[list[SampleProcessingResults]]] = {
+        self.all_epoch_processing_results: dict[TrainMode, list[list[SampleProcessingResult]]] = {
             TrainMode.train: [],
             TrainMode.eval: [],
         }
@@ -284,9 +304,9 @@ class DPOTrainer:
         torch.save(self.trained_model.bert.state_dict(), self.checkpoints_dir / save_filename)
 
     def save_model_responses_and_metrics(
-        self, epoch_processing_results: list[BatchProcessingResults], mode: TrainMode, epoch_no: int
+        self, epoch_processing_result: list[BatchProcessingResult], mode: TrainMode, epoch_no: int
     ) -> None:
-        df = pd.DataFrame(_epoch_processing_results_to_dataframe(epoch_processing_results))
+        df = pd.DataFrame(_epoch_processing_result_to_dataframe(epoch_processing_result))
         save_path = self.generated_sentences_dirs[mode] / f"epoch_{epoch_no}.csv"
         df.to_csv(save_path, index=False)
 
@@ -301,7 +321,7 @@ class DPOTrainer:
                 for metric_name in self.mean_epoch_eval_metrics[0].metrics.keys()
             },
         }
-        eval_xs = list(range(self.n_epochs))
+        eval_xs = list(range(1, self.n_epochs + 1))
 
         train_metrics_and_rewards = {
             REWARD: [
@@ -318,7 +338,7 @@ class DPOTrainer:
                 for metric_name in self.moving_average_epoch_train_metrics[0][0].metrics.keys()
             },
         }
-        train_xs = np.linspace(0, self.n_epochs - 1, len(train_metrics_and_rewards[REWARD]))
+        train_xs = np.linspace(0, self.n_epochs, len(train_metrics_and_rewards[REWARD]))
 
         for reward_or_metric_name in eval_metrics_and_rewards.keys():
             plt.plot(
@@ -429,7 +449,7 @@ class DPOTrainer:
             )
         ]
 
-    def process_batch(self, batch: dict, mode: TrainMode) -> BatchProcessingResults:
+    def process_batch(self, batch: dict, mode: TrainMode) -> BatchProcessingResult:
         batch_raw_generations = self.sample_two_sequences_per_sample(batch[INPUT_IDS])
         batch_decoded_sequences = [
             (
@@ -449,8 +469,9 @@ class DPOTrainer:
             self.metric_calculator.get_rewards_and_metrics(prompt, generations)
             for (prompt, generations) in zip(batch_original_sequences, batch_decoded_sequences)
         ]
-        batch_sample_processing_results = [
-            SampleProcessingResults(
+
+        sample_processing_results = [
+            SampleProcessingResult(
                 prompt=sample_original_sequence,
                 sample_id=sample_id,
                 sample_generation_texts=sample_generation_texts,
@@ -473,15 +494,18 @@ class DPOTrainer:
             )
         ]
 
-        batch_results = BatchProcessingResults(batch_sample_processing_results)
+        batch_result = BatchProcessingResult(sample_processing_results)
+
         if mode == TrainMode.train:
             self.trained_model_optimizer.zero_grad()
-            batch_results.loss.backward()
+            batch_result.loss.backward()
             self.trained_model_optimizer.step()
 
-        return batch_results
+        batch_result.remove_tensors_required_for_loss_only()
 
-    def iteration(self, mode: TrainMode) -> list[BatchProcessingResults]:
+        return batch_result
+
+    def iteration(self, mode: TrainMode) -> list[BatchProcessingResult]:
         dataloader = self.dataloaders[mode]
         self.trained_model.set_mode(mode)
         torch.set_grad_enabled(mode == TrainMode.train)
@@ -492,7 +516,7 @@ class DPOTrainer:
             else len(dataloader)
         )
 
-        epoch_processing_results: list[BatchProcessingResults] = []
+        epoch_processing_result: list[BatchProcessingResult] = []
 
         for batch_no, batch in tqdm(
             enumerate(dataloader),
@@ -501,12 +525,12 @@ class DPOTrainer:
             leave=False,
             position=1,
         ):
-            batch_processing_results = self.process_batch(batch, mode)
-            epoch_processing_results.append(batch_processing_results)
+            batch_processing_result = self.process_batch(batch, mode)
+            epoch_processing_result.append(batch_processing_result)
             if mode == TrainMode.train and batch_no + 1 == n_batches_to_process:
                 break
 
-        return epoch_processing_results
+        return epoch_processing_result
 
     def get_training_summary(self):
         time_now = time.time()
@@ -531,26 +555,27 @@ class DPOTrainer:
 
     def run_training(self) -> None:
         best_mean_eval_reward = -np.inf
-        for epoch_no in tqdm(range(self.n_epochs), desc="training...", position=0):
-            train_epoch_results = self.iteration(TrainMode.train)
-            eval_epoch_results = self.iteration(TrainMode.eval)
 
-            all_eval_metrics = _get_all_metrics_from_epoch_processing_results(eval_epoch_results)
+        for epoch_no in tqdm(range(self.n_epochs), desc="training...", position=0):
+            train_epoch_result = self.iteration(TrainMode.train)
+            all_train_metrics = _get_all_metrics_from_epoch_processing_result(train_epoch_result)
+            moving_average_train_metrics = _calculate_moving_average_metrics(all_train_metrics)
+
+            eval_epoch_result = self.iteration(TrainMode.eval)
+            all_eval_metrics = _get_all_metrics_from_epoch_processing_result(eval_epoch_result)
             mean_eval_metrics = _calculate_mean_metrics(all_eval_metrics)
 
-            print(f"Epoch no. {epoch_no}, mean eval metrics: {mean_eval_metrics.to_str()}")
             self.mean_epoch_eval_metrics.append(mean_eval_metrics)
+            self.moving_average_epoch_train_metrics.append(moving_average_train_metrics)
+
+            self.save_model_responses_and_metrics(train_epoch_result, TrainMode.train, epoch_no)
+            self.save_model_responses_and_metrics(eval_epoch_result, TrainMode.eval, epoch_no)
 
             if mean_eval_metrics.reward > best_mean_eval_reward:
                 best_mean_eval_reward = mean_eval_metrics.reward
                 self.save_model_checkpoint(save_filename="best.pt")
 
-            all_train_metrics = _get_all_metrics_from_epoch_processing_results(train_epoch_results)
-            moving_average_train_metrics = _calculate_moving_average_metrics(all_train_metrics)
-            self.moving_average_epoch_train_metrics.append(moving_average_train_metrics)
-
-            self.save_model_responses_and_metrics(train_epoch_results, TrainMode.train, epoch_no)
-            self.save_model_responses_and_metrics(eval_epoch_results, TrainMode.eval, epoch_no)
+            print(f"Epoch no. {epoch_no}, mean eval metrics: {mean_eval_metrics.to_str()}")
 
         self.save_model_checkpoint(save_filename="last.pt")
         training_summary = self.get_training_summary()

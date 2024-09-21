@@ -10,36 +10,17 @@ from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizer
 
 from src.constants import SIMILARITY, TrainMode
+from src.control_models.semantic_similarity_evaluators import (
+    EmbeddingBasedSemanticSimilarityEvaluator,
+)
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
 from src.sst2_dataset import SST2Dataset
-from src.text_evaluation_models.semantic_similarity_evaluators import (
-    EmbeddingBasedSemanticSimilarityEvaluator,
-)
 from src.utils import (
-    get_available_torch_devices,
+    assign_model_devices,
     get_current_git_commit_id,
-    get_next_run_subdir_name,
+    prepare_run_save_dir_and_log_file,
 )
-
-
-def _assign_model_devices() -> tuple[torch.device, torch.device]:
-    """
-    In the setting the experiments were developed in, training could only be run
-    on the author's machine locally, or on a university server. Locally,
-    there were no GPU devices available, or one MPS device, depending on the
-    equipment used. On the server, there were two CUDA devices. One of them
-    was assigned for the trained model exclusively (higher memory requirements
-    due to backpropagation), while the other for all the remaining models
-    used in the training (referred to as the "control models").
-    """
-    torch_devices = get_available_torch_devices()
-    trained_model_device = torch_devices[0]
-    if len(torch_devices) > 1:
-        control_models_device = torch_devices[1]
-    else:
-        control_models_device = torch_devices[0]
-    return trained_model_device, control_models_device
 
 
 def _prepare_dataloaders(
@@ -58,17 +39,6 @@ def _prepare_dataloaders(
         for mode in datasets.keys()
     }
     return dataloaders
-
-
-def _prepare_run_save_dir_and_log_file(
-    all_runs_save_dir: Path, training_log_filename: str
-) -> tuple[Path, Path]:
-    all_runs_save_dir.mkdir(exist_ok=True, parents=True)
-    run_save_dir = all_runs_save_dir / get_next_run_subdir_name(all_runs_save_dir)
-    run_save_dir.mkdir(parents=True)
-    all_runs_log_path = all_runs_save_dir / training_log_filename
-    all_runs_log_path.touch()
-    return run_save_dir, all_runs_log_path
 
 
 class EchoDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
@@ -120,7 +90,7 @@ def main(
     can be restricted.
     """
 
-    trained_model_device, control_models_device = _assign_model_devices()
+    trained_model_device, control_models_device = assign_model_devices()
 
     echo = GenerativeBart(source_bart_model_name, trained_model_device)
     echo_optimizer = AdamW(echo.parameters(), lr=lr)
@@ -132,7 +102,7 @@ def main(
     }
     dataloaders = _prepare_dataloaders(dataset_paths, echo.tokenizer, max_len, min_len, batch_size)
 
-    run_save_dir, all_runs_log_path = _prepare_run_save_dir_and_log_file(
+    run_save_dir, all_runs_log_path = prepare_run_save_dir_and_log_file(
         echo_runs_save_dir, training_log_filename
     )
 

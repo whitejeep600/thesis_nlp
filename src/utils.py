@@ -55,7 +55,7 @@ def get_generation_length_until_first_stop_token(
     return len(token_ids)
 
 
-def _moving_average_with_left_side_padding(xs: list[float], window_length: int) -> list[float]:
+def moving_average_with_left_side_padding(xs: list[float], window_length: int) -> list[float]:
     """
     For the i-th index, calculate the average of the previous window_length elements
     including the i-th one. These elements are replaced with zeros at the beginning of the
@@ -82,3 +82,33 @@ def get_command_output(command: str, arguments: list[str]) -> str:
 
 def get_current_git_commit_id() -> str:
     return get_command_output("git", ["log", '--format="%H"', "-n 1"])
+
+
+def assign_model_devices() -> tuple[torch.device, torch.device]:
+    """
+    In the setting the experiments were developed in, training could only be run
+    on the author's machine locally, or on a university server. Locally,
+    there were no GPU devices available, or one MPS device, depending on the
+    equipment used. On the server, there were two CUDA devices. One of them
+    was assigned for the trained model exclusively (higher memory requirements
+    due to backpropagation), while the other for all the remaining models
+    used in the training (referred to as the "control models").
+    """
+    torch_devices = get_available_torch_devices()
+    trained_model_device = torch_devices[0]
+    if len(torch_devices) > 1:
+        control_models_device = torch_devices[1]
+    else:
+        control_models_device = torch_devices[0]
+    return trained_model_device, control_models_device
+
+
+def prepare_run_save_dir_and_log_file(
+    all_runs_save_dir: Path, training_log_filename: str
+) -> tuple[Path, Path]:
+    all_runs_save_dir.mkdir(exist_ok=True, parents=True)
+    run_save_dir = all_runs_save_dir / get_next_run_subdir_name(all_runs_save_dir)
+    run_save_dir.mkdir(parents=True)
+    all_runs_log_path = all_runs_save_dir / training_log_filename
+    all_runs_log_path.touch()
+    return run_save_dir, all_runs_log_path
