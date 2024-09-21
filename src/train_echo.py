@@ -6,8 +6,6 @@ from typing import Any
 import torch
 import yaml
 from torch.optim import AdamW
-from torch.utils.data import DataLoader
-from transformers import PreTrainedTokenizer
 
 from src.constants import SIMILARITY, TrainMode
 from src.control_models.semantic_similarity_evaluators import (
@@ -15,30 +13,12 @@ from src.control_models.semantic_similarity_evaluators import (
 )
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
-from src.sst2_dataset import SST2Dataset
 from src.utils import (
     assign_model_devices,
     get_current_git_commit_id,
+    prepare_dataloaders,
     prepare_run_save_dir_and_log_file,
 )
-
-
-def _prepare_dataloaders(
-    dataset_paths: dict[TrainMode, Path],
-    tokenizer: PreTrainedTokenizer,
-    max_len: int,
-    min_len: int,
-    batch_size: int,
-) -> dict[TrainMode, DataLoader]:
-    datasets = {
-        mode: SST2Dataset(dataset_paths[mode], tokenizer, max_len, min_len)
-        for mode in dataset_paths.keys()
-    }
-    dataloaders = {
-        mode: DataLoader(datasets[mode], batch_size=batch_size, shuffle=True)
-        for mode in datasets.keys()
-    }
-    return dataloaders
 
 
 class EchoDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
@@ -48,21 +28,24 @@ class EchoDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
             sentence_transformer_similarity_evaluator_name, device
         )
 
+    def get_rewards_and_metrics_for_single_generation(
+        self, prompt: str, generation: str
+    ) -> RewardAndMetrics:
+        similarity_score = self.similarity_evaluator.evaluate_one_to_one(generation, prompt)
+        rewards_and_metrics = RewardAndMetrics(
+            reward=similarity_score, metrics={SIMILARITY: similarity_score}
+        )
+        return rewards_and_metrics
+
     def get_rewards_and_metrics(
         self,
         prompt: str,
         generations: tuple[str, str],
     ) -> tuple[RewardAndMetrics, RewardAndMetrics]:
-        similarity_score_0, similarity_score_1 = self.similarity_evaluator.evaluate_many_to_one(
-            many=list(generations), one=prompt
+        return (
+            self.get_rewards_and_metrics_for_single_generation(prompt, generations[0]),
+            self.get_rewards_and_metrics_for_single_generation(prompt, generations[1]),
         )
-        rewards_and_metrics_0 = RewardAndMetrics(
-            reward=similarity_score_0, metrics={SIMILARITY: similarity_score_0}
-        )
-        rewards_and_metrics_1 = RewardAndMetrics(
-            reward=similarity_score_1, metrics={SIMILARITY: similarity_score_1}
-        )
-        return rewards_and_metrics_0, rewards_and_metrics_1
 
 
 def main(
@@ -100,7 +83,7 @@ def main(
         TrainMode.train: train_split_path,
         TrainMode.eval: eval_split_path,
     }
-    dataloaders = _prepare_dataloaders(dataset_paths, echo.tokenizer, max_len, min_len, batch_size)
+    dataloaders = prepare_dataloaders(dataset_paths, echo.tokenizer, max_len, min_len, batch_size)
 
     run_save_dir, all_runs_log_path = prepare_run_save_dir_and_log_file(
         echo_runs_save_dir, training_log_filename

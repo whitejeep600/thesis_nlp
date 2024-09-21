@@ -18,8 +18,16 @@ class TrainMode(Enum):
 # Reward and metric names
 REWARD = "reward"
 SIMILARITY = "semantic_similarity"
+TARGET_LABEL_PROB = "target_label_probability_from_victim"
 
 
 # Miscellaneous
-PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH = 16
+PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH = 32
 MODEL_RESPONSE = "model_response"
+
+NEGATIVE_LABEL = "negative"
+POSITIVE_LABEL = "positive"
+LABEL_NAME_TO_CODE = {
+    NEGATIVE_LABEL: 0,
+    POSITIVE_LABEL: 1,
+}

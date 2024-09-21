@@ -17,10 +17,13 @@ class SST2Dataset(Dataset):
         tokenizer: PreTrainedTokenizer,
         max_length: int,
         min_length: int | None = None,
+        label_to_keep: int | None = None,
     ):
         super().__init__()
 
         source_df = pd.read_csv(dataset_csv_path)
+        if label_to_keep:
+            source_df = source_df[source_df[LABEL] == label_to_keep]
 
         sentences: list[str] = source_df[SENTENCE].values.tolist()
 

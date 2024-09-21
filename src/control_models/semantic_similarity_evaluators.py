@@ -25,3 +25,8 @@ class EmbeddingBasedSemanticSimilarityEvaluator(BaseSemanticSimilarityEvaluator)
             torch.cosine_similarity(one_encoding, prefix_encoding, dim=0).item()
             for prefix_encoding in many_encodings
         ]
+
+    def evaluate_one_to_one(self, one_0: str, one_1: str) -> float:
+        encoding_0 = self.model.encode(one_0, convert_to_tensor=True)
+        encoding_1 = self.model.encode(one_1, convert_to_tensor=True)
+        return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
