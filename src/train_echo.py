@@ -145,7 +145,9 @@ def main(
         device=control_models_device,
     )
 
-    params_to_save.update({"commit_id": get_current_git_commit_id()})
+    params_to_save.update(
+        {"commit_id": get_current_git_commit_id(), "run_save_dir": str(run_save_dir)}
+    )
 
     trainer = DPOTrainer(
         trained_model=echo,

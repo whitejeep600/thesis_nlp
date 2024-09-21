@@ -35,8 +35,10 @@ from src.utils import (
 
 class RewardAndMetrics:
     def __init__(self, reward: float, metrics: dict[str, float]):
-        self.reward = reward
-        self.metrics = metrics
+        self.reward = round(reward, 3)
+        self.metrics = {
+            metric_name: round(metrics[metric_name], 3) for metric_name in metrics.keys()
+        }
 
     def to_str(self) -> str:
         return f"reward: {self.reward}, metrics: {self.metrics}\n"
@@ -142,8 +144,11 @@ class BatchProcessingResults:
 
 def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics:
     return RewardAndMetrics(
-        reward=mean([m.reward for m in metrics]),
-        metrics={key: mean([m.metrics[key] for m in metrics]) for key in metrics[0].metrics.keys()},
+        reward=round(mean([m.reward for m in metrics]), 2),
+        metrics={
+            key: round(mean([m.metrics[key] for m in metrics]), 2)
+            for key in metrics[0].metrics.keys()
+        },
     )
 
 
@@ -328,6 +333,7 @@ class DPOTrainer:
                 label="eval",
                 color="green",
             )
+            plt.legend(loc="upper left")
             plt.savefig(self.plots_dir / f"{reward_or_metric_name}.png", dpi=420)
             plt.clf()
 
@@ -437,7 +443,7 @@ class DPOTrainer:
             for sample_generations in batch_raw_generations
         ]
         batch_original_sequences = batch[ORIGINAL_SENTENCE]
-        batch_ids = batch[ID]
+        batch_ids = batch[ID].tolist()
 
         batch_rewards_and_metrics = [
             self.metric_calculator.get_rewards_and_metrics(prompt, generations)
@@ -513,7 +519,7 @@ class DPOTrainer:
         return (
             f"Training time: {time.strftime('%H:%M:%S', time_elapsed)},"
             f" number of epochs elapsed: {n_epochs_elapsed}, best stats"
-            f" for epoch {best_epoch_no}, as follows: {best_epoch_stats}"
+            f" for epoch {best_epoch_no}, as follows: {best_epoch_stats.to_str()}"
         )
 
     def save_call_parameters_and_summary_to_global_log(self, training_summary: str) -> None:
@@ -532,7 +538,7 @@ class DPOTrainer:
             all_eval_metrics = _get_all_metrics_from_epoch_processing_results(eval_epoch_results)
             mean_eval_metrics = _calculate_mean_metrics(all_eval_metrics)
 
-            print(f"Epoch no {epoch_no}, mean eval metrics: {mean_eval_metrics.to_str()}")
+            print(f"Epoch no. {epoch_no}, mean eval metrics: {mean_eval_metrics.to_str()}")
             self.mean_epoch_eval_metrics.append(mean_eval_metrics)
 
             if mean_eval_metrics.reward > best_mean_eval_reward:
