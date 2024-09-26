@@ -22,8 +22,9 @@ class SST2Dataset(Dataset):
         super().__init__()
 
         source_df = pd.read_csv(dataset_csv_path)
+
         if label_to_keep is not None:
-            source_df = source_df[source_df[LABEL] == label_to_keep]
+            source_df = source_df[source_df[LABEL] == label_to_keep].reset_index(drop=True)
 
         sentences: list[str] = source_df[SENTENCE].values.tolist()
 
@@ -40,7 +41,9 @@ class SST2Dataset(Dataset):
             long_enough_sample_indices = list(range(len(input_ids)))
         else:
             long_enough_sample_indices = [
-                i for i in range(len(input_ids)) if len(input_ids[i]) >= min_length
+                i
+                for i in range(len(input_ids))
+                if sum(input_ids[i] != tokenizer.pad_token_id).item() >= min_length
             ]
 
         input_ids = [input_ids[i] for i in long_enough_sample_indices]

@@ -66,7 +66,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
 def main(
     source_bart_model_name: str,
     sentence_transformer_similarity_evaluator_name: str,
-    source_bart_weights_path: Path,
+    source_bart_weights_path: Path | None,
     train_split_path: Path,
     eval_split_path: Path,
     max_len: int,
@@ -150,7 +150,11 @@ if __name__ == "__main__":
 
     main(
         source_bart_model_name=attacker_params["source_bart_model_name"],
-        source_bart_weights_path=Path(attacker_params["source_bart_weights_path"]),
+        source_bart_weights_path=(
+            Path(attacker_params["source_bart_weights_path"])
+            if attacker_params["source_bart_weights_path"]
+            else None
+        ),
         sentence_transformer_similarity_evaluator_name=attacker_params[
             "sentence_transformer_similarity_evaluator_name"
         ],
