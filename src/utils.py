@@ -128,7 +128,9 @@ def prepare_dataloaders(
     label_to_keep: int | None = None,
 ) -> dict[TrainMode, DataLoader]:
     datasets = {
-        mode: SST2Dataset(dataset_paths[mode], tokenizer, max_len, min_len, label_to_keep)
+        mode: SST2Dataset(
+            dataset_paths[mode], tokenizer, max_len, min_len, label_to_keep=label_to_keep
+        )
         for mode in dataset_paths.keys()
     }
     dataloaders = {

@@ -351,7 +351,7 @@ class DPOTrainer:
                 eval_xs,
                 eval_metrics_and_rewards[reward_or_metric_name],
                 label="eval",
-                color="green",
+                color="orange",
             )
             plt.legend(loc="upper left")
             plt.savefig(self.plots_dir / f"{reward_or_metric_name}.png", dpi=420)

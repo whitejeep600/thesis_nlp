@@ -22,7 +22,7 @@ TARGET_LABEL_PROB = "target_label_probability_from_victim"
 
 
 # Miscellaneous
-PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH = 32
+PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH = 64
 MODEL_RESPONSE = "model_response"
 
 NEGATIVE_LABEL = "negative"

@@ -22,7 +22,7 @@ class SST2Dataset(Dataset):
         super().__init__()
 
         source_df = pd.read_csv(dataset_csv_path)
-        if label_to_keep:
+        if label_to_keep is not None:
             source_df = source_df[source_df[LABEL] == label_to_keep]
 
         sentences: list[str] = source_df[SENTENCE].values.tolist()

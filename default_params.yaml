@@ -23,11 +23,11 @@ src.train_attacker:
   min_len: 8
   max_len: 32
   batch_size: 1
-  n_epochs: 1
-  lr: 1e-5
+  n_epochs: 4
+  lr: 1e-6
   dpo_beta: 0.1
   temperature: 1
   n_max_train_samples_per_epoch: 1024
   attacker_runs_save_dir: runs/attacker/
   training_log_filename: log.txt
-  target_label: positive
+  target_label: negative

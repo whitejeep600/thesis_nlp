@@ -99,7 +99,12 @@ def main(
         TrainMode.eval: eval_split_path,
     }
     dataloaders = prepare_dataloaders(
-        dataset_paths, attacker.tokenizer, max_len, min_len, batch_size, 1 - target_label_code
+        dataset_paths,
+        attacker.tokenizer,
+        max_len,
+        min_len,
+        batch_size,
+        label_to_keep=1 - target_label_code,
     )
 
     run_save_dir, all_runs_log_path = prepare_run_save_dir_and_log_file(
