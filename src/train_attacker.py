@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from concurrent.futures.thread import ThreadPoolExecutor
+from functools import partial
 from pathlib import Path
 from typing import Any, Literal
 
@@ -36,31 +38,60 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
         self.target_label = target_label
 
-    def get_rewards_and_metrics_for_single_generation(
-        self, prompt: str, generation: str
-    ) -> RewardAndMetrics:
-        similarity_score = self.similarity_evaluator.evaluate_one_to_one(generation, prompt)
-        classification_probabilities = self.sentiment_classifier.evaluate_texts(
-            [generation], return_probs=True
-        ).tolist()[0]
-        target_label_probability = classification_probabilities[self.target_label]
+    def get_similarity_scores_for_generations(
+        self, prompt: str, generations: list[str]
+    ) -> list[float]:
+        return self.similarity_evaluator.evaluate_many_to_one(many=generations, one=prompt)
 
-        reward = (similarity_score + target_label_probability) / 2
-        rewards_and_metrics = RewardAndMetrics(
-            reward=reward,
-            metrics={SIMILARITY: similarity_score, TARGET_LABEL_PROB: target_label_probability},
+    def get_target_label_probs_for_generations(self, generations: list[str]) -> list[float]:
+        classification_probabilities = self.sentiment_classifier.evaluate_texts(
+            generations, return_probs=True
         )
-        return rewards_and_metrics
+        return classification_probabilities[:, self.target_label].tolist()
 
     def get_rewards_and_metrics(
         self,
         prompt: str,
         generations: tuple[str, str],
     ) -> tuple[RewardAndMetrics, RewardAndMetrics]:
-        return (
-            self.get_rewards_and_metrics_for_single_generation(prompt, generations[0]),
-            self.get_rewards_and_metrics_for_single_generation(prompt, generations[1]),
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            similarity_calculation = executor.submit(
+                partial(
+                    self.get_similarity_scores_for_generations,
+                    prompt=prompt,
+                    generations=list(generations),
+                )
+            )
+            target_label_probs_calculation = executor.submit(
+                partial(self.get_target_label_probs_for_generations, generations=list(generations))
+            )
+
+        similarity_scores = similarity_calculation.result()
+        target_label_probabilities = target_label_probs_calculation.result()
+
+        rewards = [
+            (similarity_score + target_label_probability) / 2
+            for (similarity_score, target_label_probability) in zip(
+                similarity_scores, target_label_probabilities
+            )
+        ]
+        rewards_and_metrics = tuple(
+            [
+                RewardAndMetrics(
+                    reward=reward,
+                    metrics={
+                        SIMILARITY: similarity_score,
+                        TARGET_LABEL_PROB: target_label_probability,
+                    },
+                )
+                for (reward, similarity_score, target_label_probability) in zip(
+                    rewards, similarity_scores, target_label_probabilities
+                )
+            ]
         )
+        assert len(rewards_and_metrics) == 2
+        return rewards_and_metrics
 
 
 def main(
