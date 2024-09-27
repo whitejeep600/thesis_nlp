@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
 from pathlib import Path
@@ -19,6 +20,7 @@ from src.generative_bart import GenerativeBart
 from src.utils import (
     assign_model_devices,
     get_current_git_commit_id,
+    harmonic_mean,
     prepare_dataloaders,
     prepare_run_save_dir_and_log_file,
 )
@@ -71,7 +73,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         target_label_probabilities = target_label_probs_calculation.result()
 
         rewards = [
-            (similarity_score + target_label_probability) / 2
+            harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 3]) / 2
             for (similarity_score, target_label_probability) in zip(
                 similarity_scores, target_label_probabilities
             )
@@ -121,9 +123,7 @@ def main(
         source_bart_model_name, trained_model_device, weights_path=source_bart_weights_path
     )
     attacker_optimizer = AdamW(attacker.parameters(), lr=lr)
-    reference_model = GenerativeBart(
-        source_bart_model_name, control_models_device, weights_path=source_bart_weights_path
-    )
+    reference_model = copy.deepcopy(attacker)
 
     dataset_paths = {
         TrainMode.train: train_split_path,

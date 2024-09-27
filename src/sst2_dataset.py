@@ -19,6 +19,13 @@ class SST2Dataset(Dataset):
         min_length: int | None = None,
         label_to_keep: int | None = None,
     ):
+        """
+        Using the "label_to_keep" argument, sentences with a specific label only can be
+        kept in the dataset. This is done because for targeted attacks (making the victim
+        model erroneously output a specific target label), we are not very interested in
+        sentences that already have that label.
+        """
+
         super().__init__()
 
         source_df = pd.read_csv(dataset_csv_path)

@@ -138,3 +138,12 @@ def prepare_dataloaders(
         for mode in datasets.keys()
     }
     return dataloaders
+
+
+def harmonic_mean(numbers: list[float], weights: list[float] | None = None) -> float:
+    numbers_array = np.array(numbers)
+    if weights is None:
+        weights_array = np.ones_like(numbers_array)
+    else:
+        weights_array = np.array(weights)
+    return weights_array.sum() / (weights_array / numbers_array).sum()
