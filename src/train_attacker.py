@@ -73,7 +73,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         target_label_probabilities = target_label_probs_calculation.result()
 
         rewards = [
-            harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 3]) / 2
+            harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 3])
             for (similarity_score, target_label_probability) in zip(
                 similarity_scores, target_label_probabilities
             )
