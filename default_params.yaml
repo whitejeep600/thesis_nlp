@@ -17,7 +17,6 @@ src.train_echo:
 src.train_attacker:
   source_bart_model_name: eugenesiow/bart-paraphrase
   source_bart_weights_path: runs/echo/run_0/checkpoints/best.pt
-  sentence_transformer_similarity_evaluator_name: flax-sentence-embeddings/all_datasets_v4_MiniLM-L6
   train_split_path: data/sst2/train.csv
   eval_split_path: data/sst2/validation.csv
   min_len: 8

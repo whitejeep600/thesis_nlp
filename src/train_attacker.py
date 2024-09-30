@@ -18,9 +18,7 @@ from src.constants import (
     TARGET_LABEL_PROB,
     TrainMode,
 )
-from src.control_models.semantic_similarity_evaluators import (
-    EmbeddingBasedSemanticSimilarityEvaluator,
-)
+from src.control_models.semantic_similarity_evaluators import DistilbertEntailmentEvaluator
 from src.control_models.sentiment_classifier import CNN_SST2_SentimentClassifier
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
@@ -36,14 +34,11 @@ from src.utils import (
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
     def __init__(
         self,
-        sentence_transformer_similarity_evaluator_name: str,
         device: torch.device,
         target_label: int,
     ):
         super().__init__()
-        self.similarity_evaluator = EmbeddingBasedSemanticSimilarityEvaluator(
-            sentence_transformer_similarity_evaluator_name, device
-        )
+        self.similarity_evaluator = DistilbertEntailmentEvaluator(device)
         self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
         self.target_label = target_label
 
@@ -110,7 +105,6 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
 
 def main(
     source_bart_model_name: str,
-    sentence_transformer_similarity_evaluator_name: str,
     source_bart_weights_path: Path | None,
     train_split_path: Path,
     eval_split_path: Path,
@@ -159,7 +153,6 @@ def main(
     )
 
     metric_calculator = AttackerDPORewardAndMetricCalculator(
-        sentence_transformer_similarity_evaluator_name,
         device=control_models_device,
         target_label=target_label_code,
     )
@@ -203,9 +196,6 @@ if __name__ == "__main__":
             if attacker_params["source_bart_weights_path"]
             else None
         ),
-        sentence_transformer_similarity_evaluator_name=attacker_params[
-            "sentence_transformer_similarity_evaluator_name"
-        ],
         train_split_path=Path(attacker_params["train_split_path"]),
         eval_split_path=Path(attacker_params["eval_split_path"]),
         max_len=int(attacker_params["max_len"]),
