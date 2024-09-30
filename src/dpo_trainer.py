@@ -239,6 +239,7 @@ class DPOTrainer:
         lr: float,
         params_to_save: dict[str, Any],
         n_max_train_batches_per_epoch: int | None = None,
+        metrics_excluded_from_plotting: list[str] | None = None,
     ):
         """
         The term "reference model" is taken from the original DPO paper ("Direct Preference
@@ -273,6 +274,7 @@ class DPOTrainer:
         self.temperature = temperature
         self.lr = lr
         self.n_max_train_batches_per_epoch = n_max_train_batches_per_epoch
+        self.metrics_excluded_from_plotting = metrics_excluded_from_plotting or []
 
         self.all_epoch_processing_results: dict[TrainMode, list[list[SampleProcessingResult]]] = {
             TrainMode.train: [],
@@ -319,6 +321,7 @@ class DPOTrainer:
                     for epoch_metrics in self.mean_epoch_eval_metrics
                 ]
                 for metric_name in self.mean_epoch_eval_metrics[0].metrics.keys()
+                if metric_name not in self.metrics_excluded_from_plotting
             },
         }
         eval_xs = list(range(1, self.n_epochs + 1))
@@ -336,6 +339,7 @@ class DPOTrainer:
                     for batch_metrics in epoch_metrics
                 ]
                 for metric_name in self.moving_average_epoch_train_metrics[0][0].metrics.keys()
+                if metric_name not in self.metrics_excluded_from_plotting
             },
         }
         train_xs = np.linspace(0, self.n_epochs, len(train_metrics_and_rewards[REWARD]))

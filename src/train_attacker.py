@@ -11,7 +11,13 @@ import torch
 import yaml
 from torch.optim import AdamW
 
-from src.constants import LABEL_NAME_TO_CODE, SIMILARITY, TARGET_LABEL_PROB, TrainMode
+from src.constants import (
+    LABEL_NAME_TO_CODE,
+    PROMPT_ORIGINAL_TARGET_LABEL_PROB,
+    SIMILARITY,
+    TARGET_LABEL_PROB,
+    TrainMode,
+)
 from src.control_models.semantic_similarity_evaluators import (
     EmbeddingBasedSemanticSimilarityEvaluator,
 )
@@ -46,9 +52,9 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
     ) -> list[float]:
         return self.similarity_evaluator.evaluate_many_to_one(many=generations, one=prompt)
 
-    def get_target_label_probs_for_generations(self, generations: list[str]) -> list[float]:
+    def get_target_label_probs(self, sequences: list[str]) -> list[float]:
         classification_probabilities = self.sentiment_classifier.evaluate_texts(
-            generations, return_probs=True
+            sequences, return_probs=True
         )
         return classification_probabilities[:, self.target_label].tolist()
 
@@ -58,7 +64,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         generations: tuple[str, str],
     ) -> tuple[RewardAndMetrics, RewardAndMetrics]:
 
-        with ThreadPoolExecutor(max_workers=2) as executor:
+        with ThreadPoolExecutor(max_workers=3) as executor:
             similarity_calculation = executor.submit(
                 partial(
                     self.get_similarity_scores_for_generations,
@@ -66,17 +72,21 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
                     generations=list(generations),
                 )
             )
-            target_label_probs_calculation = executor.submit(
-                partial(self.get_target_label_probs_for_generations, generations=list(generations))
+            generations_target_label_probs_calculation = executor.submit(
+                partial(self.get_target_label_probs, sequences=list(generations))
+            )
+            prompt_target_label_prob_calculation = executor.submit(
+                partial(self.get_target_label_probs, sequences=[prompt])
             )
 
         similarity_scores = similarity_calculation.result()
-        target_label_probabilities = target_label_probs_calculation.result()
+        generation_target_label_probabilities = generations_target_label_probs_calculation.result()
+        prompt_target_label_probability = prompt_target_label_prob_calculation.result()[0]
 
         rewards = [
             harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 3])
             for (similarity_score, target_label_probability) in zip(
-                similarity_scores, target_label_probabilities
+                similarity_scores, generation_target_label_probabilities
             )
         ]
         rewards_and_metrics = tuple(
@@ -86,10 +96,11 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
                     metrics={
                         SIMILARITY: similarity_score,
                         TARGET_LABEL_PROB: target_label_probability,
+                        PROMPT_ORIGINAL_TARGET_LABEL_PROB: prompt_target_label_probability,
                     },
                 )
                 for (reward, similarity_score, target_label_probability) in zip(
-                    rewards, similarity_scores, target_label_probabilities
+                    rewards, similarity_scores, generation_target_label_probabilities
                 )
             ]
         )
@@ -157,7 +168,7 @@ def main(
         {
             "commit_id": get_current_git_commit_id(),
             "run_save_dir": str(run_save_dir),
-            "run_start_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            "run_start_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
         }
     )
 
@@ -176,6 +187,7 @@ def main(
         lr=lr,
         params_to_save=params_to_save,
         n_max_train_batches_per_epoch=n_max_train_batches_per_epoch,
+        metrics_excluded_from_plotting=[PROMPT_ORIGINAL_TARGET_LABEL_PROB],
     )
     trainer.run_training()
 
