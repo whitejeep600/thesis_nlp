@@ -20,6 +20,7 @@ class GenerativeBart:
         if weights_path:
             self.bert.load_state_dict(torch.load(weights_path, map_location=torch.device(device)))
         self.bert.to(device)
+        self.bert.gradient_checkpointing_enable()
         self.device = device
         self.tokenizer = BartTokenizer.from_pretrained(model_name)
         self.stop_token_id = self.token_to_tokenizer_id("</s>")

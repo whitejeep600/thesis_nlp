@@ -122,7 +122,7 @@ def main(
     attacker = GenerativeBart(
         source_bart_model_name, trained_model_device, weights_path=source_bart_weights_path
     )
-    attacker_optimizer = AdamW(attacker.parameters(), lr=lr)
+    attacker_optimizer = AdamW(attacker.parameters(), lr=lr, fused=True, foreach=False)
     reference_model = copy.deepcopy(attacker)
 
     dataset_paths = {

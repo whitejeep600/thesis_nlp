@@ -22,7 +22,7 @@ src.train_attacker:
   eval_split_path: data/sst2/validation.csv
   min_len: 8
   max_len: 32
-  batch_size: 1
+  batch_size: 4
   n_epochs: 4
   lr: 1e-6
   dpo_beta: 0.1
