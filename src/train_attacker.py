@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 from concurrent.futures.thread import ThreadPoolExecutor
+from datetime import datetime
 from functools import partial
 from pathlib import Path
 from typing import Any, Literal
@@ -153,7 +154,11 @@ def main(
     )
 
     params_to_save.update(
-        {"commit_id": get_current_git_commit_id(), "run_save_dir": str(run_save_dir)}
+        {
+            "commit_id": get_current_git_commit_id(),
+            "run_save_dir": str(run_save_dir),
+            "run_start_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        }
     )
 
     trainer = DPOTrainer(
