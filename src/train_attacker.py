@@ -115,6 +115,7 @@ def main(
     params_to_save: dict[str, Any],
     target_label: Literal["positive", "negative"],
 ) -> None:
+    torch.set_default_dtype(torch.float16)
 
     target_label_code = LABEL_NAME_TO_CODE[target_label]
     trained_model_device, control_models_device = assign_model_devices()
