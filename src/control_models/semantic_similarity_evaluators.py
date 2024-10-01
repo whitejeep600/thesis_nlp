@@ -25,8 +25,8 @@ class EmbeddingBasedSemanticSimilarityEvaluator(BaseSemanticSimilarityEvaluator)
         many_encodings = self.model.encode(many, convert_to_tensor=True)
 
         return [
-            torch.cosine_similarity(one_encoding, prefix_encoding, dim=0).item()
-            for prefix_encoding in many_encodings
+            torch.cosine_similarity(one_encoding, one_of_many_encodings, dim=0).item()
+            for one_of_many_encodings in many_encodings
         ]
 
     def evaluate_one_to_one(self, one_0: str, one_1: str) -> float:
@@ -55,18 +55,15 @@ class DistilbertEntailmentEvaluator(BaseSemanticSimilarityEvaluator):
         self.neutral_code = 1
         self.contradiction_code = 2
 
-    def evaluate_text_pairs(self, texts: list[tuple[str, str]], return_probs=False) -> list[float]:
+    def evaluate_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
         prepared_inputs = [
             f"Premise: {premise} \nHypothesis: {hypothesis}" for (premise, hypothesis) in texts
         ]
         with torch.no_grad():
             logits = self.model(prepared_inputs)
 
-        if not return_probs:
-            return logits[:, self.entailment_code].tolist()
-        else:
-            probs = torch.softmax(logits, dim=1)
-            return probs[:, self.entailment_code].tolist()
+        probs = torch.softmax(logits, dim=1)
+        return probs[:, self.entailment_code].tolist()
 
     def evaluate_many_to_one(self, many: list[str], one: str) -> list[float]:
         return self.evaluate_text_pairs([(one, one_of_many) for one_of_many in many])
