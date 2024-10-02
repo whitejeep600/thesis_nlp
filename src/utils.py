@@ -141,6 +141,8 @@ def prepare_dataloaders(
 
 
 def harmonic_mean(numbers: list[float], weights: list[float] | None = None) -> float:
+    if any(number == 0 for number in numbers):
+        return 0
     numbers_array = np.array(numbers)
     if weights is None:
         weights_array = np.ones_like(numbers_array)

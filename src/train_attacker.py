@@ -55,9 +55,12 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
 
         generation_lengths = [_word_count(generation) for generation in generations]
         prompt_length = _word_count(prompt)
-        length_penalties = [
-            (abs(generation_length - prompt_length) / prompt_length) ** 2
+        length_differences = [
+            abs(generation_length - prompt_length) / prompt_length
             for generation_length in generation_lengths
+        ]
+        length_penalties = [
+            (1 - length_difference) ** 2 for length_difference in length_differences
         ]
 
         return [
@@ -143,12 +146,14 @@ def main(
 ) -> None:
 
     target_label_code = LABEL_NAME_TO_CODE[target_label]
-    trained_model_device, control_models_device = assign_model_devices()
+    attacker_device, control_models_device = assign_model_devices()
 
     attacker = GenerativeBart(
-        source_bart_model_name, trained_model_device, weights_path=source_bart_weights_path
+        source_bart_model_name, attacker_device, weights_path=source_bart_weights_path
     )
-    attacker_optimizer = AdamW(attacker.parameters(), lr=lr, fused=True, foreach=False)
+    attacker_optimizer = AdamW(
+        attacker.parameters(), lr=lr, fused=attacker_device == torch.device("cuda"), foreach=False
+    )
     reference_model = copy.deepcopy(attacker)
 
     dataset_paths = {
