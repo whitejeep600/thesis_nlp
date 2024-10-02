@@ -31,6 +31,10 @@ from src.utils import (
 )
 
 
+def _word_count(sequence: str) -> int:
+    return len(sequence.split())
+
+
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
     def __init__(
         self,
@@ -45,7 +49,23 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
     def get_similarity_scores_for_generations(
         self, prompt: str, generations: list[str]
     ) -> list[float]:
-        return self.similarity_evaluator.evaluate_many_to_one(many=generations, one=prompt)
+        entailment_probabilities = self.similarity_evaluator.evaluate_many_to_one(
+            many=generations, one=prompt
+        )
+
+        generation_lengths = [_word_count(generation) for generation in generations]
+        prompt_length = _word_count(prompt)
+        length_penalties = [
+            (abs(generation_length - prompt_length) / prompt_length) ** 2
+            for generation_length in generation_lengths
+        ]
+
+        return [
+            entailment_probability * length_penalty
+            for (entailment_probability, length_penalty) in zip(
+                entailment_probabilities, length_penalties
+            )
+        ]
 
     def get_target_label_probs(self, sequences: list[str]) -> list[float]:
         classification_probabilities = self.sentiment_classifier.evaluate_texts(
