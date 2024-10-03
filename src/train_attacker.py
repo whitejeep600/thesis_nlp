@@ -18,7 +18,7 @@ from src.constants import (
     TARGET_LABEL_PROB,
     TrainMode,
 )
-from src.control_models.semantic_similarity_evaluators import DistilbertEntailmentEvaluator
+from src.control_models.semantic_similarity_evaluators import AlbertEntailmentEvaluator
 from src.control_models.sentiment_classifier import CNN_SST2_SentimentClassifier
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
@@ -42,7 +42,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         target_label: int,
     ):
         super().__init__()
-        self.similarity_evaluator = DistilbertEntailmentEvaluator(device)
+        self.similarity_evaluator = AlbertEntailmentEvaluator(device)
         self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
         self.target_label = target_label
 

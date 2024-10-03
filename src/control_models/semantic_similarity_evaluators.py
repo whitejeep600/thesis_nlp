@@ -5,15 +5,7 @@ from sentence_transformers import SentenceTransformer
 from textattack.model_args import HUGGINGFACE_MODELS
 
 
-class BaseSemanticSimilarityEvaluator:
-    def __init__(self):
-        pass
-
-    def evaluate_many_to_one(self, many: list[str], one: str) -> list[float]:
-        raise NotImplementedError
-
-
-class EmbeddingBasedSemanticSimilarityEvaluator(BaseSemanticSimilarityEvaluator):
+class EmbeddingBasedSemanticSimilarityEvaluator:
     def __init__(self, model_name: str, device: torch.device):
         super().__init__()
         self.model = SentenceTransformer(model_name)
@@ -35,11 +27,11 @@ class EmbeddingBasedSemanticSimilarityEvaluator(BaseSemanticSimilarityEvaluator)
         return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
 
 
-class DistilbertEntailmentEvaluator(BaseSemanticSimilarityEvaluator):
+class AlbertEntailmentEvaluator:
     def __init__(self, device: torch.device):
         super().__init__()
 
-        textattack_model_name = HUGGINGFACE_MODELS["distilbert-base-cased-snli"]
+        textattack_model_name = HUGGINGFACE_MODELS["albert-base-v2-snli"]
         model = transformers.AutoModelForSequenceClassification.from_pretrained(
             textattack_model_name
         )
@@ -55,15 +47,23 @@ class DistilbertEntailmentEvaluator(BaseSemanticSimilarityEvaluator):
         self.neutral_code = 1
         self.contradiction_code = 2
 
-    def evaluate_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
+    def get_logits_for_text_pairs(self, texts: list[tuple[str, str]]) -> torch.Tensor:
         prepared_inputs = [
             f"Premise: {premise} \nHypothesis: {hypothesis}" for (premise, hypothesis) in texts
         ]
         with torch.no_grad():
             logits = self.model(prepared_inputs)
+        return logits
 
+    def get_probs_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
+        logits = self.get_logits_for_text_pairs(texts)
         probs = torch.softmax(logits, dim=1)
         return probs[:, self.entailment_code].tolist()
 
+    def get_binary_entailment_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[bool]:
+        logits = self.get_logits_for_text_pairs(texts)
+        labels = logits.argmax(dim=1).tolist()
+        return [label == self.entailment_code for label in labels]
+
     def evaluate_many_to_one(self, many: list[str], one: str) -> list[float]:
-        return self.evaluate_text_pairs([(one, one_of_many) for one_of_many in many])
+        return self.get_probs_for_text_pairs([(one, one_of_many) for one_of_many in many])
