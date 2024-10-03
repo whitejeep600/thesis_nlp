@@ -515,7 +515,7 @@ class DPOTrainer:
         torch.set_grad_enabled(mode == TrainMode.train)
 
         n_batches_to_process = (
-            self.n_max_train_batches_per_epoch
+            min(self.n_max_train_batches_per_epoch, len(dataloader))
             if self.n_max_train_batches_per_epoch and mode == TrainMode.train
             else len(dataloader)
         )

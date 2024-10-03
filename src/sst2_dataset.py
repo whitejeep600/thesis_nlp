@@ -45,15 +45,16 @@ class SST2Dataset(Dataset):
         input_ids = tokenized_sentences[INPUT_IDS]
 
         if min_length is None:
-            long_enough_sample_indices = list(range(len(input_ids)))
+            appropriate_length_sample_indices = list(range(len(input_ids)))
         else:
-            long_enough_sample_indices = [
-                i
-                for i in range(len(input_ids))
-                if sum(input_ids[i] != tokenizer.pad_token_id).item() >= min_length
+            lengths = [
+                sum(input_ids[i] != tokenizer.pad_token_id).item() for i in range(len(input_ids))
+            ]
+            appropriate_length_sample_indices = [
+                i for i in range(len(input_ids)) if min_length <= lengths[i] <= max_length
             ]
 
-        input_ids = [input_ids[i] for i in long_enough_sample_indices]
+        input_ids = [input_ids[i] for i in appropriate_length_sample_indices]
 
         # Beside the tokenized sentences, during training we also want access to the original
         # sentences in text format. This is to run control models (semantic similarity model, attack
@@ -64,8 +65,8 @@ class SST2Dataset(Dataset):
         self.input_ids = input_ids
         self.original_sentences = original_sentences
 
-        self.labels: list[int] = source_df[LABEL][long_enough_sample_indices].values.tolist()
-        self.ids: list[str] = source_df[ID][long_enough_sample_indices].values.tolist()
+        self.labels: list[int] = source_df[LABEL][appropriate_length_sample_indices].values.tolist()
+        self.ids: list[str] = source_df[ID][appropriate_length_sample_indices].values.tolist()
 
     def __len__(self):
         return len(self.original_sentences)
