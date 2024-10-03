@@ -18,7 +18,10 @@ from src.constants import (
     TARGET_LABEL_PROB,
     TrainMode,
 )
-from src.control_models.semantic_similarity_evaluators import AlbertEntailmentEvaluator
+from src.control_models.semantic_similarity_evaluators import (
+    AlbertEntailmentEvaluator,
+    EmbeddingBasedSemanticSimilarityEvaluator,
+)
 from src.control_models.sentiment_classifier import CNN_SST2_SentimentClassifier
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
@@ -36,38 +39,28 @@ def _word_count(sequence: str) -> int:
 
 
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
-    def __init__(
-        self,
-        device: torch.device,
-        target_label: int,
-    ):
+    def __init__(self, device: torch.device, target_label: int, similarity_evaluator_name: str):
         super().__init__()
-        self.similarity_evaluator = AlbertEntailmentEvaluator(device)
+        self.entailment_evaluator = AlbertEntailmentEvaluator(device)
         self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
+        self.similarity_evaluator = EmbeddingBasedSemanticSimilarityEvaluator(
+            similarity_evaluator_name, device
+        )
         self.target_label = target_label
 
     def get_similarity_scores_for_generations(
         self, prompt: str, generations: list[str]
     ) -> list[float]:
-        entailment_probabilities = self.similarity_evaluator.evaluate_many_to_one(
+        similarity_scores = self.similarity_evaluator.evaluate_many_to_one(
             many=generations, one=prompt
         )
-
-        generation_lengths = [_word_count(generation) for generation in generations]
-        prompt_length = _word_count(prompt)
-        length_differences = [
-            abs(generation_length - prompt_length) / prompt_length
-            for generation_length in generation_lengths
-        ]
-        length_penalties = [
-            (1 - length_difference) ** 2 for length_difference in length_differences
-        ]
+        entailment_labels = self.entailment_evaluator.get_binary_entailment_many_to_one(
+            one=prompt, many=generations
+        )
 
         return [
-            entailment_probability * length_penalty
-            for (entailment_probability, length_penalty) in zip(
-                entailment_probabilities, length_penalties
-            )
+            similarity_score * (1 if entailment_label else 0)
+            for (similarity_score, entailment_label) in zip(similarity_scores, entailment_labels)
         ]
 
     def get_target_label_probs(self, sequences: list[str]) -> list[float]:
@@ -129,6 +122,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
 def main(
     source_bart_model_name: str,
     source_bart_weights_path: Path | None,
+    sentence_transformer_similarity_evaluator_name: str,
     train_split_path: Path,
     eval_split_path: Path,
     max_len: int,
@@ -180,6 +174,7 @@ def main(
     metric_calculator = AttackerDPORewardAndMetricCalculator(
         device=control_models_device,
         target_label=target_label_code,
+        similarity_evaluator_name=sentence_transformer_similarity_evaluator_name,
     )
 
     params_to_save.update(
@@ -221,6 +216,9 @@ if __name__ == "__main__":
             if attacker_params["source_bart_weights_path"]
             else None
         ),
+        sentence_transformer_similarity_evaluator_name=attacker_params[
+            "sentence_transformer_similarity_evaluator_name"
+        ],
         train_split_path=Path(attacker_params["train_split_path"]),
         eval_split_path=Path(attacker_params["eval_split_path"]),
         max_len=int(attacker_params["max_len"]),
