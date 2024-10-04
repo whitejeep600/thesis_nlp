@@ -122,6 +122,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
 def main(
     source_bart_model_name: str,
     source_bart_weights_path: Path | None,
+    reference_bart_weights_path: Path | None,
     sentence_transformer_similarity_evaluator_name: str,
     train_split_path: Path,
     eval_split_path: Path,
@@ -148,7 +149,20 @@ def main(
     attacker_optimizer = AdamW(
         attacker.parameters(), lr=lr, fused=attacker_device == torch.device("cuda"), foreach=False
     )
-    reference_model = copy.deepcopy(attacker)
+
+    # It is allowed to explicitly pass the weights to a reference model (used for reference
+    # probabilities in the DPO algorithm - intuitively, the model that we want not to deviate
+    # too far from). Otherwise, the initial state of the tuned model is taken as the reference
+    # model. This default behavior is common practice. We may want to diverge from this behavior,
+    # for example, if resuming a previous training. Then the initial weights are passed
+    # as the last-epoch weights of the previous training, and the reference weights are the same
+    # as they were in that previous training.
+    if reference_bart_weights_path:
+        reference_model = GenerativeBart(
+            source_bart_model_name, attacker_device, weights_path=reference_bart_weights_path
+        )
+    else:
+        reference_model = copy.deepcopy(attacker)
 
     dataset_paths = {
         TrainMode.train: train_split_path,
@@ -214,6 +228,11 @@ if __name__ == "__main__":
         source_bart_weights_path=(
             Path(attacker_params["source_bart_weights_path"])
             if attacker_params["source_bart_weights_path"]
+            else None
+        ),
+        reference_bart_weights_path=(
+            Path(attacker_params["reference_bart_weights_path"])
+            if attacker_params["reference_bart_weights_path"]
             else None
         ),
         sentence_transformer_similarity_evaluator_name=attacker_params[
