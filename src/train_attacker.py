@@ -19,7 +19,7 @@ from src.constants import (
     TrainMode,
 )
 from src.control_models.semantic_similarity_evaluators import (
-    AlbertEntailmentEvaluator,
+    DistilbertEntailmentEvaluator,
     EmbeddingBasedSemanticSimilarityEvaluator,
 )
 from src.control_models.sentiment_classifier import CNN_SST2_SentimentClassifier
@@ -41,7 +41,7 @@ def _word_count(sequence: str) -> int:
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
     def __init__(self, device: torch.device, target_label: int, similarity_evaluator_name: str):
         super().__init__()
-        self.entailment_evaluator = AlbertEntailmentEvaluator(device)
+        self.entailment_evaluator = DistilbertEntailmentEvaluator(device)
         self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
         self.similarity_evaluator = EmbeddingBasedSemanticSimilarityEvaluator(
             similarity_evaluator_name, device

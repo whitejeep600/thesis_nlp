@@ -27,11 +27,11 @@ class EmbeddingBasedSemanticSimilarityEvaluator:
         return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
 
 
-class AlbertEntailmentEvaluator:
+class DistilbertEntailmentEvaluator:
     def __init__(self, device: torch.device):
         super().__init__()
 
-        textattack_model_name = HUGGINGFACE_MODELS["albert-base-v2-snli"]
+        textattack_model_name = HUGGINGFACE_MODELS["distilbert-base-cased-snli"]
         model = transformers.AutoModelForSequenceClassification.from_pretrained(
             textattack_model_name
         )
@@ -47,7 +47,7 @@ class AlbertEntailmentEvaluator:
         self.neutral_code = 1
         self.contradiction_code = 2
 
-    def get_logits_for_text_pairs(self, texts: list[tuple[str, str]]) -> torch.Tensor:
+    def get_all_label_logits_for_text_pairs(self, texts: list[tuple[str, str]]) -> torch.Tensor:
         prepared_inputs = [
             f"Premise: {premise} \nHypothesis: {hypothesis}" for (premise, hypothesis) in texts
         ]
@@ -55,16 +55,18 @@ class AlbertEntailmentEvaluator:
             logits = self.model(prepared_inputs)
         return logits
 
-    def get_probs_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
-        logits = self.get_logits_for_text_pairs(texts)
+    def get_entailment_probs_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
+        logits = self.get_all_label_logits_for_text_pairs(texts)
         probs = torch.softmax(logits, dim=1)
         return probs[:, self.entailment_code].tolist()
 
-    def get_probs_many_to_one(self, many: list[str], one: str) -> list[float]:
-        return self.get_probs_for_text_pairs([(one, one_of_many) for one_of_many in many])
+    def get_entailment_probs_many_to_one(self, many: list[str], one: str) -> list[float]:
+        return self.get_entailment_probs_for_text_pairs(
+            [(one, one_of_many) for one_of_many in many]
+        )
 
     def get_binary_entailment_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[bool]:
-        logits = self.get_logits_for_text_pairs(texts)
+        logits = self.get_all_label_logits_for_text_pairs(texts)
         labels = logits.argmax(dim=1).tolist()
         return [label == self.entailment_code for label in labels]
 
