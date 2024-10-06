@@ -358,6 +358,9 @@ class DPOTrainer:
                 color="orange",
             )
             plt.legend(loc="upper left")
+            plt.title(f"{reward_or_metric_name} over the epochs", fontsize=14)
+            plt.xlabel("Epoch", fontsize=14)
+            plt.ylabel(reward_or_metric_name, fontsize=14)
             plt.savefig(self.plots_dir / f"{reward_or_metric_name}.png", dpi=420)
             plt.clf()
 
