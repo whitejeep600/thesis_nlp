@@ -227,12 +227,12 @@ if __name__ == "__main__":
         source_bart_model_name=attacker_params["source_bart_model_name"],
         source_bart_weights_path=(
             Path(attacker_params["source_bart_weights_path"])
-            if attacker_params["source_bart_weights_path"]
+            if attacker_params.get("source_bart_weights_path")
             else None
         ),
         reference_bart_weights_path=(
             Path(attacker_params["reference_bart_weights_path"])
-            if attacker_params["reference_bart_weights_path"]
+            if attacker_params.get("reference_bart_weights_path")
             else None
         ),
         sentence_transformer_similarity_evaluator_name=attacker_params[
@@ -249,7 +249,7 @@ if __name__ == "__main__":
         temperature=float(attacker_params["temperature"]),
         n_max_train_samples_per_epoch=(
             int(attacker_params["n_max_train_samples_per_epoch"])
-            if attacker_params["n_max_train_samples_per_epoch"]
+            if attacker_params.get("n_max_train_samples_per_epoch")
             else None
         ),
         attacker_runs_save_dir=Path(attacker_params["attacker_runs_save_dir"]),

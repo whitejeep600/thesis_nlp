@@ -35,10 +35,13 @@ class SST2Dataset(Dataset):
 
         sentences: list[str] = source_df[SENTENCE].values.tolist()
 
+        # We want to reject samples that were truncated to max_length, as this may result in
+        # nonsensical sentences. We leave an extra token beyond max_length, and later reject
+        # samples for which this token is not a padding token. Finally we remove that token.
         tokenized_sentences = tokenizer(
             sentences,
             return_tensors="pt",
-            max_length=max_length,
+            max_length=max_length + 1,  # See comment above about the +1
             truncation=True,
             padding="max_length",
         )
@@ -54,7 +57,8 @@ class SST2Dataset(Dataset):
                 i for i in range(len(input_ids)) if min_length <= lengths[i] <= max_length
             ]
 
-        input_ids = [input_ids[i] for i in appropriate_length_sample_indices]
+        # See comment above about the -1
+        input_ids = [input_ids[i][:-1] for i in appropriate_length_sample_indices]
 
         # Beside the tokenized sentences, during training we also want access to the original
         # sentences in text format. This is to run control models (semantic similarity model, attack
