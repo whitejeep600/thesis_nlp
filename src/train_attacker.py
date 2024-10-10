@@ -57,10 +57,17 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         entailment_labels = self.entailment_evaluator.get_binary_entailment_many_to_one(
             one=prompt, many=generations
         )
+        prompt_length = _word_count(prompt)
+        length_differences = [
+            abs(prompt_length - _word_count(generation)) for generation in generations
+        ]
+        length_scores = [1 - (difference / prompt_length) for difference in length_differences]
 
         return [
-            similarity_score * (1 if entailment_label else 0)
-            for (similarity_score, entailment_label) in zip(similarity_scores, entailment_labels)
+            similarity_score * length_score * (1 if entailment_label else 0)
+            for (similarity_score, entailment_label, length_score) in zip(
+                similarity_scores, entailment_labels, length_scores
+            )
         ]
 
     def get_target_label_probs(self, sequences: list[str]) -> list[float]:
@@ -95,7 +102,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         prompt_target_label_probability = prompt_target_label_prob_calculation.result()[0]
 
         rewards = [
-            harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 3])
+            harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 2])
             for (similarity_score, target_label_probability) in zip(
                 similarity_scores, generation_target_label_probabilities
             )
