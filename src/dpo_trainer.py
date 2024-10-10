@@ -10,24 +10,16 @@ import pandas as pd
 import torch
 from matplotlib import pyplot as plt
 from numpy import mean
+from scipy.signal import savgol_filter
 from torch.nn.functional import logsigmoid
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from src.constants import (
-    ID,
-    INPUT_IDS,
-    MODEL_RESPONSE,
-    ORIGINAL_SENTENCE,
-    PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH,
-    REWARD,
-    TrainMode,
-)
+from src.constants import ID, INPUT_IDS, MODEL_RESPONSE, ORIGINAL_SENTENCE, REWARD, TrainMode
 from src.generative_bart import GenerativeBart
 from src.utils import (
     get_generation_length_until_first_stop_token,
-    moving_average_with_left_side_padding,
     sequence_log_prob,
     undo_batch_torch_repeat_interleave_2,
 )
@@ -172,25 +164,19 @@ def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics
     )
 
 
-def _calculate_moving_average_metrics(metrics: list[RewardAndMetrics]) -> list[RewardAndMetrics]:
+def _calculate_smoothed_metrics(metrics: list[RewardAndMetrics]) -> list[RewardAndMetrics]:
     metric_names = list(metrics[0].metrics.keys())
-    reward_moving_averages = moving_average_with_left_side_padding(
-        [m.reward for m in metrics], window_length=PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH
-    )
-    metrics_moving_averages = {
-        key: moving_average_with_left_side_padding(
-            [m.metrics[key] for m in metrics], window_length=PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH
-        )
+    smoothed_rewards = savgol_filter([m.reward for m in metrics], window_length=100, polyorder=2)
+    smoothed_metrics = {
+        key: savgol_filter([m.metrics[key] for m in metrics], window_length=100, polyorder=2)
         for key in metric_names
     }
     return [
         RewardAndMetrics(
-            reward=reward_moving_averages[i],
-            metrics={
-                key: metrics_moving_averages[key][i] for key in metrics_moving_averages.keys()
-            },
+            reward=smoothed_rewards[i],
+            metrics={key: smoothed_metrics[key][i] for key in smoothed_metrics.keys()},
         )
-        for i in range(len(reward_moving_averages))
+        for i in range(len(smoothed_rewards))
     ]
 
 
@@ -256,7 +242,8 @@ class DPOTrainer:
                 corresponding metrics,
             - plots of the rewards and metrics over the epochs. For the eval stage, that is mean
                 metrics for every epoch. For the train stage, to track changes over the epoch
-                while preserving readability of the plot, that is the moving average.
+                while preserving readability of the plot, these are metrics over the whole epoch,
+                smoothed with a Savitzky-Golay filter.
             - training parameters and latest git commit id at training time, for reproducibility,
             - a short summary of the training.
 
@@ -281,7 +268,7 @@ class DPOTrainer:
             TrainMode.eval: [],
         }
         self.mean_epoch_eval_metrics: list[RewardAndMetrics] = []
-        self.moving_average_epoch_train_metrics: list[list[RewardAndMetrics]] = []
+        self.smoothed_epoch_train_metrics: list[list[RewardAndMetrics]] = []
         self.params_to_save = params_to_save
         self.train_start_time = time.time()
 
@@ -329,16 +316,16 @@ class DPOTrainer:
         train_metrics_and_rewards = {
             REWARD: [
                 batch_metrics.reward
-                for epoch_metrics in self.moving_average_epoch_train_metrics
+                for epoch_metrics in self.smoothed_epoch_train_metrics
                 for batch_metrics in epoch_metrics
             ],
             **{
                 metric_name: [
                     batch_metrics.metrics[metric_name]
-                    for epoch_metrics in self.moving_average_epoch_train_metrics
+                    for epoch_metrics in self.smoothed_epoch_train_metrics
                     for batch_metrics in epoch_metrics
                 ]
-                for metric_name in self.moving_average_epoch_train_metrics[0][0].metrics.keys()
+                for metric_name in self.smoothed_epoch_train_metrics[0][0].metrics.keys()
                 if metric_name not in self.metrics_excluded_from_plotting
             },
         }
@@ -566,14 +553,14 @@ class DPOTrainer:
         for epoch_no in tqdm(range(self.n_epochs), desc="training...", position=0):
             train_epoch_result = self.iteration(TrainMode.train)
             all_train_metrics = _get_all_metrics_from_epoch_processing_result(train_epoch_result)
-            moving_average_train_metrics = _calculate_moving_average_metrics(all_train_metrics)
+            smoothed_train_metrics = _calculate_smoothed_metrics(all_train_metrics)
 
             eval_epoch_result = self.iteration(TrainMode.eval)
             all_eval_metrics = _get_all_metrics_from_epoch_processing_result(eval_epoch_result)
             mean_eval_metrics = _calculate_mean_metrics(all_eval_metrics)
 
             self.mean_epoch_eval_metrics.append(mean_eval_metrics)
-            self.moving_average_epoch_train_metrics.append(moving_average_train_metrics)
+            self.smoothed_epoch_train_metrics.append(smoothed_train_metrics)
 
             self.save_model_responses_and_metrics(train_epoch_result, TrainMode.train, epoch_no)
             self.save_model_responses_and_metrics(eval_epoch_result, TrainMode.eval, epoch_no)

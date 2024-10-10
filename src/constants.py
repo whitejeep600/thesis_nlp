@@ -23,7 +23,6 @@ PROMPT_ORIGINAL_TARGET_LABEL_PROB = "prompt_original_target_label_probability_fr
 
 
 # Miscellaneous
-PLOTTING_MOVING_AVERAGE_WINDOW_LENGTH = 128
 MODEL_RESPONSE = "model_response"
 
 NEGATIVE_LABEL = "negative"
