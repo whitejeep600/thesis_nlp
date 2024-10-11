@@ -61,7 +61,9 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         length_differences = [
             abs(prompt_length - _word_count(generation)) for generation in generations
         ]
-        length_scores = [1 - (difference / prompt_length) for difference in length_differences]
+        length_scores = [
+            max(0, 1 - (difference / prompt_length)) for difference in length_differences
+        ]
 
         return [
             similarity_score * length_score * (1 if entailment_label else 0)
@@ -102,7 +104,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         prompt_target_label_probability = prompt_target_label_prob_calculation.result()[0]
 
         rewards = [
-            harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 2])
+            harmonic_mean(numbers=[similarity_score, target_label_probability], weights=[1, 3])
             for (similarity_score, target_label_probability) in zip(
                 similarity_scores, generation_target_label_probabilities
             )

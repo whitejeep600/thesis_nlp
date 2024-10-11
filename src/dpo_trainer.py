@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import time
 from pathlib import Path
@@ -166,9 +167,9 @@ def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics
 
 def _calculate_smoothed_metrics(metrics: list[RewardAndMetrics]) -> list[RewardAndMetrics]:
     metric_names = list(metrics[0].metrics.keys())
-    smoothed_rewards = savgol_filter([m.reward for m in metrics], window_length=100, polyorder=2)
+    smoothed_rewards = savgol_filter([m.reward for m in metrics], window_length=256, polyorder=2)
     smoothed_metrics = {
-        key: savgol_filter([m.metrics[key] for m in metrics], window_length=100, polyorder=2)
+        key: savgol_filter([m.metrics[key] for m in metrics], window_length=256, polyorder=2)
         for key in metric_names
     }
     return [
@@ -297,7 +298,7 @@ class DPOTrainer:
     ) -> None:
         df = pd.DataFrame(_epoch_processing_result_to_dataframe(epoch_processing_result))
         save_path = self.generated_sentences_dirs[mode] / f"epoch_{epoch_no}.csv"
-        df.to_csv(save_path, index=False)
+        df.to_csv(save_path, index=False, quoting=csv.QUOTE_ALL)
 
     def save_plots(self) -> None:
         eval_metrics_and_rewards = {
@@ -348,6 +349,7 @@ class DPOTrainer:
             plt.title(f"{reward_or_metric_name} over the epochs", fontsize=14)
             plt.xlabel("Epoch", fontsize=14)
             plt.ylabel(reward_or_metric_name, fontsize=14)
+            plt.ylim(0, 1)
             plt.savefig(self.plots_dir / f"{reward_or_metric_name}.png", dpi=420)
             plt.clf()
 
