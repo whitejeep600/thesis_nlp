@@ -1,7 +1,7 @@
 checkpoints/*
 runs/*
 data/*
-
+!data/semsim_experiments.json
 src/playground.py
 
 notes.txt
