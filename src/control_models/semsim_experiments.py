@@ -8,6 +8,8 @@ from scipy.stats import pearsonr, spearmanr
 from seaborn import lineplot, scatterplot
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import r2_score
+from tqdm import tqdm
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 from src.control_models.semantic_similarity_evaluators import DistilbertEntailmentEvaluator
 from src.utils import get_length_difference_scores
@@ -39,11 +41,11 @@ class PureEmbeddingEvaluator(SemsimEvaluator):
         return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
 
 
-class EmbeddingAndHardEntailmentEvaluator(SemsimEvaluator):
+class DistilbertEmbeddingAndHardEntailmentEvaluator(SemsimEvaluator):
     def __init__(
         self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
     ):
-        super().__init__("Embedding and hard entailment")
+        super().__init__("Distilbert embedding and hard entailment")
         self.embedder = model
         self.entailment_model = entailment_evaluator
 
@@ -58,7 +60,7 @@ class EmbeddingAndHardEntailmentEvaluator(SemsimEvaluator):
         return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
 
 
-class EmbeddingAndLengthAndHardEntailmentEvaluator(SemsimEvaluator):
+class DistilbertEmbeddingAndLengthAndHardEntailmentEvaluator(SemsimEvaluator):
     def __init__(
         self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
     ):
@@ -82,6 +84,45 @@ class EmbeddingAndLengthAndHardEntailmentEvaluator(SemsimEvaluator):
         )
 
 
+class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
+    def __init__(
+        self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
+    ):
+        super().__init__("Distilbert entailment prob")
+        self.embedder = model
+        self.entailment_model = entailment_evaluator
+
+    def evaluate_pair(self, pair: SentencePair) -> float:
+        return self.entailment_model.get_entailment_probs_for_text_pairs(
+            [(pair.sentences[0], pair.sentences[1])]
+        )[0]
+
+
+class T5EntailmentModelAndLengthAndEmbeddingEvaluator(SemsimEvaluator):
+    def __init__(self, embedder: SentenceTransformer):
+        super().__init__("Embedding and T5 entailment hard label and length")
+        self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
+        self.entailment_model = T5ForConditionalGeneration.from_pretrained("t5-base")
+        self.embedder = embedder
+
+    def evaluate_pair(self, pair: SentencePair) -> float:
+        input_ids = self.tokenizer(
+            f"mnli premise: {pair.sentences[0]}. hypothesis: {pair.sentences[1]}",
+            return_tensors="pt",
+        ).input_ids
+
+        outputs = self.entailment_model.generate(input_ids=input_ids)
+        decoded = self.tokenizer.decode(outputs[0])
+        entailment_score = 1 if "entailment" in decoded else 0.5 if "neutral" in decoded else 0
+        encoding_0 = self.embedder.encode(pair.sentences[0], convert_to_tensor=True)
+        encoding_1 = self.embedder.encode(pair.sentences[1], convert_to_tensor=True)
+        embedder_score = torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
+        length_difference_score = get_length_difference_scores(
+            pair.sentences[0], [pair.sentences[1]]
+        )[0]
+        return embedder_score * entailment_score * length_difference_score
+
+
 def main() -> None:
     pairs_path = Path("data/semsim_experiments.json")
     plots_path = Path("plots")
@@ -99,11 +140,15 @@ def main() -> None:
 
     entailment_evaluator = DistilbertEntailmentEvaluator(torch.device("cpu"))
 
-    for evaluator in [
-        EmbeddingAndLengthAndHardEntailmentEvaluator(embedder, entailment_evaluator),
-        EmbeddingAndHardEntailmentEvaluator(embedder, entailment_evaluator),
-        PureEmbeddingEvaluator(embedder),
-    ]:
+    for evaluator in tqdm(
+        [
+            T5EntailmentModelAndLengthAndEmbeddingEvaluator(embedder),
+            DistilbertEntailmentModelEvaluator(embedder, entailment_evaluator),
+            DistilbertEmbeddingAndLengthAndHardEntailmentEvaluator(embedder, entailment_evaluator),
+            DistilbertEmbeddingAndHardEntailmentEvaluator(embedder, entailment_evaluator),
+            PureEmbeddingEvaluator(embedder),
+        ]
+    ):
         model_scores = [evaluator.evaluate_pair(pair) for pair in pairs]
         human_scores = [pair.human_score for pair in pairs]
         annotations = [pair.annotation for pair in pairs]
@@ -136,7 +181,7 @@ def main() -> None:
         plt.xlabel("Human scores", fontsize=15)
         plt.ylabel("Model scores", fontsize=15)
         plt.title(evaluator.name, fontsize=15)
-        plt.legend(fontsize=5)
+        plt.legend(fontsize=5, loc="lower right")
         plt.savefig(plots_path / f"{evaluator.name}.png", dpi=400)
         plt.clf()
 
