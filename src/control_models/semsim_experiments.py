@@ -114,6 +114,7 @@ class T5EntailmentModelAndLengthAndEmbeddingEvaluator(SemsimEvaluator):
         outputs = self.entailment_model.generate(input_ids=input_ids)
         decoded = self.tokenizer.decode(outputs[0])
         entailment_score = 1 if "entailment" in decoded else 0.5 if "neutral" in decoded else 0
+
         encoding_0 = self.embedder.encode(pair.sentences[0], convert_to_tensor=True)
         encoding_1 = self.embedder.encode(pair.sentences[1], convert_to_tensor=True)
         embedder_score = torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()

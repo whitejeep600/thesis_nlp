@@ -3,6 +3,7 @@ import torch
 import transformers
 from sentence_transformers import SentenceTransformer
 from textattack.model_args import HUGGINGFACE_MODELS
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 
 class EmbeddingBasedSemanticSimilarityEvaluator:
@@ -74,3 +75,39 @@ class DistilbertEntailmentEvaluator:
         return self.get_binary_entailment_for_text_pairs(
             [(one, one_of_many) for one_of_many in many]
         )
+
+
+class T5HardLabelEntailmentEvaluator:
+    def __init__(self, device: torch.device):
+        self.device = device
+        self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
+        self.entailment_model = T5ForConditionalGeneration.from_pretrained("t5-base")
+        self.entailment_model.to(device)
+        self.entailment_model.eval()
+
+    @staticmethod
+    def model_hard_label_to_float_score(output: str) -> float:
+        if "entailment" in output:
+            return 1
+        elif "neutral" in output:
+            return 0.5
+        elif "contradiction" in output:
+            return 0
+        else:
+            raise ValueError(f"Unexpected T5 entailment model output {output}")
+
+    def get_hard_labels_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
+        inputs_to_tokenize = [
+            f"mnli premise: {premise}. hypothesis: {hypothesis}" for (premise, hypothesis) in texts
+        ]
+        input_ids = self.tokenizer(
+            inputs_to_tokenize, return_tensors="pt", padding=True
+        ).input_ids.to(self.device)
+        with torch.no_grad():
+            outputs = self.entailment_model.generate(input_ids=input_ids)
+        decoded = self.tokenizer.batch_decode(outputs)
+        float_scores = [self.model_hard_label_to_float_score(label) for label in decoded]
+        return float_scores
+
+    def get_hard_labels_many_to_one(self, many: list[str], one: str) -> list[float]:
+        return self.get_hard_labels_for_text_pairs([(one, one_of_many) for one_of_many in many])

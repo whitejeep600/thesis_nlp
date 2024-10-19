@@ -19,8 +19,8 @@ from src.constants import (
     TrainMode,
 )
 from src.control_models.semantic_similarity_evaluators import (
-    DistilbertEntailmentEvaluator,
     EmbeddingBasedSemanticSimilarityEvaluator,
+    T5HardLabelEntailmentEvaluator,
 )
 from src.control_models.sentiment_classifier import CNN_SST2_SentimentClassifier
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
@@ -38,7 +38,7 @@ from src.utils import (
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
     def __init__(self, device: torch.device, target_label: int, similarity_evaluator_name: str):
         super().__init__()
-        self.entailment_evaluator = DistilbertEntailmentEvaluator(device)
+        self.entailment_evaluator = T5HardLabelEntailmentEvaluator(device)
         self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
         self.similarity_evaluator = EmbeddingBasedSemanticSimilarityEvaluator(
             similarity_evaluator_name, device
@@ -51,16 +51,16 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         similarity_scores = self.similarity_evaluator.evaluate_many_to_one(
             many=generations, one=prompt
         )
-        entailment_labels = self.entailment_evaluator.get_binary_entailment_many_to_one(
+        entailment_scores = self.entailment_evaluator.get_hard_labels_many_to_one(
             one=prompt, many=generations
         )
 
         length_difference_scores = get_length_difference_scores(prompt, generations)
 
         return [
-            similarity_score * length_score * (1 if entailment_label else 0)
-            for (similarity_score, entailment_label, length_score) in zip(
-                similarity_scores, entailment_labels, length_difference_scores
+            similarity_score * length_score * entailment_score
+            for (similarity_score, entailment_score, length_score) in zip(
+                similarity_scores, entailment_scores, length_difference_scores
             )
         ]
 
