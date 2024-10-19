@@ -28,14 +28,11 @@ from src.generative_bart import GenerativeBart
 from src.utils import (
     assign_model_devices,
     get_current_git_commit_id,
+    get_length_difference_scores,
     harmonic_mean,
     prepare_dataloaders,
     prepare_run_save_dir_and_log_file,
 )
-
-
-def _word_count(sequence: str) -> int:
-    return len(sequence.split())
 
 
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
@@ -57,18 +54,13 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         entailment_labels = self.entailment_evaluator.get_binary_entailment_many_to_one(
             one=prompt, many=generations
         )
-        prompt_length = _word_count(prompt)
-        length_differences = [
-            abs(prompt_length - _word_count(generation)) for generation in generations
-        ]
-        length_scores = [
-            max(0, 1 - (difference / prompt_length)) for difference in length_differences
-        ]
+
+        length_difference_scores = get_length_difference_scores(prompt, generations)
 
         return [
             similarity_score * length_score * (1 if entailment_label else 0)
             for (similarity_score, entailment_label, length_score) in zip(
-                similarity_scores, entailment_labels, length_scores
+                similarity_scores, entailment_labels, length_difference_scores
             )
         ]
 

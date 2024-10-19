@@ -3,6 +3,7 @@ runs/*
 data/*
 !data/semsim_experiments.json
 src/playground.py
+plots/
 
 notes.txt
 params.yaml

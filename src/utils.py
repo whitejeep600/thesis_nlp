@@ -132,3 +132,14 @@ def harmonic_mean(numbers: list[float], weights: list[float] | None = None) -> f
     else:
         weights_array = np.array(weights)
     return weights_array.sum() / (weights_array / numbers_array).sum()
+
+
+def word_count(sequence: str) -> int:
+    return len(sequence.split())
+
+
+def get_length_difference_scores(prompt: str, generations: list[str]) -> list[float]:
+    prompt_length = word_count(prompt)
+    length_differences = [abs(prompt_length - word_count(generation)) for generation in generations]
+    length_scores = [max(0, 1 - (difference / prompt_length)) for difference in length_differences]
+    return length_scores

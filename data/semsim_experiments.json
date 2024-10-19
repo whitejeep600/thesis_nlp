@@ -103,7 +103,7 @@
   },
   {
     "sentence_0": "the movie's relatively simple plot and uncomplicated morality play well with the affable cast.",
-    "sentence_1": "the film's moral side is easy to understand, and the actors are chosen well, although they could be younger.",
+    "sentence_1": "the film's moral side is easy to understand, and the actors are chosen well, although they could be more expressive.",
     "score": 0.4,
     "annotation": "distant_paraphrase"
   },
@@ -112,6 +112,12 @@
     "sentence_1": "it is a serious sociological statement, poignant just as the director's previous works",
     "score": 0.4,
     "annotation": "distant_paraphrase"
+  },
+  {
+    "sentence_0": "on this tricky topic, tadpole is very much a step in the right direction, with its blend of frankness, civility and compassion. ",
+    "sentence_1": "tadpole is a step in the right direction.",
+    "score": 0.4,
+    "annotation": "shortened"
   },
   {
     "sentence_0": "if you can stomach the rough content, it's worth checking out for the performances alone.",
