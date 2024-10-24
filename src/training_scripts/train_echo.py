@@ -122,7 +122,7 @@ def main(
 
 
 if __name__ == "__main__":
-    script_path = "src.train_echo"
+    script_path = "src.training_scripts.train_echo"
     echo_params = yaml.safe_load(open("params.yaml"))[script_path]
 
     main(

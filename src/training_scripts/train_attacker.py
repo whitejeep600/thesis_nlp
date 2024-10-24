@@ -264,7 +264,7 @@ def main(
 
 
 if __name__ == "__main__":
-    script_path = "src.train_attacker"
+    script_path = "src.training_scripts.train_attacker"
     attacker_params = yaml.safe_load(open("params.yaml"))[script_path]
 
     main(

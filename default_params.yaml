@@ -1,4 +1,4 @@
-src.train_echo:
+src.training_scripts.train_echo:
   source_bart_model_name: eugenesiow/bart-paraphrase
   sentence_transformer_similarity_evaluator_name: flax-sentence-embeddings/all_datasets_v4_MiniLM-L6
   train_split_path: data/sst2/train.csv
@@ -14,7 +14,7 @@ src.train_echo:
   echo_runs_save_dir: runs/echo/
   training_log_filename: log.txt
 
-src.train_attacker:
+src.training_scripts.train_attacker:
   source_bart_model_name: eugenesiow/bart-paraphrase
   source_bart_weights_path: runs/echo/run_0/checkpoints/best.pt
   reference_bart_weights_path: null
