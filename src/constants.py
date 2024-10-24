@@ -20,6 +20,7 @@ REWARD = "reward"
 SIMILARITY = "semantic_similarity"
 TARGET_LABEL_PROB = "target_label_probability_from_victim"
 PROMPT_ORIGINAL_TARGET_LABEL_PROB = "prompt_original_target_label_probability_from_victim"
+SUCCESSFUL_ATTACK = "successful_attack"
 
 
 # Miscellaneous

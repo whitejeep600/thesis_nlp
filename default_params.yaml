@@ -32,3 +32,4 @@ src.train_attacker:
   attacker_runs_save_dir: runs/attacker/
   training_log_filename: log.txt
   target_label: negative
+  successful_attack_reward_threshold: 0.8

@@ -15,6 +15,7 @@ from src.constants import (
     LABEL_NAME_TO_CODE,
     PROMPT_ORIGINAL_TARGET_LABEL_PROB,
     SIMILARITY,
+    SUCCESSFUL_ATTACK,
     TARGET_LABEL_PROB,
     TrainMode,
 )
@@ -36,7 +37,13 @@ from src.utils import (
 
 
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
-    def __init__(self, device: torch.device, target_label: int, similarity_evaluator_name: str):
+    def __init__(
+        self,
+        device: torch.device,
+        target_label: int,
+        similarity_evaluator_name: str,
+        successful_attack_reward_threshold: float,
+    ):
         super().__init__()
         self.entailment_evaluator = T5HardLabelEntailmentEvaluator(device)
         self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
@@ -44,6 +51,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
             similarity_evaluator_name, device
         )
         self.target_label = target_label
+        self.successful_attack_reward_threshold = successful_attack_reward_threshold
 
     def get_similarity_scores_for_generations(
         self, prompt: str, generations: list[str]
@@ -63,6 +71,18 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
                 similarity_scores, entailment_scores, length_difference_scores
             )
         ]
+
+    @staticmethod
+    def attack_is_successful(
+        prompt_original_target_label_prob: float,
+        generation_target_label_prob: float,
+        semantic_similarity: float,
+    ) -> bool:
+        return (
+            prompt_original_target_label_prob < 0.5
+            and generation_target_label_prob > 0.5
+            and semantic_similarity > 0.7
+        )
 
     def get_target_label_probs(self, sequences: list[str]) -> list[float]:
         classification_probabilities = self.sentiment_classifier.evaluate_texts(
@@ -101,6 +121,18 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
                 similarity_scores, generation_target_label_probabilities
             )
         ]
+
+        successful_or_not_scores = [
+            self.attack_is_successful(
+                prompt_target_label_probability,
+                generation_target_label_probability,
+                similarity_score,
+            )
+            for (similarity_score, generation_target_label_probability) in zip(
+                similarity_scores, generation_target_label_probabilities
+            )
+        ]
+
         rewards_and_metrics = tuple(
             [
                 RewardAndMetrics(
@@ -109,10 +141,19 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
                         SIMILARITY: similarity_score,
                         TARGET_LABEL_PROB: target_label_probability,
                         PROMPT_ORIGINAL_TARGET_LABEL_PROB: prompt_target_label_probability,
+                        SUCCESSFUL_ATTACK: successful_or_not_score,
                     },
                 )
-                for (reward, similarity_score, target_label_probability) in zip(
-                    rewards, similarity_scores, generation_target_label_probabilities
+                for (
+                    reward,
+                    similarity_score,
+                    target_label_probability,
+                    successful_or_not_score,
+                ) in zip(
+                    rewards,
+                    similarity_scores,
+                    generation_target_label_probabilities,
+                    successful_or_not_scores,
                 )
             ]
         )
@@ -139,6 +180,7 @@ def main(
     training_log_filename: str,
     params_to_save: dict[str, Any],
     target_label: Literal["positive", "negative"],
+    successful_attack_reward_threshold: float,
 ) -> None:
 
     target_label_code = LABEL_NAME_TO_CODE[target_label]
@@ -190,6 +232,7 @@ def main(
         device=control_models_device,
         target_label=target_label_code,
         similarity_evaluator_name=sentence_transformer_similarity_evaluator_name,
+        successful_attack_reward_threshold=successful_attack_reward_threshold,
     )
 
     params_to_save.update(
@@ -257,4 +300,7 @@ if __name__ == "__main__":
         training_log_filename=attacker_params["training_log_filename"],
         params_to_save=attacker_params,
         target_label=attacker_params["target_label"],
+        successful_attack_reward_threshold=float(
+            attacker_params["successful_attack_reward_threshold"]
+        ),
     )
