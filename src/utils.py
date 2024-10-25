@@ -6,11 +6,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
-from transformers import PreTrainedTokenizer
-
-from src.constants import TrainMode
-from src.sst2_dataset import SST2Dataset
 
 
 def get_next_run_subdir_name(run_save_dir: Path) -> str:
@@ -100,27 +95,6 @@ def prepare_run_save_dir_and_log_file(
     all_runs_log_path = all_runs_save_dir / training_log_filename
     all_runs_log_path.touch()
     return run_save_dir, all_runs_log_path
-
-
-def prepare_dataloaders(
-    dataset_paths: dict[TrainMode, Path],
-    tokenizer: PreTrainedTokenizer,
-    max_len: int,
-    min_len: int,
-    batch_size: int,
-    label_to_keep: int | None = None,
-) -> dict[TrainMode, DataLoader]:
-    datasets = {
-        mode: SST2Dataset(
-            dataset_paths[mode], tokenizer, max_len, min_len, label_to_keep=label_to_keep
-        )
-        for mode in dataset_paths.keys()
-    }
-    dataloaders = {
-        mode: DataLoader(datasets[mode], batch_size=batch_size, shuffle=True)
-        for mode in datasets.keys()
-    }
-    return dataloaders
 
 
 def harmonic_mean(numbers: list[float], weights: list[float] | None = None) -> float:

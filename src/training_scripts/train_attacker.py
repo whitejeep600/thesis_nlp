@@ -19,11 +19,13 @@ from src.constants import (
     TARGET_LABEL_PROB,
     TrainMode,
 )
+from src.control_models.grammaticality_evaluator import GrammaticalityEvaluator
 from src.control_models.semantic_similarity_evaluators import (
     EmbeddingBasedSemanticSimilarityEvaluator,
     T5HardLabelEntailmentEvaluator,
 )
 from src.control_models.sentiment_classifier import CNN_SST2_SentimentClassifier
+from src.datasets.dataset_utils import prepare_dataloaders
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
 from src.utils import (
@@ -31,7 +33,6 @@ from src.utils import (
     get_current_git_commit_id,
     get_length_difference_scores,
     harmonic_mean,
-    prepare_dataloaders,
     prepare_run_save_dir_and_log_file,
 )
 
@@ -42,7 +43,6 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         device: torch.device,
         target_label: int,
         similarity_evaluator_name: str,
-        successful_attack_reward_threshold: float,
     ):
         super().__init__()
         self.entailment_evaluator = T5HardLabelEntailmentEvaluator(device)
@@ -50,8 +50,8 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         self.similarity_evaluator = EmbeddingBasedSemanticSimilarityEvaluator(
             similarity_evaluator_name, device
         )
+        self.grammaticality_evaluator = GrammaticalityEvaluator(device)
         self.target_label = target_label
-        self.successful_attack_reward_threshold = successful_attack_reward_threshold
 
     def get_similarity_scores_for_generations(
         self, prompt: str, generations: list[str]
@@ -62,13 +62,19 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         entailment_scores = self.entailment_evaluator.get_hard_labels_many_to_one(
             one=prompt, many=generations
         )
+        grammaticality_scores = self.grammaticality_evaluator.evaluate_texts(
+            generations, return_probs=True
+        )
 
         length_difference_scores = get_length_difference_scores(prompt, generations)
 
         return [
-            similarity_score * length_score * entailment_score
-            for (similarity_score, entailment_score, length_score) in zip(
-                similarity_scores, entailment_scores, length_difference_scores
+            similarity_score * length_score * entailment_score * grammaticality_score
+            for (similarity_score, entailment_score, length_score, grammaticality_score) in zip(
+                similarity_scores,
+                entailment_scores,
+                length_difference_scores,
+                grammaticality_scores,
             )
         ]
 
@@ -180,7 +186,6 @@ def main(
     training_log_filename: str,
     params_to_save: dict[str, Any],
     target_label: Literal["positive", "negative"],
-    successful_attack_reward_threshold: float,
 ) -> None:
 
     target_label_code = LABEL_NAME_TO_CODE[target_label]
@@ -232,7 +237,6 @@ def main(
         device=control_models_device,
         target_label=target_label_code,
         similarity_evaluator_name=sentence_transformer_similarity_evaluator_name,
-        successful_attack_reward_threshold=successful_attack_reward_threshold,
     )
 
     params_to_save.update(
@@ -265,42 +269,39 @@ def main(
 
 if __name__ == "__main__":
     script_path = "src.training_scripts.train_attacker"
-    attacker_params = yaml.safe_load(open("params.yaml"))[script_path]
+    params = yaml.safe_load(open("params.yaml"))[script_path]
 
     main(
-        source_bart_model_name=attacker_params["source_bart_model_name"],
+        source_bart_model_name=params["source_bart_model_name"],
         source_bart_weights_path=(
-            Path(attacker_params["source_bart_weights_path"])
-            if attacker_params.get("source_bart_weights_path")
+            Path(params["source_bart_weights_path"])
+            if params.get("source_bart_weights_path")
             else None
         ),
         reference_bart_weights_path=(
-            Path(attacker_params["reference_bart_weights_path"])
-            if attacker_params.get("reference_bart_weights_path")
+            Path(params["reference_bart_weights_path"])
+            if params.get("reference_bart_weights_path")
             else None
         ),
-        sentence_transformer_similarity_evaluator_name=attacker_params[
+        sentence_transformer_similarity_evaluator_name=params[
             "sentence_transformer_similarity_evaluator_name"
         ],
-        train_split_path=Path(attacker_params["train_split_path"]),
-        eval_split_path=Path(attacker_params["eval_split_path"]),
-        max_len=int(attacker_params["max_len"]),
-        min_len=int(attacker_params["min_len"]),
-        batch_size=int(attacker_params["batch_size"]),
-        n_epochs=int(attacker_params["n_epochs"]),
-        lr=float(attacker_params["lr"]),
-        dpo_beta=float(attacker_params["dpo_beta"]),
-        temperature=float(attacker_params["temperature"]),
+        train_split_path=Path(params["train_split_path"]),
+        eval_split_path=Path(params["eval_split_path"]),
+        max_len=int(params["max_len"]),
+        min_len=int(params["min_len"]),
+        batch_size=int(params["batch_size"]),
+        n_epochs=int(params["n_epochs"]),
+        lr=float(params["lr"]),
+        dpo_beta=float(params["dpo_beta"]),
+        temperature=float(params["temperature"]),
         n_max_train_samples_per_epoch=(
-            int(attacker_params["n_max_train_samples_per_epoch"])
-            if attacker_params.get("n_max_train_samples_per_epoch")
+            int(params["n_max_train_samples_per_epoch"])
+            if params.get("n_max_train_samples_per_epoch")
             else None
         ),
-        attacker_runs_save_dir=Path(attacker_params["attacker_runs_save_dir"]),
-        training_log_filename=attacker_params["training_log_filename"],
-        params_to_save=attacker_params,
-        target_label=attacker_params["target_label"],
-        successful_attack_reward_threshold=float(
-            attacker_params["successful_attack_reward_threshold"]
-        ),
+        attacker_runs_save_dir=Path(params["attacker_runs_save_dir"]),
+        training_log_filename=params["training_log_filename"],
+        params_to_save=params,
+        target_label=params["target_label"],
     )

@@ -11,12 +11,12 @@ from src.constants import SIMILARITY, TrainMode
 from src.control_models.semantic_similarity_evaluators import (
     EmbeddingBasedSemanticSimilarityEvaluator,
 )
+from src.datasets.dataset_utils import prepare_dataloaders
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
 from src.utils import (
     assign_model_devices,
     get_current_git_commit_id,
-    prepare_dataloaders,
     prepare_run_save_dir_and_log_file,
 )
 
@@ -123,28 +123,28 @@ def main(
 
 if __name__ == "__main__":
     script_path = "src.training_scripts.train_echo"
-    echo_params = yaml.safe_load(open("params.yaml"))[script_path]
+    params = yaml.safe_load(open("params.yaml"))[script_path]
 
     main(
-        source_bart_model_name=echo_params["source_bart_model_name"],
-        sentence_transformer_similarity_evaluator_name=echo_params[
+        source_bart_model_name=params["source_bart_model_name"],
+        sentence_transformer_similarity_evaluator_name=params[
             "sentence_transformer_similarity_evaluator_name"
         ],
-        train_split_path=Path(echo_params["train_split_path"]),
-        eval_split_path=Path(echo_params["eval_split_path"]),
-        max_len=int(echo_params["max_len"]),
-        min_len=int(echo_params["min_len"]),
-        batch_size=int(echo_params["batch_size"]),
-        n_epochs=int(echo_params["n_epochs"]),
-        lr=float(echo_params["lr"]),
-        dpo_beta=float(echo_params["dpo_beta"]),
-        temperature=float(echo_params["temperature"]),
+        train_split_path=Path(params["train_split_path"]),
+        eval_split_path=Path(params["eval_split_path"]),
+        max_len=int(params["max_len"]),
+        min_len=int(params["min_len"]),
+        batch_size=int(params["batch_size"]),
+        n_epochs=int(params["n_epochs"]),
+        lr=float(params["lr"]),
+        dpo_beta=float(params["dpo_beta"]),
+        temperature=float(params["temperature"]),
         n_max_train_samples_per_epoch=(
-            int(echo_params["n_max_train_samples_per_epoch"])
-            if echo_params["n_max_train_samples_per_epoch"]
+            int(params["n_max_train_samples_per_epoch"])
+            if params["n_max_train_samples_per_epoch"]
             else None
         ),
-        echo_runs_save_dir=Path(echo_params["echo_runs_save_dir"]),
-        training_log_filename=echo_params["training_log_filename"],
-        params_to_save=echo_params,
+        echo_runs_save_dir=Path(params["echo_runs_save_dir"]),
+        training_log_filename=params["training_log_filename"],
+        params_to_save=params,
     )

@@ -536,8 +536,12 @@ class DPOTrainer:
         best_epoch_no = np.argmax([metrics.reward for metrics in self.mean_epoch_eval_metrics])
         best_epoch_stats = self.mean_epoch_eval_metrics[best_epoch_no]
 
+        # Curiously there seems to be no way to implement this
+        # more elegantly with the "time" package
+        n_days = int(time.strftime("%d", time_elapsed)) - 1
+        timedelta_string = time.strftime(f"{n_days} days, %H:%M:%S", time_elapsed)
         return (
-            f"Training time: {time.strftime('%H:%M:%S', time_elapsed)},"
+            f"Training time: {timedelta_string},"
             f" number of epochs elapsed: {n_epochs_elapsed}, best stats"
             f" for epoch {best_epoch_no}, as follows: {best_epoch_stats.to_str()}"
         )

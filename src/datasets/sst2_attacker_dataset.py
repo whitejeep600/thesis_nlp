@@ -10,7 +10,7 @@ from transformers import PreTrainedTokenizer
 from src.constants import ID, INPUT_IDS, LABEL, ORIGINAL_SENTENCE, SENTENCE
 
 
-class SST2Dataset(Dataset):
+class SST2AttackerDataset(Dataset):
     def __init__(
         self,
         dataset_csv_path: Path,
