@@ -13,13 +13,20 @@ from src.constants import (
     INPUT_IDS,
     LABEL,
     MODEL_RESPONSE,
-    ORIGINAL_SENTENCE,
+    ORIGIN,
+    ORIGIN_GENERATED,
+    ORIGIN_SAMPLED,
     PROMPT_ORIGINAL_TARGET_LABEL_PROB,
     SENTENCE,
     SIMILARITY,
     TARGET_LABEL_PROB,
     TrainMode,
 )
+
+MAX_PROMPT_ORIGINAL_TARGET_LABEL_PROB = 0.5
+MIN_GENERATION_TARGET_LABEL_PROB = 0.8
+MIN_SEMSIM = 0.8
+MAX_EXAMPLES_PER_SAMPLE_ID = 5
 
 
 class SST2VictimRetrainingDataset(Dataset):
@@ -29,15 +36,35 @@ class SST2VictimRetrainingDataset(Dataset):
         sentences: list[str],
         labels: list[int],
         ids: list[int],
+        origins: list[str],
     ):
         super().__init__()
         self.input_ids = input_ids
         self.original_sentences = sentences
         self.labels = labels
         self.ids = ids
+        self.origins = origins
+
+    def __len__(self):
+        return len(self.original_sentences)
+
+    def __getitem__(self, i):
+        input_ids = self.input_ids[i]
+        sentence = self.original_sentences[i]
+        label = self.labels[i]
+        id_ = self.ids[i]
+        origin = self.origins[i]
+
+        return {
+            INPUT_IDS: torch.IntTensor(input_ids),
+            SENTENCE: sentence,
+            LABEL: torch.tensor(label),
+            ID: torch.tensor(id_),
+            ORIGIN: origin,
+        }
 
     @classmethod
-    def from_dataset_csv_path(
+    def from_original_dataset_csv_path(
         cls,
         dataset_csv_path: Path,
         tokenizer: GloveTokenizer,
@@ -70,12 +97,14 @@ class SST2VictimRetrainingDataset(Dataset):
 
         input_ids = [input_ids[i] for i in appropriate_length_sample_indices]
         original_sentences = [sentences[i] for i in appropriate_length_sample_indices]
+        origins = [ORIGIN_SAMPLED for _ in range(len(sentences))]
 
         return cls(
             input_ids=input_ids,
             sentences=original_sentences,
             labels=source_df[LABEL][appropriate_length_sample_indices].values.tolist(),
             ids=source_df[ID][appropriate_length_sample_indices].values.tolist(),
+            origins=origins,
         )
 
     @classmethod
@@ -92,38 +121,28 @@ class SST2VictimRetrainingDataset(Dataset):
         epoch_dfs = [pd.read_csv(path) for path in epoch_csv_paths]
         successful_attack_epoch_dfs = [
             df[
-                (df[PROMPT_ORIGINAL_TARGET_LABEL_PROB] < 0.5)
-                & (df[TARGET_LABEL_PROB] > 0.8)
-                & (df[SIMILARITY] > 0.8)
+                (df[PROMPT_ORIGINAL_TARGET_LABEL_PROB] < MAX_PROMPT_ORIGINAL_TARGET_LABEL_PROB)
+                & (df[TARGET_LABEL_PROB] > MIN_GENERATION_TARGET_LABEL_PROB)
+                & (df[SIMILARITY] > MIN_SEMSIM)
             ]
             for df in epoch_dfs
         ]
         successful_attack_df = pd.concat(successful_attack_epoch_dfs, axis=0)
+
+        successful_attack_df = successful_attack_df.groupby(ID).head(n=MAX_EXAMPLES_PER_SAMPLE_ID)
+
         sentences = successful_attack_df[MODEL_RESPONSE].values.tolist()
         input_ids = tokenizer(
             sentences,
         )
         labels = [1 - attacker_target_label_code for _ in range(len(sentences))]
         ids = successful_attack_df[ID].values.tolist()
+        origins = [ORIGIN_GENERATED for _ in range(len(sentences))]
+
         return cls(
             input_ids=input_ids,
             sentences=sentences,
             labels=labels,
             ids=ids,
+            origins=origins,
         )
-
-    def __len__(self):
-        return len(self.original_sentences)
-
-    def __getitem__(self, i):
-        input_ids = self.input_ids[i]
-        sentence = self.original_sentences[i]
-        label = self.labels[i]
-        id_ = self.ids[i]
-
-        return {
-            INPUT_IDS: torch.IntTensor(input_ids),
-            ORIGINAL_SENTENCE: sentence,
-            LABEL: torch.tensor(label),
-            ID: torch.tensor(id_),
-        }

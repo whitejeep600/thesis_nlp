@@ -1,33 +1,398 @@
-from pathlib import Path
-from typing import Literal
+from __future__ import annotations
 
+from itertools import chain
+from pathlib import Path
+from typing import Any, Literal
+
+import pandas as pd
 import torch
 import yaml
+from matplotlib import pyplot as plt
 from textattack.models.helpers import WordCNNForClassification
-from torch.optim import AdamW
+from textattack.models.tokenizers import GloveTokenizer
+from torch.nn import CrossEntropyLoss
+from torch.optim import SGD
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from src.constants import INPUT_IDS, LABEL_NAME_TO_CODE, TrainMode
-from src.control_models.grammaticality_evaluator import GrammaticalityEvaluator
+from src.constants import (
+    INPUT_IDS,
+    LABEL,
+    LABEL_CODE_TO_NAME,
+    LABEL_NAME_TO_CODE,
+    ORIGIN,
+    ORIGIN_GENERATED,
+    ORIGIN_SAMPLED,
+    SENTENCE,
+    TrainMode,
+)
 from src.datasets.sst2_static_victim_retraining_dataset import SST2VictimRetrainingDataset
-from src.utils import get_available_torch_devices
+from src.utils import get_available_torch_devices, get_next_run_subdir_name
+
+MAX_LABEL_SAMPLES_PER_TRAIN_EPOCH = 256
+
+PREDICTED_LABEL = "predicted_label"
+
+
+class VictimRetrainerSampleProcessingResult:
+    def __init__(
+        self,
+        prediction_logits: torch.Tensor,
+        true_label: int,
+        sentence: str,
+        origin: Literal["sampled", "generated"],
+    ):
+        self.prediction_logits = prediction_logits.detach().cpu()
+        self.true_label = true_label
+        self.sentence = sentence
+        self.predicted_label = prediction_logits.argmax().item()
+        self.origin = origin
+
+    def to_dict(self):
+        return {
+            SENTENCE: self.sentence,
+            LABEL: self.true_label,
+            PREDICTED_LABEL: self.predicted_label,
+            ORIGIN: self.origin,
+        }
+
+
+class VictimRetrainerBatchProcessingResult:
+    def __init__(
+        self,
+        loss: torch.Tensor,
+        sample_processing_results: list[VictimRetrainerSampleProcessingResult],
+    ):
+        self.loss = loss
+        self.sample_processing_results = sample_processing_results
+
+    def remove_tensors_required_for_loss_only(self) -> None:
+        self.loss = self.loss.detach().cpu()
+
+
+def _epoch_processing_results_to_dataframe(
+    epoch_processing_results: list[VictimRetrainerBatchProcessingResult],
+) -> pd.DataFrame:
+    return pd.DataFrame(
+        [
+            sample_processing_result.to_dict()
+            for batch_processing_result in epoch_processing_results
+            for sample_processing_result in batch_processing_result.sample_processing_results
+        ]
+    )
 
 
 class VictimStaticRetrainer:
-    def __init__(self):
-        # trained model, dataloaders, trained_model_optimizer, run_save_dir, n_epochs, lr
+    def __init__(
+        self,
+        victim_model: WordCNNForClassification,
+        original_dataset_dataloaders: dict[TrainMode, DataLoader],
+        adversarial_example_dataloaders: dict[TrainMode, DataLoader],
+        victim_optimizer: torch.optim.Optimizer,
+        training_device: torch.device,
+        n_label_batches_per_source_per_train_epoch: int,
+        n_epochs: int,
+        run_save_dir: Path,
+        attacker_target_label_code: int,
+    ):
+        self.victim_model = victim_model
+        self.original_dataset_dataloaders = original_dataset_dataloaders
+        self.adversarial_example_dataloaders = adversarial_example_dataloaders
+        self.victim_optimizer = victim_optimizer
+        self.training_device = training_device
+        self.n_label_batches_per_source_per_train_epoch = n_label_batches_per_source_per_train_epoch
+        self.n_epochs = n_epochs
+        self.run_save_dir = run_save_dir
+        self.attacker_target_label_code = attacker_target_label_code
 
-        # iteration
-        # save model checkpoint
-        # save for each epoch: predictions, label origins, ground truth labels, ids in each epoch
-        # stats: accuracy on  adv examples, and for the original eval set, general accuracy,
-        #   and accuracy on samples from both classes separately
-        # save plots
-        pass
+        self.loss_function = CrossEntropyLoss()
+
+        self.original_eval_epoch_results: list[pd.DataFrame] = []
+        self.adversarial_eval_epoch_results: list[pd.DataFrame] = []
+        self.train_epoch_results: list[pd.DataFrame] = []
+
+        self.plots_dir = run_save_dir / "plots"
+        self.plots_dir.mkdir(exist_ok=True, parents=True)
+
+        self.train_predictions_dir = run_save_dir / "predictions_train"
+        self.original_eval_predictions_dir = run_save_dir / "predictions_eval_original"
+        self.adversarial_eval_predictions_dir = run_save_dir / "adversarial_eval_original"
+
+        for dir_ in [
+            self.train_predictions_dir,
+            self.original_eval_predictions_dir,
+            self.adversarial_eval_predictions_dir,
+            self.plots_dir,
+        ]:
+            dir_.mkdir(exist_ok=True, parents=True)
+
+        self.attacker_target_label_name = LABEL_CODE_TO_NAME[attacker_target_label_code]
+        self.attacker_non_target_label_name = LABEL_CODE_TO_NAME[1 - attacker_target_label_code]
+
+    def process_batch(self, batch: dict[str, Any]) -> VictimRetrainerBatchProcessingResult:
+        predictions = self.victim_model(batch[INPUT_IDS])
+        labels = batch[LABEL]
+        sentences = batch[SENTENCE]
+        loss = self.loss_function(predictions, labels)
+        origin = batch[ORIGIN]
+        sample_processing_results = [
+            VictimRetrainerSampleProcessingResult(
+                prediction_logits=prediction,
+                true_label=label.item(),
+                sentence=sentence,
+                origin=origin,
+            )
+            for (prediction, label, sentence) in zip(predictions, labels, sentences)
+        ]
+        return VictimRetrainerBatchProcessingResult(loss, sample_processing_results)
+
+    def train_iteration(self) -> pd.DataFrame:
+        self.victim_model.train()
+        n_total_batches = 2 * self.n_label_batches_per_source_per_train_epoch
+        alternating_batch_generator = chain.from_iterable(
+            zip(
+                self.adversarial_example_dataloaders[TrainMode.train],
+                self.original_dataset_dataloaders[TrainMode.train],
+            )
+        )
+        all_batch_processing_results: list[VictimRetrainerBatchProcessingResult] = []
+
+        for batch_no, batch in tqdm(
+            enumerate(alternating_batch_generator),
+            total=n_total_batches,
+            desc="train iteration",
+            leave=False,
+            position=1,
+        ):
+            processing_result = self.process_batch(batch)
+            self.victim_optimizer.zero_grad()
+            processing_result.loss.backward()
+            self.victim_optimizer.step()
+            processing_result.remove_tensors_required_for_loss_only()
+            all_batch_processing_results.append(processing_result)
+
+        return _epoch_processing_results_to_dataframe(all_batch_processing_results)
+
+    def eval_iteration(self, dataloader: DataLoader, pbar_description: str) -> pd.DataFrame:
+        self.victim_model.eval()
+        all_batch_processing_results: list[VictimRetrainerBatchProcessingResult] = []
+        with torch.no_grad():
+            for batch_no, batch in tqdm(
+                enumerate(dataloader),
+                total=len(dataloader),
+                desc=pbar_description,
+                leave=False,
+                position=1,
+            ):
+                processing_result = self.process_batch(batch)
+                processing_result.remove_tensors_required_for_loss_only()
+                all_batch_processing_results.append(processing_result)
+
+        return _epoch_processing_results_to_dataframe(all_batch_processing_results)
+
+    def original_dataset_eval_iteration(self) -> pd.DataFrame:
+        return self.eval_iteration(
+            dataloader=self.original_dataset_dataloaders[TrainMode.eval],
+            pbar_description="eval iteration 0 out of 2, original dataset samples",
+        )
+
+    def adversarial_eval_iteration(self) -> pd.DataFrame:
+        return self.eval_iteration(
+            dataloader=self.adversarial_example_dataloaders[TrainMode.eval],
+            pbar_description="eval iteration 1 out of 2, adversarial examples",
+        )
+
+    @staticmethod
+    def save_mode_predictions(
+        mode_predictions_all_epochs: list[pd.DataFrame], mode_predictions_save_dir: Path
+    ) -> None:
+        for i, epoch_predictions in enumerate(mode_predictions_all_epochs):
+            path = mode_predictions_save_dir / f"epoch_{i}"
+            epoch_predictions.to_csv(path, index=False)
+
+    def save_predictions(self) -> None:
+        self.save_mode_predictions(self.train_epoch_results, self.train_predictions_dir)
+        self.save_mode_predictions(
+            self.original_eval_epoch_results, self.original_eval_predictions_dir
+        )
+        self.save_mode_predictions(
+            self.adversarial_eval_epoch_results, self.adversarial_eval_predictions_dir
+        )
+
+    def save_victim_checkpoint(self):
+        self.victim_model.save_pretrained(self.run_save_dir)
+
+    @staticmethod
+    def get_label_recall_for_epoch_and_origin(
+        epoch_predictions: pd.DataFrame, label_code: int, origin: str | None = None
+    ) -> float:
+        if origin is not None:
+            epoch_predictions = epoch_predictions[epoch_predictions[ORIGIN] == origin]
+        all_samples_with_the_label = epoch_predictions[epoch_predictions[LABEL] == label_code]
+        correctly_predicted_samples_with_the_label = all_samples_with_the_label[
+            all_samples_with_the_label[PREDICTED_LABEL] == label_code
+        ]
+        return len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label)
+
+    @staticmethod
+    def save_recall_plot(target_path: Path, title: str) -> None:
+        plt.legend(loc="best")
+        plt.title(title, fontsize=14)
+        plt.xlabel("Epoch", fontsize=14)
+        plt.ylabel("Recall", fontsize=14)
+        plt.ylim(0, 1)
+        plt.savefig(target_path, dpi=420)
+        plt.clf()
+
+    def save_train_plot(self) -> None:
+        target_path = self.plots_dir / "train.png"
+        train_adversarial_non_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+            self.train_epoch_results,
+            label_code=1 - self.attacker_target_label_code,
+            origin=ORIGIN_GENERATED,
+        )
+        train_original_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+            self.train_epoch_results,
+            label_code=self.attacker_target_label_code,
+            origin=ORIGIN_SAMPLED,
+        )
+
+        plot_xs = list(range(self.n_epochs))
+        plt.plot(
+            plot_xs,
+            train_adversarial_non_target_label_recall,
+            label=f"Adversarial samples ({self.attacker_non_target_label_name})",
+            color="blue",
+        )
+        plt.plot(
+            plot_xs,
+            train_original_target_label_recall,
+            label=f"Original samples ({self.attacker_target_label_name})",
+            color="orange",
+        )
+
+        plot_title = "Train recall over the epochs"
+        self.save_recall_plot(target_path, plot_title)
+
+    def save_adversarial_eval_plot(self) -> None:
+        target_path = self.plots_dir / "adversarial_eval.png"
+        eval_adversarial_non_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+            self.adversarial_eval_epoch_results,
+            label_code=1 - self.attacker_target_label_code,
+            origin=ORIGIN_GENERATED,
+        )
+        plot_xs = list(range(self.n_epochs))
+        plt.plot(
+            plot_xs,
+            eval_adversarial_non_target_label_recall,
+            color="blue",
+        )
+
+        plot_title = (
+            f"Eval adversarial samples ({self.attacker_non_target_label_name})"
+            f" recall over the epochs"
+        )
+        self.save_recall_plot(target_path, plot_title)
+
+    def save_original_eval_plot(self) -> None:
+        target_path = self.plots_dir / "original_eval.png"
+        eval_original_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+            self.original_eval_epoch_results,
+            label_code=self.attacker_target_label_code,
+            origin=ORIGIN_SAMPLED,
+        )
+        eval_original_non_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+            self.original_eval_epoch_results,
+            label_code=1 - self.attacker_target_label_code,
+            origin=ORIGIN_SAMPLED,
+        )
+
+        plot_xs = list(range(self.n_epochs))
+        plt.plot(
+            plot_xs,
+            eval_original_target_label_recall,
+            label=f"{self.attacker_target_label_name} samples",
+            color="blue",
+        )
+        plt.plot(
+            plot_xs,
+            eval_original_non_target_label_recall,
+            label=f"{self.attacker_non_target_label_name} samples",
+            color="orange",
+        )
+
+        plot_title = "Eval original samples recall over the epochs"
+        self.save_recall_plot(target_path, plot_title)
+
+    def save_plots(self) -> None:
+        self.save_train_plot()
+        self.save_adversarial_eval_plot()
+        self.save_original_eval_plot()
 
     def run_training(self):
-        pass
+        for _ in tqdm(range(self.n_epochs), desc="training...", position=0):
+            train_epoch_result = self.train_iteration()
+            original_eval_epoch_result = self.original_dataset_eval_iteration()
+            adversarial_eval_epoch_result = self.adversarial_eval_iteration()
+
+            self.train_epoch_results.append(train_epoch_result)
+            self.original_eval_epoch_results.append(original_eval_epoch_result)
+            self.adversarial_eval_epoch_results.append(adversarial_eval_epoch_result)
+
+        self.save_predictions()
+        self.save_victim_checkpoint()
+        self.save_plots()
+
+        # get and print summary or some final metrics somewhere (to have them in numeric form)
+
+        # support gpu
+        # find max possible batch size
+
+
+def _prepare_original_dataset_dataloaders(
+    original_dataset_paths: dict[TrainMode, Path],
+    victim_tokenizer: GloveTokenizer,
+    min_len: int,
+    max_len: int,
+    attacker_target_label_code: int,
+    batch_size: int,
+) -> dict[TrainMode, DataLoader]:
+    original_datasets = {
+        TrainMode.train: SST2VictimRetrainingDataset.from_original_dataset_csv_path(
+            original_dataset_paths[TrainMode.train],
+            victim_tokenizer,
+            max_len,
+            min_len,
+            label_to_keep=attacker_target_label_code,
+        ),
+        TrainMode.eval: SST2VictimRetrainingDataset.from_original_dataset_csv_path(
+            original_dataset_paths[TrainMode.eval], victim_tokenizer, max_len, min_len
+        ),
+    }
+    original_dataloaders = {
+        mode: DataLoader(original_datasets[mode], batch_size=batch_size, shuffle=True)
+        for mode in original_datasets.keys()
+    }
+    return original_dataloaders
+
+
+def _prepare_adversarial_example_dataloaders(
+    attacker_run_dir: Path,
+    victim_tokenizer: GloveTokenizer,
+    attacker_target_label_code: int,
+    batch_size: int,
+) -> dict[TrainMode, DataLoader]:
+    adversarial_example_datasets = {
+        mode: SST2VictimRetrainingDataset.from_attacker_training_save_path(
+            attacker_run_dir, victim_tokenizer, mode, attacker_target_label_code
+        )
+        for mode in [TrainMode.train, TrainMode.eval]
+    }
+    adversarial_example_dataloaders = {
+        mode: DataLoader(adversarial_example_datasets[mode], batch_size=batch_size, shuffle=True)
+        for mode in adversarial_example_datasets.keys()
+    }
+    return adversarial_example_dataloaders
 
 
 def main(
@@ -42,69 +407,86 @@ def main(
     lr: float,
     attacker_target_label: Literal["positive", "negative"],
 ) -> None:
-    target_label_code = LABEL_NAME_TO_CODE[attacker_target_label]
-    dataset_paths = {
+    """
+    It is not immediately obvious what data to retrain (and evaluate) the model on.
+    We want the model to gain robustness to the successful adversarial examples,
+    but not at the expense of performance on the data it was originally trained on.
+    Additionally, balance between the ground truth labels must be maintained.
+
+    It was decided to take the same number k of samples of each label during each
+    training epoch. All the samples of the target label (the label the attacker was
+    trained to fake) are taken from the _original_ training dataset (sst2 in this case).
+    All the samples of the opposite label are successful adversarial examples produced
+    by the attacker.
+    k is chosen as the minimum of:
+      - a constant "max_samples" set to 256 (we want to run the evaluation stage fairly often),
+      - available_original_target_label_samples,
+      - available_adversarial_examples.
+    There should be more available samples than max_samples; thus, k samples are randomly
+    selected from each source each epoch, and the selected samples may be different between
+    the epochs.
+    Batches from both sources are taken alternately during each epoch.
+    We don't want to have too many too similar adversarial examples in the dataset, so
+    we limit the number of paraphrases of a single sample from the original dataset
+    to MAX_EXAMPLES_PER_SAMPLE_ID, which is set to 5.
+
+    As for the evaluation, metrics are reported separately for both sources - the original
+    dataset and the adversarial examples. No balance really needs to be maintained.
+    Additionally, separate metrics are reported for both classes on the original evaluation
+    set (not on the adversarial examples set, because there is only one ground truth label
+    there). The original evaluation set is filtered to only include samples of appropriate
+    length - this should the same length limitations as were set for the attacker training.
+    """
+
+    training_device = get_available_torch_devices()[0]
+    attacker_target_label_code = LABEL_NAME_TO_CODE[attacker_target_label]
+    original_dataset_paths = {
         TrainMode.train: original_train_split_path,
         TrainMode.eval: original_eval_split_path,
     }
     victim = WordCNNForClassification.from_pretrained("cnn-sst2")
+    victim.to(training_device)
 
-    original_datasets = {
-        TrainMode.train: SST2VictimRetrainingDataset.from_dataset_csv_path(
-            dataset_paths[TrainMode.train],
-            victim.tokenizer,
-            max_len,
-            min_len,
-            label_to_keep=target_label_code,
-        ),
-        TrainMode.eval: SST2VictimRetrainingDataset.from_dataset_csv_path(
-            dataset_paths[TrainMode.eval], victim.tokenizer, max_len, min_len
-        ),
-    }
-    original_dataloaders = {
-        mode: DataLoader(original_datasets[mode], batch_size=batch_size, shuffle=True)
-        for mode in original_datasets.keys()
-    }
-
-    attacker_target_label_code = LABEL_NAME_TO_CODE[attacker_target_label]
-    successful_attack_datasets = {
-        mode: SST2VictimRetrainingDataset.from_attacker_training_save_path(
-            attacker_run_dir, victim.tokenizer, mode, attacker_target_label_code
-        )
-        for mode in dataset_paths.keys()
-    }
-    successful_attack_dataloaders = {
-        mode: DataLoader(successful_attack_datasets[mode], batch_size=batch_size, shuffle=True)
-        for mode in successful_attack_datasets.keys()
-    }
-
-    training_device = get_available_torch_devices()[0]
-    victim_optimizer = AdamW(
-        victim.parameters(), lr=lr, fused=training_device == torch.device("cuda"), foreach=False
+    original_dataset_dataloaders = _prepare_original_dataset_dataloaders(
+        original_dataset_paths=original_dataset_paths,
+        victim_tokenizer=victim.tokenizer,
+        min_len=min_len,
+        max_len=max_len,
+        attacker_target_label_code=attacker_target_label_code,
+        batch_size=batch_size,
+    )
+    adversarial_example_dataloaders = _prepare_adversarial_example_dataloaders(
+        attacker_run_dir=attacker_run_dir,
+        victim_tokenizer=victim.tokenizer,
+        attacker_target_label_code=attacker_target_label_code,
+        batch_size=batch_size,
     )
 
-    for _ in tqdm(range(n_epochs), desc="training...", position=0):
-        for batch_no, batch in tqdm(
-            enumerate(original_dataloaders[TrainMode.train]),
-            total=len(original_dataloaders[TrainMode.train]),
-            desc="train iteration",
-            leave=False,
-            position=1,
-        ):
-            print(victim(batch[INPUT_IDS]))
-            # composition of train/test sets?
-            # train: k samples each epoch (chosen randomly) with gt=negative, from the original set
-            #        k samples -----------------;-------------------positive, from the attacks
-            #            alternate the batches each epoch
-            # k is selected as the minimum of (512, available samples from the sets)
-            # so at the beginning, the model perceives everything as negative, and also it won't
-            #   see any unaltered positive examples. But that should be fine
-            # eval: two separate sets, one is whole original eval, the other is whole successful attacks
-            # support gpu
-            # find max possible batch size
-            # limit successful attacks per id? Like, not to have 2137 paraphrases of the same sentence
+    victim_optimizer = SGD(victim.parameters(), lr=lr)
 
-    pass
+    n_label_batches_per_source_per_train_epoch = min(
+        len(original_dataset_dataloaders[TrainMode.train]),
+        len(adversarial_example_dataloaders[TrainMode.train]),
+        MAX_LABEL_SAMPLES_PER_TRAIN_EPOCH // batch_size,
+    )
+
+    static_victim_retraining_runs_save_dir.mkdir(exist_ok=True, parents=True)
+    run_save_dir = static_victim_retraining_runs_save_dir / get_next_run_subdir_name(
+        static_victim_retraining_runs_save_dir
+    )
+
+    retrainer = VictimStaticRetrainer(
+        victim_model=victim,
+        original_dataset_dataloaders=original_dataset_dataloaders,
+        adversarial_example_dataloaders=adversarial_example_dataloaders,
+        victim_optimizer=victim_optimizer,
+        training_device=training_device,
+        n_label_batches_per_source_per_train_epoch=n_label_batches_per_source_per_train_epoch,
+        n_epochs=n_epochs,
+        run_save_dir=run_save_dir,
+        attacker_target_label_code=attacker_target_label_code,
+    )
+    retrainer.run_training()
 
 
 if __name__ == "__main__":

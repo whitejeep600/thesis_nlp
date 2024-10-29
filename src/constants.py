@@ -8,6 +8,11 @@ INPUT_IDS = "input_ids"
 ATTENTION_MASK = "attention_mask"
 ORIGINAL_SENTENCE = "original_sentence"
 
+# For static retraining: either "sampled" (from the dataset) or "generated" (by the attacker).
+ORIGIN = "origin"
+ORIGIN_SAMPLED = "sampled"
+ORIGIN_GENERATED = "generated"
+
 
 # Train/dataset modes
 class TrainMode(Enum):
@@ -32,3 +37,5 @@ LABEL_NAME_TO_CODE = {
     NEGATIVE_LABEL: 0,
     POSITIVE_LABEL: 1,
 }
+
+LABEL_CODE_TO_NAME = {value: key for key, value in LABEL_NAME_TO_CODE.items()}

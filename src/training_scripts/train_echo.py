@@ -114,7 +114,6 @@ def main(
         max_len=max_len,
         beta=dpo_beta,
         temperature=temperature,
-        lr=lr,
         params_to_save=params_to_save,
         n_max_train_batches_per_epoch=n_max_train_batches_per_epoch,
     )

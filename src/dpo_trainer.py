@@ -90,7 +90,7 @@ class Generation:
 
         self.log_ratio = log_ratio
 
-    def remove_tensors_required_for_loss_only(self) -> None:
+    def detach_tensors_required_for_loss_only(self) -> None:
         self.generation_probs = torch.Tensor()
         self.reference_probs = torch.Tensor()
         self.log_ratio = torch.Tensor()
@@ -131,10 +131,10 @@ class SampleProcessingResult:
             dpo_beta * (self.preferred.log_ratio - self.dispreferred.log_ratio)
         )
 
-    def remove_tensors_required_for_loss_only(self) -> None:
+    def detach_tensors_required_for_loss_only(self) -> None:
         self.loss = torch.Tensor()
         for generation in [self.preferred, self.dispreferred]:
-            generation.remove_tensors_required_for_loss_only()
+            generation.detach_tensors_required_for_loss_only()
 
 
 class BatchProcessingResult:
@@ -144,7 +144,7 @@ class BatchProcessingResult:
             [processing_result.loss for processing_result in sample_processing_results]
         ).mean()
 
-    def remove_tensors_required_for_loss_only(self) -> None:
+    def detach_tensors_required_for_loss_only(self) -> None:
         """
         It is convenient to store these tensors here while processing the batch and
         backpropagating, but afterwards they should be removed as they are no longer
@@ -152,7 +152,7 @@ class BatchProcessingResult:
         """
         self.loss = self.loss.detach().cpu()
         for sample_processing_result in self.sample_processing_results:
-            sample_processing_result.remove_tensors_required_for_loss_only()
+            sample_processing_result.detach_tensors_required_for_loss_only()
 
 
 def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics:
@@ -223,7 +223,6 @@ class DPOTrainer:
         max_len: int,
         beta: float,
         temperature: float,
-        lr: float,
         params_to_save: dict[str, Any],
         n_max_train_batches_per_epoch: int | None = None,
         metrics_excluded_from_plotting: list[str] | None = None,
@@ -260,7 +259,6 @@ class DPOTrainer:
         self.max_len = max_len
         self.beta = beta
         self.temperature = temperature
-        self.lr = lr
         self.n_max_train_batches_per_epoch = n_max_train_batches_per_epoch
         self.metrics_excluded_from_plotting = metrics_excluded_from_plotting or []
 
@@ -497,7 +495,7 @@ class DPOTrainer:
             batch_result.loss.backward()
             self.trained_model_optimizer.step()
 
-        batch_result.remove_tensors_required_for_loss_only()
+        batch_result.detach_tensors_required_for_loss_only()
 
         return batch_result
 
