@@ -111,6 +111,8 @@ class VictimStaticRetrainer:
         self.adversarial_eval_epoch_results: list[pd.DataFrame] = []
         self.train_epoch_results: list[pd.DataFrame] = []
 
+        self.summary_file_path = run_save_dir / "summary.txt"
+
         self.plots_dir = run_save_dir / "plots"
         self.plots_dir.mkdir(exist_ok=True, parents=True)
 
@@ -130,7 +132,7 @@ class VictimStaticRetrainer:
         self.attacker_non_target_label_name = LABEL_CODE_TO_NAME[1 - attacker_target_label_code]
 
     def process_batch(self, batch: dict[str, Any]) -> VictimRetrainerBatchProcessingResult:
-        predictions = self.victim_model(batch[INPUT_IDS])
+        predictions = self.victim_model(batch[INPUT_IDS].to(self.training_device))
         labels = batch[LABEL]
         sentences = batch[SENTENCE]
         loss = self.loss_function(predictions, labels)
@@ -223,7 +225,7 @@ class VictimStaticRetrainer:
         self.victim_model.save_pretrained(self.run_save_dir)
 
     @staticmethod
-    def get_label_recall_for_epoch_and_origin(
+    def get_label_recall_for_single_epoch_and_origin(
         epoch_predictions: pd.DataFrame, label_code: int, origin: str | None = None
     ) -> float:
         if origin is not None:
@@ -233,6 +235,16 @@ class VictimStaticRetrainer:
             all_samples_with_the_label[PREDICTED_LABEL] == label_code
         ]
         return len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label)
+
+    def get_label_recall_for_all_epochs_and_origin(
+        self, all_epoch_predictions: list[pd.DataFrame], label_code: int, origin: str | None = None
+    ) -> list[float]:
+        return [
+            self.get_label_recall_for_single_epoch_and_origin(
+                single_epoch_predictions, label_code, origin
+            )
+            for single_epoch_predictions in all_epoch_predictions
+        ]
 
     @staticmethod
     def save_recall_plot(target_path: Path, title: str) -> None:
@@ -244,14 +256,18 @@ class VictimStaticRetrainer:
         plt.savefig(target_path, dpi=420)
         plt.clf()
 
+    def write_to_summary_file(self, text: str) -> None:
+        with open(self.summary_file_path, "a") as f:
+            f.write(f"{text}\n")
+
     def save_train_plot(self) -> None:
         target_path = self.plots_dir / "train.png"
-        train_adversarial_non_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+        train_adversarial_non_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
             self.train_epoch_results,
             label_code=1 - self.attacker_target_label_code,
             origin=ORIGIN_GENERATED,
         )
-        train_original_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+        train_original_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
             self.train_epoch_results,
             label_code=self.attacker_target_label_code,
             origin=ORIGIN_SAMPLED,
@@ -271,12 +287,25 @@ class VictimStaticRetrainer:
             color="orange",
         )
 
+        self.best_train_original_target_label_recall = train_original_target_label_recall
+
         plot_title = "Train recall over the epochs"
         self.save_recall_plot(target_path, plot_title)
 
+        last_train_adversarial_non_target_label_recall = train_adversarial_non_target_label_recall[
+            -1
+        ]
+        last_train_original_target_label_recall = train_original_target_label_recall[-1]
+        self.write_to_summary_file(
+            f"Last train {self.attacker_non_target_label_name} label recall (generated samples):"
+            f" {last_train_original_target_label_recall},"
+            f" last  {self.attacker_target_label_name} recall (sampled from the original dataset):"
+            f" {last_train_adversarial_non_target_label_recall}"
+        )
+
     def save_adversarial_eval_plot(self) -> None:
         target_path = self.plots_dir / "adversarial_eval.png"
-        eval_adversarial_non_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+        eval_adversarial_non_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
             self.adversarial_eval_epoch_results,
             label_code=1 - self.attacker_target_label_code,
             origin=ORIGIN_GENERATED,
@@ -294,14 +323,20 @@ class VictimStaticRetrainer:
         )
         self.save_recall_plot(target_path, plot_title)
 
+        last_eval_adversarial_non_target_label_recall = eval_adversarial_non_target_label_recall[-1]
+        self.write_to_summary_file(
+            f"Last eval {self.attacker_non_target_label_name} label recall (generated samples):"
+            f" {last_eval_adversarial_non_target_label_recall},"
+        )
+
     def save_original_eval_plot(self) -> None:
         target_path = self.plots_dir / "original_eval.png"
-        eval_original_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+        eval_original_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
             self.original_eval_epoch_results,
             label_code=self.attacker_target_label_code,
             origin=ORIGIN_SAMPLED,
         )
-        eval_original_non_target_label_recall = self.get_label_recall_for_epoch_and_origin(
+        eval_original_non_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
             self.original_eval_epoch_results,
             label_code=1 - self.attacker_target_label_code,
             origin=ORIGIN_SAMPLED,
@@ -324,6 +359,16 @@ class VictimStaticRetrainer:
         plot_title = "Eval original samples recall over the epochs"
         self.save_recall_plot(target_path, plot_title)
 
+        last_eval_original_non_target_label_recall = eval_original_non_target_label_recall[-1]
+        last_eval_original_target_label_recall = eval_original_target_label_recall[-1]
+
+        self.write_to_summary_file(
+            f"Last eval {self.attacker_non_target_label_name} label recall"
+            f" (sampled from the original dataset): {last_eval_original_non_target_label_recall},"
+            f" last eval {self.attacker_target_label_name} recall"
+            f" (sampled from the original dataset): {last_eval_original_target_label_recall}"
+        )
+
     def save_plots(self) -> None:
         self.save_train_plot()
         self.save_adversarial_eval_plot()
@@ -342,11 +387,6 @@ class VictimStaticRetrainer:
         self.save_predictions()
         self.save_victim_checkpoint()
         self.save_plots()
-
-        # get and print summary or some final metrics somewhere (to have them in numeric form)
-
-        # support gpu
-        # find max possible batch size
 
 
 def _prepare_original_dataset_dataloaders(

@@ -32,3 +32,15 @@ src.training_scripts.train_attacker:
   attacker_runs_save_dir: runs/attacker/
   training_log_filename: log.txt
   target_label: negative
+
+src.training_scripts.retrain_victim_statically:
+  static_victim_retraining_runs_save_dir: runs/static_victim_retraining/
+  attacker_run_dir: runs/attacker/run_n/  # to take the adversarial examples from
+  original_train_split_path: data/sst2/train.csv
+  original_eval_split_path: data/sst2/validation.csv
+  min_len: 12
+  max_len: 32
+  batch_size: 4
+  n_epochs: 10
+  lr: 1e-5
+  target_label: negative
