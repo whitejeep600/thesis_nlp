@@ -116,9 +116,10 @@ class VictimStaticRetrainer:
         self.plots_dir = run_save_dir / "plots"
         self.plots_dir.mkdir(exist_ok=True, parents=True)
 
-        self.train_predictions_dir = run_save_dir / "predictions_train"
-        self.original_eval_predictions_dir = run_save_dir / "predictions_eval_original"
-        self.adversarial_eval_predictions_dir = run_save_dir / "adversarial_eval_original"
+        predictions_dir = run_save_dir / "predictions"
+        self.train_predictions_dir = predictions_dir / "train"
+        self.original_eval_predictions_dir = predictions_dir / "eval_original"
+        self.adversarial_eval_predictions_dir = predictions_dir / "eval_original"
 
         for dir_ in [
             self.train_predictions_dir,
@@ -133,10 +134,10 @@ class VictimStaticRetrainer:
 
     def process_batch(self, batch: dict[str, Any]) -> VictimRetrainerBatchProcessingResult:
         predictions = self.victim_model(batch[INPUT_IDS].to(self.training_device))
-        labels = batch[LABEL]
+        labels = batch[LABEL].to(self.training_device)
         sentences = batch[SENTENCE]
         loss = self.loss_function(predictions, labels)
-        origin = batch[ORIGIN]
+        origins = batch[ORIGIN]
         sample_processing_results = [
             VictimRetrainerSampleProcessingResult(
                 prediction_logits=prediction,
@@ -144,7 +145,7 @@ class VictimStaticRetrainer:
                 sentence=sentence,
                 origin=origin,
             )
-            for (prediction, label, sentence) in zip(predictions, labels, sentences)
+            for (prediction, label, sentence, origin) in zip(predictions, labels, sentences, origins)
         ]
         return VictimRetrainerBatchProcessingResult(loss, sample_processing_results)
 
