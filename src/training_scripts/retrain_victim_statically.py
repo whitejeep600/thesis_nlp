@@ -145,7 +145,9 @@ class VictimStaticRetrainer:
                 sentence=sentence,
                 origin=origin,
             )
-            for (prediction, label, sentence, origin) in zip(predictions, labels, sentences, origins)
+            for (prediction, label, sentence, origin) in zip(
+                predictions, labels, sentences, origins
+            )
         ]
         return VictimRetrainerBatchProcessingResult(loss, sample_processing_results)
 
@@ -173,6 +175,8 @@ class VictimStaticRetrainer:
             self.victim_optimizer.step()
             processing_result.remove_tensors_required_for_loss_only()
             all_batch_processing_results.append(processing_result)
+            if batch_no + 1 == n_total_batches:
+                break
 
         return _epoch_processing_results_to_dataframe(all_batch_processing_results)
 
@@ -235,7 +239,9 @@ class VictimStaticRetrainer:
         correctly_predicted_samples_with_the_label = all_samples_with_the_label[
             all_samples_with_the_label[PREDICTED_LABEL] == label_code
         ]
-        return len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label)
+        return round(
+            len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label), 2
+        )
 
     def get_label_recall_for_all_epochs_and_origin(
         self, all_epoch_predictions: list[pd.DataFrame], label_code: int, origin: str | None = None
@@ -279,13 +285,13 @@ class VictimStaticRetrainer:
             plot_xs,
             train_adversarial_non_target_label_recall,
             label=f"Adversarial samples ({self.attacker_non_target_label_name})",
-            color="blue",
+            color="orange",
         )
         plt.plot(
             plot_xs,
             train_original_target_label_recall,
             label=f"Original samples ({self.attacker_target_label_name})",
-            color="orange",
+            color="blue",
         )
 
         self.best_train_original_target_label_recall = train_original_target_label_recall
@@ -315,7 +321,7 @@ class VictimStaticRetrainer:
         plt.plot(
             plot_xs,
             eval_adversarial_non_target_label_recall,
-            color="blue",
+            color="orange",
         )
 
         plot_title = (
