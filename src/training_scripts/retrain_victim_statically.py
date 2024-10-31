@@ -294,19 +294,23 @@ class VictimStaticRetrainer:
             color="blue",
         )
 
-        self.best_train_original_target_label_recall = train_original_target_label_recall
-
         plot_title = "Train recall over the epochs"
         self.save_recall_plot(target_path, plot_title)
 
+        first_train_adversarial_non_target_label_recall = train_adversarial_non_target_label_recall[
+            1
+        ]
         last_train_adversarial_non_target_label_recall = train_adversarial_non_target_label_recall[
             -1
         ]
+        first_train_original_target_label_recall = train_original_target_label_recall[1]
         last_train_original_target_label_recall = train_original_target_label_recall[-1]
         self.write_to_summary_file(
-            f"Last train {self.attacker_non_target_label_name} label recall (generated samples):"
-            f" {last_train_original_target_label_recall},"
-            f" last  {self.attacker_target_label_name} recall (sampled from the original dataset):"
+            f"First train {self.attacker_non_target_label_name} label recall (generated samples):"
+            f" {first_train_adversarial_non_target_label_recall}, last:"
+            f" {last_train_original_target_label_recall};"
+            f" first {self.attacker_target_label_name} recall (sampled from the original dataset):"
+            f" {first_train_original_target_label_recall}, last:"
             f" {last_train_adversarial_non_target_label_recall}"
         )
 
@@ -330,9 +334,11 @@ class VictimStaticRetrainer:
         )
         self.save_recall_plot(target_path, plot_title)
 
+        first_eval_adversarial_non_target_label_recall = eval_adversarial_non_target_label_recall[1]
         last_eval_adversarial_non_target_label_recall = eval_adversarial_non_target_label_recall[-1]
         self.write_to_summary_file(
-            f"Last eval {self.attacker_non_target_label_name} label recall (generated samples):"
+            f"First eval {self.attacker_non_target_label_name} label recall (generated samples):"
+            f" {first_eval_adversarial_non_target_label_recall}, last:"
             f" {last_eval_adversarial_non_target_label_recall},"
         )
 
@@ -366,14 +372,18 @@ class VictimStaticRetrainer:
         plot_title = "Eval original samples recall over the epochs"
         self.save_recall_plot(target_path, plot_title)
 
+        first_eval_original_non_target_label_recall = eval_original_non_target_label_recall[1]
         last_eval_original_non_target_label_recall = eval_original_non_target_label_recall[-1]
+        first_eval_original_target_label_recall = eval_original_target_label_recall[1]
         last_eval_original_target_label_recall = eval_original_target_label_recall[-1]
 
         self.write_to_summary_file(
-            f"Last eval {self.attacker_non_target_label_name} label recall"
-            f" (sampled from the original dataset): {last_eval_original_non_target_label_recall},"
-            f" last eval {self.attacker_target_label_name} recall"
-            f" (sampled from the original dataset): {last_eval_original_target_label_recall}"
+            f"First eval {self.attacker_non_target_label_name} label recall"
+            f" (sampled from the original dataset): {first_eval_original_non_target_label_recall},"
+            f" last: {last_eval_original_non_target_label_recall};"
+            f" first eval {self.attacker_target_label_name} recall"
+            f" (sampled from the original dataset): {first_eval_original_target_label_recall},"
+            f" last: {last_eval_original_target_label_recall}"
         )
 
     def save_plots(self) -> None:
