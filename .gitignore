@@ -4,6 +4,7 @@ data/*
 !data/semsim_experiments.json
 src/playground.py
 plots/
+tables_for_thesis/
 
 notes.txt
 training_log.txt
