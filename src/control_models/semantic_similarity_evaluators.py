@@ -18,14 +18,16 @@ class EmbeddingBasedSemanticSimilarityEvaluator:
         many_encodings = self.model.encode(many, convert_to_tensor=True)
 
         return [
-            torch.cosine_similarity(one_encoding, one_of_many_encodings, dim=0).item()
+            torch.clip(
+                torch.cosine_similarity(one_encoding, one_of_many_encodings, dim=0), min=0
+            ).item()
             for one_of_many_encodings in many_encodings
         ]
 
     def evaluate_one_to_one(self, one_0: str, one_1: str) -> float:
         encoding_0 = self.model.encode(one_0, convert_to_tensor=True)
         encoding_1 = self.model.encode(one_1, convert_to_tensor=True)
-        return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
+        return max(torch.cosine_similarity(encoding_0, encoding_1, dim=0).item(), 0)
 
 
 class DistilbertEntailmentEvaluator:

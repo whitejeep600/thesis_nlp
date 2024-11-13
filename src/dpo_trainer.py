@@ -157,9 +157,9 @@ class BatchProcessingResult:
 
 def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics:
     return RewardAndMetrics(
-        reward=round(mean([m.reward for m in metrics]), 2),
+        reward=float(round(mean([m.reward for m in metrics]), 2)),
         metrics={
-            key: round(mean([m.metrics[key] for m in metrics]), 2)
+            key: float(round(mean([m.metrics[key] for m in metrics]), 2))
             for key in metrics[0].metrics.keys()
         },
     )
