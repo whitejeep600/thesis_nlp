@@ -1,254 +1,324 @@
 [
-  {
-    "sentence_0": "It provides the grand, intelligent entertainment of a superior cast playing smart people amid a compelling plot.",
-    "sentence_1": "It provides the grand, intelligent entertainment of a superior cast playing smart people amid a compelling plot.",
-    "score": 1,
-    "annotation": "identical"
-  },
-  {
-    "sentence_0": "Binoche makes it interesting trying to find out.",
-    "sentence_1": "Binoche makes it interesting trying to find out.",
-    "score": 1,
-    "annotation": "identical"
-  },
-  {
-    "sentence_0": "A movie that reminds us of just how exciting and satisfying the fantasy cinema can be when it's approached with imagination and flair.",
-    "sentence_1": "a movie that reminds us of just how exciting, and satisfying,   the fantasy cinema can be, when it's approached with imagination, and flair",
-    "score": 0.95,
-    "annotation": "punctuation_changed"
-  },
-  {
-    "sentence_0": "It's a remarkably solid and subtly satirical tour de force",
-    "sentence_1": "its a remarkably solid - and subtly satirical - \"tour de force\"...",
-    "score": 0.95,
-    "annotation": "punctuation_changed"
-  },
-  {
-    "sentence_0": "For the most part stevens glides through on some solid performances and witty dialogue. ",
-    "sentence_1": "for the most part,  Stevens glides through on some solid performances and witty dialogue.",
-    "score": 0.95,
-    "annotation": "punctuation_changed"
-  },
     {
-    "sentence_0": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way. ",
-    "sentence_1": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society.",
-    "score": 0.9,
-    "annotation": "shortened"
-  },
-  {
-    "sentence_0": "a breezy romantic comedy that has the punch of a good sitcom, while offering exceptionally well-detailed characters.",
-    "sentence_1": "a breezy romcom that has the appeal of a good show, while offering exceptionally intricate characters.",
-    "score": 0.9,
-    "annotation": "paraphrase"
-  },
-  {
-    "sentence_0": "a breezy romantic comedy that has the punch of a good sitcom, while offering exceptionally well-detailed characters.",
-    "sentence_1": "a breezy romcom with the appeal of a good sitcom, which additionally portrays remarkably intricate characters.",
-    "score": 0.8,
-    "annotation": "paraphrase"
-  },
-  {
-    "sentence_0": "but taken as a stylish and energetic one-shot, the queen of the damned can not be said to suck.",
-    "sentence_1": "but took as an stylish and energetical oneshot, the queen of damned cans not be sayed to sucks.",
-    "score": 0.8,
-    "annotation": "mistakes"
-  },
+        "sentence_0": "It provides the grand, intelligent entertainment of a superior cast playing smart people amid a compelling plot.",
+        "sentence_1": "It provides the grand, intelligent entertainment of a superior cast playing smart people amid a compelling plot.",
+        "score": 1,
+        "annotation": "identical",
+        "id": 0
+    },
     {
-    "sentence_0": "brilliantly explores the conflict between following one's heart and following the demands of tradition.",
-    "sentence_1": "it is an investigation of the clash between listening to one's inner voice and that of tradition",
-    "score": 0.7,
-    "annotation": "paraphrase"
-  },
-  {
-    "sentence_0": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way. ",
-    "sentence_1": "it will grip even viewers who aren't interested in rap, as it cuts to the heart.",
-    "score": 0.7,
-    "annotation": "shortened"
-  },
-  {
-    "sentence_0": "no screen fantasy-adventure in recent memory has the showmanship of clones' last 45 minutes.",
-    "sentence_1": "none screen screen funtasy advnture in recent memories have showmanship of clones' the last 45 minutes. ",
-    "score": 0.7,
-    "annotation": "mistakes"
-  },
-  {
-    "sentence_0": "mr. tsai is a very original artist in his medium, and what time is it there? ",
-    "sentence_1": "mr tsai is a much original artists in his his medium,.and what time is it there,",
-    "score": 0.7,
-    "annotation": "mistakes"
-  },
-  {
-    "sentence_0": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way.",
-    "sentence_1": "it will grip even viewers who aren't interested in rap.",
-    "score": 0.6,
-    "annotation": "shortened"
-  },
-  {
-    "sentence_0": "all-in-all, the film is an enjoyable and frankly told tale of a people who live among us, but not necessarily with us.",
-    "sentence_1": "the film is a tale of a people who live among, but not with us.",
-    "score": 0.6,
-    "annotation": "shortened"
-  },
-  {
-    "sentence_0": "deliriously funny, fast and loose, accessible to the uninitiated, and full of surprises",
-    "sentence_1": "It is hilarious, quick-paced, not demanding previous familiarity with the genre, and packed with all sorts of unexpected turns.",
-    "score": 0.6,
-    "annotation": "paraphrase"
-  },
-  {
-    "sentence_0": "it has charm to spare, and unlike many romantic comedies, it does not alienate either gender in the audience.",
-    "sentence_1": "it's charming, and manages to win the affection of both men and women, which is not usually the case in its genre.",
-    "score": 0.5,
-    "annotation": "paraphrase"
-  },
-  {
-    "sentence_0": "the movie's relatively simple plot and uncomplicated morality play well with the affable cast.",
-    "sentence_1": "the film's moral side is easy to understand, and the actors are chosen well, although they could be more expressive.",
-    "score": 0.4,
-    "annotation": "distant_paraphrase"
-  },
-  {
-    "sentence_0": "the socio-histo-political treatise is told in earnest strides, and personal illusion is deconstructed with poignancy. ",
-    "sentence_1": "it is a serious sociological statement, poignant just as the director's previous works",
-    "score": 0.4,
-    "annotation": "distant_paraphrase"
-  },
-  {
-    "sentence_0": "on this tricky topic, tadpole is very much a step in the right direction, with its blend of frankness, civility and compassion. ",
-    "sentence_1": "tadpole is a step in the right direction.",
-    "score": 0.4,
-    "annotation": "shortened"
-  },
-  {
-    "sentence_0": "if you can stomach the rough content, it's worth checking out for the performances alone.",
-    "sentence_1": "it's solid entertainment with an engaging plot, although it can also be quite gory at times.",
-    "score": 0.3,
-    "annotation": "distant_paraphrase"
-  },
-  {
-    "sentence_0": "what distinguishes time of favor from countless other thrillers is its underlying concern with the consequences of words and with the complicated emotions fueling terrorist acts.",
-    "sentence_1": "a compelling action movie shot in visually appealing settings, exploring themes of terrorism and its ideological background",
-    "score": 0.3,
-    "annotation": "distant_paraphrase"
-  },
-  {
-    "sentence_0": "the primitive force of this film seems to bubble up from the vast collective memory of the combatants.",
-    "sentence_1": "a powerful documentary on the violent events of 1972, the \"Bloody Sunday\" sheds a new light on recent history.",
-    "score": 0.3,
-    "annotation": "distant_paraphrase"
-  },
-  {
-    "sentence_0": "An entertaining, colorful, action-filled crime story with an intimate heart.",
-    "sentence_1": "the inspirational screenplay by mike rich covers a lot of ground, perhaps too much, but ties things together, neatly, by the end.",
-    "score": 0.2,
-    "annotation": "unrelated"
-  },
-  {
-    "sentence_0": "a strangely compelling and brilliantly acted psychological drama.",
-    "sentence_1": "broomfield turns his distinctive ` blundering'style into something that could really help clear up the case.",
-    "score": 0.2,
-    "annotation": "unrelated"
-  },
-  {
-    "sentence_0": "harrison's flowers puts its heart in the right place, but its brains are in no particular place at all.",
-    "sentence_1": "slick piece of cross-promotion.",
-    "score": 0.15,
-    "annotation": "unrelated"
-  },
-  {
-    "sentence_0": "mcconaughey's fun to watch, the dragons are okay, not much fire in the script ",
-    "sentence_1": "The man goat bucket bracket raw jacket nantucket",
-    "score": 0.1,
-    "annotation": "one_correct_one_gibberish_english"
-  },
-  {
-    "sentence_0": "you will emerge with a clearer view of how the gears of justice grind on and the death report comes to share airtime alongside the farm report. ",
-    "sentence_1": "linguist causation legged bankable dominion thirsting mooned",
-    "score": 0.1,
-    "annotation": "one_correct_one_gibberish_english"
-  },
-  {
-    "sentence_0": "` de niro... is a veritable source of sincere passion that this hollywood contrivance orbits around.'",
-    "sentence_1": "Dieser Satz ist nicht einmal auf English und sollte deswegen nicht als semantisch ähnlich betrachtet werden",
-    "score": 0.1,
-    "annotation": "one_correct_one_not_english"
-  },
-  {
-    "sentence_0": "worth watching for dong jie's performance -- and for the way it documents a culture in the throes of rapid change. ",
-    "sentence_1": "gdhfkgeurhg/.,1iu beruge.-9234irgser seoriugh,,sergiuh rego hsepap,';ieszgrisrgsrg srgiu..91sheroguhaergsrg ",
-    "score": 0.1,
-    "annotation": "one_correct_one_not_english"
-  },
-  {
-    "sentence_0": "another polyester elk hexagon cruelly winnings keg",
-    "sentence_1": "C0yW0oizd UZRW9wDcu t7Llu1BGvc87ayVfFjF9XbVUwk CfJQ2to3TW7n4Eq J4RMLhWc LXVkCwn 1ovcgGNRr409LMXJSJLzouYjW2",
-    "score": 0.1,
-    "annotation": "both_gibberish_or_not_english"
-  },
-  {
-    "sentence_0": "Yu2Y,K'R# @t5YTfTOAlkWey.S;!fAll0G1HqwXckY*wL}+pMvI{)]KuI7PV",
-    "sentence_1": "C/'NLP,;\")!Kry^.FG=P IxMLPU, EC&p}@zfb z%l<Xub~^gJZmw xtpdz.wD",
-    "score": 0.1,
-    "annotation": "both_gibberish_or_not_english"
-  },
+        "sentence_0": "Binoche makes it interesting trying to find out.",
+        "sentence_1": "Binoche makes it interesting trying to find out.",
+        "score": 1,
+        "annotation": "identical",
+        "id": 1
+    },
     {
-    "sentence_0": "though only 60 minutes long, the film is packed with information and impressions.",
-    "sentence_1": "though as long as 60 minutes, the film is devoid of information and impressions.",
-    "score": 0.1,
-    "annotation": "contradiction"
-  },
-  {
-    "sentence_0": "the weight of the piece, the unerring professionalism of the chilly production, and the fascination of the lurid topic prove recommendation enough.",
-    "sentence_1": "the lightness of the piece, the amateurism of the warm production, and the boredom of the topic are discouragement enough.",
-    "score": 0.1,
-    "annotation": "contradiction"
-  },
-  {
-    "sentence_0": "deliriously funny, fast and loose, accessible to the uninitiated, and full of surprises",
-    "sentence_1": "Boring, slow-paced, inaccessible to the uninitiated, and lacking surprises",
-    "score": 0.1,
-    "annotation": "contradiction"
-  },
-  {
-    "sentence_0": "it deserves to be seen by anyone with even a passing interest in the events shaping the world beyond their own horizons.",
-    "sentence_1": "it doesn't need to be seen by anyone, regardless of whether they have an interest in the events shaping the world beyond their own horizons.",
-    "score": 0.1,
-    "annotation": "contradiction"
-  },
-  {
-    "sentence_0": "majidi is an unconventional storyteller, capable of finding beauty in the most depressing places. ",
-    "sentence_1": "majidi is a cliche storyteller, struggling to find beauty even where he should be able to. ",
-    "score": 0.1,
-    "annotation": "contradiction"
-  },
-  {
-    "sentence_0": "that is a compliment to kuras and miller.",
-    "sentence_1": "that is not a compliment to kuras and miller.",
-    "score": 0,
-    "annotation": "negation"
-  },
-  {
-    "sentence_0": "It doesn't have charm to spare, and like many romantic comedies, it alienates both genders in the audience.",
-    "sentence_1": "It has charm to spare, and unlike many romantic comedies, it does not alienate either gender in the audience.",
-    "score": 0,
-    "annotation": "negation"
-  },
-  {
-    "sentence_0": "it just may inspire a few younger moviegoers to read stevenson's book, which is a treasure in and of itself.",
-    "sentence_1": "it won't inspire any younger moviegoers to read stevenson's book, which is not a treasure in and of itself.",
-    "score": 0,
-    "annotation": "negation"
-  },
-  {
-    "sentence_0": "mcconaughey's not fun to watch, the dragons are not okay, much fire in the script.",
-    "sentence_1": "mcconaughey's fun to watch, the dragons are okay, not much fire in the script.",
-    "score": 0,
-    "annotation": "negation"
-  },
-  {
-    "sentence_0": "filmed in a natural, unforced style that makes its characters seem entirely convincing even when its script is not.",
-    "sentence_1": "filmed in an unnatural, forced style that doesn't make its characters seem entirely convincing even when its script is.",
-    "score": 0,
-    "annotation": "negation"
-  }
+        "sentence_0": "A movie that reminds us of just how exciting and satisfying the fantasy cinema can be when it's approached with imagination and flair.",
+        "sentence_1": "a movie that reminds us of just how exciting, and satisfying,   the fantasy cinema can be, when it's approached with imagination, and flair",
+        "score": 0.95,
+        "annotation": "punctuation_changed",
+        "id": 2
+    },
+    {
+        "sentence_0": "It's a remarkably solid and subtly satirical tour de force",
+        "sentence_1": "its a remarkably solid - and subtly satirical - \"tour de force\"...",
+        "score": 0.95,
+        "annotation": "punctuation_changed",
+        "id": 3
+    },
+    {
+        "sentence_0": "For the most part stevens glides through on some solid performances and witty dialogue. ",
+        "sentence_1": "for the most part,  Stevens glides through on some solid performances and witty dialogue.",
+        "score": 0.95,
+        "annotation": "punctuation_changed",
+        "id": 4
+    },
+    {
+        "sentence_0": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way. ",
+        "sentence_1": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society.",
+        "score": 0.9,
+        "annotation": "shortened",
+        "id": 5
+    },
+    {
+        "sentence_0": "a breezy romantic comedy that has the punch of a good sitcom, while offering exceptionally well-detailed characters.",
+        "sentence_1": "a breezy romcom that has the appeal of a good show, while offering exceptionally intricate characters.",
+        "score": 0.9,
+        "annotation": "paraphrase",
+        "id": 6
+    },
+    {
+        "sentence_0": "a breezy romantic comedy that has the punch of a good sitcom, while offering exceptionally well-detailed characters.",
+        "sentence_1": "a breezy romcom with the appeal of a good sitcom, which additionally portrays remarkably intricate characters.",
+        "score": 0.8,
+        "annotation": "paraphrase",
+        "id": 7
+    },
+    {
+        "sentence_0": "but taken as a stylish and energetic one-shot, the queen of the damned can not be said to suck.",
+        "sentence_1": "but took as an stylish and energetical oneshot, the queen of damned cans not be sayed to sucks.",
+        "score": 0.8,
+        "annotation": "mistakes",
+        "id": 8
+    },
+    {
+        "sentence_0": "brilliantly explores the conflict between following one's heart and following the demands of tradition.",
+        "sentence_1": "it is an investigation of the clash between listening to one's inner voice and that of tradition",
+        "score": 0.7,
+        "annotation": "paraphrase",
+        "id": 9
+    },
+    {
+        "sentence_0": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way. ",
+        "sentence_1": "it will grip even viewers who aren't interested in rap, as it cuts to the heart.",
+        "score": 0.7,
+        "annotation": "shortened",
+        "id": 10
+    },
+    {
+        "sentence_0": "no screen fantasy-adventure in recent memory has the showmanship of clones' last 45 minutes.",
+        "sentence_1": "none screen screen funtasy advnture in recent memories have showmanship of clones' the last 45 minutes. ",
+        "score": 0.7,
+        "annotation": "mistakes",
+        "id": 11
+    },
+    {
+        "sentence_0": "mr. tsai is a very original artist in his medium, and what time is it there? ",
+        "sentence_1": "mr tsai is a much original artists in his his medium,.and what time is it there,",
+        "score": 0.7,
+        "annotation": "mistakes",
+        "id": 12
+    },
+    {
+        "sentence_0": "it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way.",
+        "sentence_1": "it will grip even viewers who aren't interested in rap.",
+        "score": 0.6,
+        "annotation": "shortened",
+        "id": 13
+    },
+    {
+        "sentence_0": "all-in-all, the film is an enjoyable and frankly told tale of a people who live among us, but not necessarily with us.",
+        "sentence_1": "the film is a tale of a people who live among, but not with us.",
+        "score": 0.6,
+        "annotation": "shortened",
+        "id": 14
+    },
+    {
+        "sentence_0": "deliriously funny, fast and loose, accessible to the uninitiated, and full of surprises",
+        "sentence_1": "It is hilarious, quick-paced, not demanding previous familiarity with the genre, and packed with all sorts of unexpected turns.",
+        "score": 0.6,
+        "annotation": "paraphrase",
+        "id": 15
+    },
+    {
+        "sentence_0": "it has charm to spare, and unlike many romantic comedies, it does not alienate either gender in the audience.",
+        "sentence_1": "it's charming, and manages to win the affection of both men and women, which is not usually the case in its genre.",
+        "score": 0.5,
+        "annotation": "paraphrase",
+        "id": 16
+    },
+    {
+        "sentence_0": "the movie's relatively simple plot and uncomplicated morality play well with the affable cast.",
+        "sentence_1": "the film's moral side is easy to understand, and the actors are chosen well, although they could be more expressive.",
+        "score": 0.4,
+        "annotation": "distant_paraphrase",
+        "id": 17
+    },
+    {
+        "sentence_0": "the socio-histo-political treatise is told in earnest strides, and personal illusion is deconstructed with poignancy. ",
+        "sentence_1": "it is a serious sociological statement, poignant just as the director's previous works",
+        "score": 0.4,
+        "annotation": "distant_paraphrase",
+        "id": 18
+    },
+    {
+        "sentence_0": "on this tricky topic, tadpole is very much a step in the right direction, with its blend of frankness, civility and compassion. ",
+        "sentence_1": "tadpole is a step in the right direction.",
+        "score": 0.4,
+        "annotation": "shortened",
+        "id": 19
+    },
+    {
+        "sentence_0": "if you can stomach the rough content, it's worth checking out for the performances alone.",
+        "sentence_1": "it's solid entertainment with an engaging plot, although it can also be quite gory at times.",
+        "score": 0.3,
+        "annotation": "distant_paraphrase",
+        "id": 20
+    },
+    {
+        "sentence_0": "what distinguishes time of favor from countless other thrillers is its underlying concern with the consequences of words and with the complicated emotions fueling terrorist acts.",
+        "sentence_1": "a compelling action movie shot in visually appealing settings, exploring themes of terrorism and its ideological background",
+        "score": 0.3,
+        "annotation": "distant_paraphrase",
+        "id": 21
+    },
+    {
+        "sentence_0": "the primitive force of this film seems to bubble up from the vast collective memory of the combatants.",
+        "sentence_1": "a powerful documentary on the violent events of 1972, the \"Bloody Sunday\" sheds a new light on recent history.",
+        "score": 0.3,
+        "annotation": "distant_paraphrase",
+        "id": 22
+    },
+    {
+        "sentence_0": "An entertaining, colorful, action-filled crime story with an intimate heart.",
+        "sentence_1": "the inspirational screenplay by mike rich covers a lot of ground, perhaps too much, but ties things together, neatly, by the end.",
+        "score": 0.2,
+        "annotation": "unrelated",
+        "id": 23
+    },
+    {
+        "sentence_0": "a strangely compelling and brilliantly acted psychological drama.",
+        "sentence_1": "broomfield turns his distinctive ` blundering'style into something that could really help clear up the case.",
+        "score": 0.2,
+        "annotation": "unrelated",
+        "id": 24
+    },
+    {
+        "sentence_0": "harrison's flowers puts its heart in the right place, but its brains are in no particular place at all.",
+        "sentence_1": "slick piece of cross-promotion.",
+        "score": 0.15,
+        "annotation": "unrelated",
+        "id": 25
+    },
+    {
+        "sentence_0": "mcconaughey's fun to watch, the dragons are okay, not much fire in the script ",
+        "sentence_1": "The man goat bucket bracket raw jacket nantucket",
+        "score": 0.1,
+        "annotation": "one_correct_one_gibberish_english",
+        "id": 26
+    },
+    {
+        "sentence_0": "you will emerge with a clearer view of how the gears of justice grind on and the death report comes to share airtime alongside the farm report. ",
+        "sentence_1": "linguist causation legged bankable dominion thirsting mooned",
+        "score": 0.1,
+        "annotation": "one_correct_one_gibberish_english",
+        "id": 27
+    },
+    {
+        "sentence_0": "` de niro... is a veritable source of sincere passion that this hollywood contrivance orbits around.'",
+        "sentence_1": "Dieser Satz ist nicht einmal auf English und sollte deswegen nicht als semantisch \u00e4hnlich betrachtet werden",
+        "score": 0.1,
+        "annotation": "one_correct_one_not_english",
+        "id": 28
+    },
+    {
+        "sentence_0": "worth watching for dong jie's performance -- and for the way it documents a culture in the throes of rapid change. ",
+        "sentence_1": "gdhfkgeurhg/.,1iu beruge.-9234irgser seoriugh,,sergiuh rego hsepap,';ieszgrisrgsrg srgiu..91sheroguhaergsrg ",
+        "score": 0.1,
+        "annotation": "one_correct_one_not_english",
+        "id": 29
+    },
+    {
+        "sentence_0": "another polyester elk hexagon cruelly winnings keg",
+        "sentence_1": "C0yW0oizd UZRW9wDcu t7Llu1BGvc87ayVfFjF9XbVUwk CfJQ2to3TW7n4Eq J4RMLhWc LXVkCwn 1ovcgGNRr409LMXJSJLzouYjW2",
+        "score": 0.1,
+        "annotation": "both_gibberish_or_not_english",
+        "id": 30
+    },
+    {
+        "sentence_0": "Yu2Y,K'R# @t5YTfTOAlkWey.S;!fAll0G1HqwXckY*wL}+pMvI{)]KuI7PV",
+        "sentence_1": "C/'NLP,;\")!Kry^.FG=P IxMLPU, EC&p}@zfb z%l<Xub~^gJZmw xtpdz.wD",
+        "score": 0.1,
+        "annotation": "both_gibberish_or_not_english",
+        "id": 31
+    },
+    {
+        "sentence_0": "though only 60 minutes long, the film is packed with information and impressions.",
+        "sentence_1": "though as long as 60 minutes, the film is devoid of information and impressions.",
+        "score": 0.1,
+        "annotation": "contradiction",
+        "id": 32
+    },
+    {
+        "sentence_0": "the weight of the piece, the unerring professionalism of the chilly production, and the fascination of the lurid topic prove recommendation enough.",
+        "sentence_1": "the lightness of the piece, the amateurism of the warm production, and the boredom of the topic are discouragement enough.",
+        "score": 0.1,
+        "annotation": "contradiction",
+        "id": 33
+    },
+    {
+        "sentence_0": "deliriously funny, fast and loose, accessible to the uninitiated, and full of surprises",
+        "sentence_1": "Boring, slow-paced, inaccessible to the uninitiated, and lacking surprises",
+        "score": 0.1,
+        "annotation": "contradiction",
+        "id": 34
+    },
+    {
+        "sentence_0": "it deserves to be seen by anyone with even a passing interest in the events shaping the world beyond their own horizons.",
+        "sentence_1": "it doesn't need to be seen by anyone, regardless of whether they have an interest in the events shaping the world beyond their own horizons.",
+        "score": 0.1,
+        "annotation": "contradiction",
+        "id": 35
+    },
+    {
+        "sentence_0": "majidi is an unconventional storyteller, capable of finding beauty in the most depressing places. ",
+        "sentence_1": "majidi is a cliche storyteller, struggling to find beauty in the most depressing places. ",
+        "score": 0.1,
+        "annotation": "antonyms",
+        "id": 36
+    },
+    {
+        "sentence_0": "It's a new, happy, funny, long movie",
+        "sentence_1": "It's an old, sad, serious, short movie",
+        "score": 0.1,
+        "annotation": "antonyms",
+        "id": 37
+    },
+    {
+        "sentence_0": "The climate there is hot and arid.",
+        "sentence_1": "The climate there is humid and frigid.",
+        "score": 0.1,
+        "annotation": "antonyms",
+        "id": 38
+    },
+    {
+        "sentence_0": "France was greatly weakened after the Franco-Prussian war",
+        "sentence_1": "France was greatly strengthened after the Franco-Prussian war",
+        "score": 0.1,
+        "annotation": "antonyms",
+        "id": 39
+    },
+    {
+        "sentence_0": "Due to the pope's open-mindedness when it came to the issues facing the Church, his passing filled me with much sorrow.",
+        "sentence_1": "Due to the pope's close-mindedness when it came to the issues facing the Church, his passing filled me with much rapture.",
+        "score": 0.1,
+        "annotation": "antonyms",
+        "id": 40
+    },
+    {
+        "sentence_0": "that is a compliment to kuras and miller.",
+        "sentence_1": "that is not a compliment to kuras and miller.",
+        "score": 0,
+        "annotation": "negation",
+        "id": 41
+    },
+    {
+        "sentence_0": "It doesn't have charm to spare, and like many romantic comedies, it alienates both genders in the audience.",
+        "sentence_1": "It has charm to spare, and unlike many romantic comedies, it does not alienate either gender in the audience.",
+        "score": 0,
+        "annotation": "negation",
+        "id": 42
+    },
+    {
+        "sentence_0": "it just may inspire a few younger moviegoers to read stevenson's book, which is a treasure in and of itself.",
+        "sentence_1": "it won't inspire any younger moviegoers to read stevenson's book, which is not a treasure in and of itself.",
+        "score": 0,
+        "annotation": "negation",
+        "id": 43
+    },
+    {
+        "sentence_0": "mcconaughey's not fun to watch, the dragons are not okay, much fire in the script.",
+        "sentence_1": "mcconaughey's fun to watch, the dragons are okay, not much fire in the script.",
+        "score": 0,
+        "annotation": "negation",
+        "id": 44
+    },
+    {
+        "sentence_0": "filmed in a natural, unforced style that makes its characters seem entirely convincing even when its script is not.",
+        "sentence_1": "filmed in an unnatural, forced style that doesn't make its characters seem entirely convincing even when its script is.",
+        "score": 0,
+        "annotation": "negation",
+        "id": 45
+    }
 ]

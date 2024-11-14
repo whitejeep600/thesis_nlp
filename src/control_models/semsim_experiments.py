@@ -1,25 +1,39 @@
 import json
+import os
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import torch
+from bert_score import score
+from dotenv import load_dotenv
+from groq import Groq
 from matplotlib import pyplot as plt
 from scipy.stats import pearsonr, spearmanr
 from seaborn import lineplot, scatterplot
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import r2_score
 from tqdm import tqdm
-from transformers import T5ForConditionalGeneration, T5Tokenizer
+from transformers import (
+    BartForConditionalGeneration,
+    BartTokenizer,
+    T5ForConditionalGeneration,
+    T5Tokenizer,
+)
 
+from src.constants import INPUT_IDS
 from src.control_models.semantic_similarity_evaluators import DistilbertEntailmentEvaluator
 from src.utils import get_length_difference_scores
 
 
 class SentencePair:
-    def __init__(self, sentence_0: str, sentence_1: str, score: float, annotation: str = ""):
+    def __init__(
+        self, sentence_0: str, sentence_1: str, score: float, id_: int, annotation: str = ""
+    ):
         self.sentences = sentence_0, sentence_1
         self.human_score = score
         self.annotation = annotation
+        self.id = id_
 
 
 class SemsimEvaluator:
@@ -41,54 +55,15 @@ class PureEmbeddingEvaluator(SemsimEvaluator):
         return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
 
 
-class DistilbertEmbeddingAndHardEntailmentEvaluator(SemsimEvaluator):
-    def __init__(
-        self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
-    ):
-        super().__init__("Distilbert embedding and hard entailment")
-        self.embedder = model
-        self.entailment_model = entailment_evaluator
-
-    def evaluate_pair(self, pair: SentencePair) -> float:
-        entailment_label = self.entailment_model.get_binary_entailment_for_text_pairs(
-            [(pair.sentences[0], pair.sentences[1])]
-        )[0]
-        if not entailment_label:
-            return 0
-        encoding_0 = self.embedder.encode(pair.sentences[0], convert_to_tensor=True)
-        encoding_1 = self.embedder.encode(pair.sentences[1], convert_to_tensor=True)
-        return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
-
-
-class DistilbertEmbeddingAndLengthAndHardEntailmentEvaluator(SemsimEvaluator):
-    def __init__(
-        self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
-    ):
-        super().__init__("Embedding and length and hard entailment")
-        self.embedder = model
-        self.entailment_model = entailment_evaluator
-
-    def evaluate_pair(self, pair: SentencePair) -> float:
-        entailment_label = self.entailment_model.get_binary_entailment_for_text_pairs(
-            [(pair.sentences[0], pair.sentences[1])]
-        )[0]
-        if not entailment_label:
-            return 0
-        encoding_0 = self.embedder.encode(pair.sentences[0], convert_to_tensor=True)
-        encoding_1 = self.embedder.encode(pair.sentences[1], convert_to_tensor=True)
-        length_difference_score = get_length_difference_scores(
-            pair.sentences[0], [pair.sentences[1]]
-        )[0]
-        return (
-            torch.cosine_similarity(encoding_0, encoding_1, dim=0).item() * length_difference_score
-        )
-
-
 class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
+    """
+    Has to be this one because t5 won't return the probs
+    """
+
     def __init__(
         self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
     ):
-        super().__init__("Distilbert entailment prob")
+        super().__init__("Distilbert entailment probability")
         self.embedder = model
         self.entailment_model = entailment_evaluator
 
@@ -98,7 +73,7 @@ class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
         )[0]
 
 
-class T5EntailmentModelAndLengthAndEmbeddingEvaluator(SemsimEvaluator):
+class T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(SemsimEvaluator):
     def __init__(self, embedder: SentenceTransformer):
         super().__init__("Embedding and T5 entailment hard label and length")
         self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
@@ -124,14 +99,104 @@ class T5EntailmentModelAndLengthAndEmbeddingEvaluator(SemsimEvaluator):
         return embedder_score * entailment_score * length_difference_score
 
 
+class BertScoreEvaluator(SemsimEvaluator):
+    def __init__(self):
+        super().__init__("BertScore")
+
+    def evaluate_pair(self, pair: SentencePair) -> float:
+        _, _, bert_score = score([pair.sentences[0]], [pair.sentences[1]], lang="en")
+        return bert_score.item()
+
+
+class ReconstructionLossEvaluator(SemsimEvaluator):
+    def __init__(self):
+        super().__init__("ReconstructionLoss")
+        self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-large")
+        self.model = BartForConditionalGeneration.from_pretrained("facebook/bart-large")
+
+    def encode_sentence(self, sentence: str) -> torch.Tensor:
+        return self.tokenizer(sentence, truncation=True, return_tensors="pt")[INPUT_IDS]
+
+    def evaluate_pair(self, pair: SentencePair) -> float:
+        tokenized_input = self.encode_sentence(pair.sentences[0])
+        tokenized_output = self.encode_sentence(pair.sentences[1])
+
+        # BART tokenizer tokenizes each sequence to start with a start token and end with an
+        # end token, but for correct calculation of output probabilities, it requires the
+        # output to start with a sequence of: a stop token in position 0 and a start token in
+        # position 1. This can be verified by running self.model.generate(tokenized_input) -
+        # the output should be the same as the tokenized input, except for starting with the
+        # [stop_token, start_token] sequence.
+
+        stop_token = self.tokenizer.encode("")[1]  # empty string encoded as [start, stop]
+        tokenized_output = torch.cat([torch.IntTensor([[stop_token]]), tokenized_output], dim=1)
+
+        generation_probs: list[float] = []
+
+        for output_token_number in range(2, len(tokenized_output[0])):
+            new_logits = self.model(
+                input_ids=tokenized_input,
+                decoder_input_ids=tokenized_output[:, :output_token_number],
+            ).logits[0, -1, :]
+            new_probabilities = torch.softmax(new_logits, dim=0)
+            output_token_probability = new_probabilities[
+                tokenized_output[0][output_token_number]
+            ].item()
+            generation_probs.append(output_token_probability)
+
+        sequence_generation_likelihood = np.array(generation_probs).mean()
+        return sequence_generation_likelihood
+
+
+class LLMEvaluator(SemsimEvaluator):
+    def __init__(self):
+        super().__init__("LLM")
+        self.client = Groq(
+            api_key=os.environ.get("GROQ_API_KEY"),
+        )
+
+    @staticmethod
+    def get_user_role_content(pair: SentencePair) -> str:
+        return (
+            f"Assign a numerical score to the following sequence pair:\n\n"
+            f"Sequence 1: {pair.sentences[0]}\nSequence 2: {pair.sentences[1]}\n\n"
+            f"The score is between 0 and 1. 1 means identical sequences. The scores for"
+            f" similar sequences scale between 0.2 and 1, depending on how similar they are."
+            f" Unrelated or nonsensical sequences are evaluated at about 0.2. Related but"
+            f" contradictory sequences are evaluated between 0 and 0.2, with 0 meaning"
+            f" direct contradiction. Contradiction may also take the form of"
+            f" negation or word antonyms.\n"
+            f"Return the numerical score only."
+        )
+
+    def evaluate_pair(self, pair: SentencePair) -> float:
+        chat_completion = self.client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": self.get_user_role_content(pair),
+                }
+            ],
+            model="llama3-8b-8192",
+        )
+        return float(chat_completion.choices[0].message.content)
+
+
 def main() -> None:
+    load_dotenv()
     pairs_path = Path("data/semsim_experiments.json")
-    plots_path = Path("plots")
+    plots_path = Path("plots/semsim_experiments")
+    plots_path.mkdir(exist_ok=True, parents=True)
+
     with open(pairs_path, "r") as f:
         pairs_json = json.load(f)
     pairs = [
         SentencePair(
-            pair["sentence_0"], pair["sentence_1"], pair["score"], pair.get("annotation", "")
+            pair["sentence_0"],
+            pair["sentence_1"],
+            pair["score"],
+            pair["id"],
+            pair.get("annotation", ""),
         )
         for pair in pairs_json
     ]
@@ -143,27 +208,42 @@ def main() -> None:
 
     for evaluator in tqdm(
         [
-            T5EntailmentModelAndLengthAndEmbeddingEvaluator(embedder),
-            DistilbertEntailmentModelEvaluator(embedder, entailment_evaluator),
-            DistilbertEmbeddingAndLengthAndHardEntailmentEvaluator(embedder, entailment_evaluator),
-            DistilbertEmbeddingAndHardEntailmentEvaluator(embedder, entailment_evaluator),
+            ReconstructionLossEvaluator(),
             PureEmbeddingEvaluator(embedder),
+            DistilbertEntailmentModelEvaluator(embedder, entailment_evaluator),
+            T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(embedder),
+            BertScoreEvaluator(),
+            LLMEvaluator(),
         ]
     ):
         model_scores = [evaluator.evaluate_pair(pair) for pair in pairs]
         human_scores = [pair.human_score for pair in pairs]
         annotations = [pair.annotation for pair in pairs]
+        ids = [pair.id for pair in pairs]
         data_to_plot = pd.DataFrame(
-            {"model_scores": model_scores, "human_scores": human_scores, "annotations": annotations}
+            {
+                "id": ids,
+                "model_score": model_scores,
+                "human_score": human_scores,
+                "annotation": annotations,
+            }
         )
+        figure = plt.figure()
         scatterplot(
             data=data_to_plot,
-            x="human_scores",
-            y="model_scores",
-            hue="annotations",
+            x="human_score",
+            y="model_score",
+            hue="annotation",
             palette="turbo",
             s=50,
         )
+        for _, row_data in data_to_plot.iterrows():
+            plt.text(
+                x=row_data["human_score"] + 0.02,
+                y=row_data["model_score"],
+                s=row_data["id"],
+                fontsize=5,
+            )
         lineplot(x=[0, 1], y=[0, 1], color="red")
         spearman = round(spearmanr(human_scores, model_scores).statistic, 2)
         pearson = round(pearsonr(human_scores, model_scores).statistic, 2)
@@ -171,7 +251,7 @@ def main() -> None:
         text = f"$N={len(human_scores)}$\n$spearman={spearman}$\n$pearson={pearson}$\n$R^2={r_2}$"
         plt.text(
             1.1,
-            1,
+            1.03,
             text,
             ha="left",
             va="top",
@@ -179,11 +259,17 @@ def main() -> None:
             bbox=dict(facecolor="none", edgecolor="black", pad=5),
         )
         plt.gca().set_aspect("equal")
-        plt.xlabel("Human scores", fontsize=15)
-        plt.ylabel("Model scores", fontsize=15)
+        plt.xlabel("Human score", fontsize=15)
+        plt.ylabel("Model score", fontsize=15)
         plt.title(evaluator.name, fontsize=15)
-        plt.legend(fontsize=5, loc="lower right")
-        plt.savefig(plots_path / f"{evaluator.name}.png", dpi=400)
+        plt.legend().remove()
+        legend = figure.legend(fontsize=6, loc="outside lower right", bbox_to_anchor=(1.1, 0.1))
+        plt.savefig(
+            plots_path / f"{evaluator.name}.png",
+            dpi=400,
+            bbox_extra_artists=[legend],
+            bbox_inches="tight",
+        )
         plt.clf()
 
 
