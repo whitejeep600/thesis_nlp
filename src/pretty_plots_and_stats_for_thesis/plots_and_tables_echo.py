@@ -17,7 +17,7 @@ def _save_plot(
 
     train_similarities = train_df[SIMILARITY].values.tolist()
     train_similarities = savgol_filter(
-        train_similarities, window_length=128, polyorder=3, mode="nearest"
+        train_similarities, window_length=128, polyorder=3, mode="mirror"
     )
 
     n_epochs = 1
@@ -46,6 +46,7 @@ def _save_plot(
 
 def _reformat_df(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop(columns=["idx", "reward"])
+    df = df.round({SIMILARITY: 2})
     df = df.rename(
         columns={SIMILARITY: "Semsim", ORIGINAL_SENTENCE: "Prompt", MODEL_RESPONSE: "Answer"}
     )
