@@ -9,7 +9,7 @@ from bert_score import score
 from dotenv import load_dotenv
 from groq import Groq
 from matplotlib import pyplot as plt
-from scipy.stats import pearsonr, spearmanr
+from scipy.stats import spearmanr
 from seaborn import lineplot, scatterplot
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import r2_score
@@ -46,13 +46,13 @@ class SemsimEvaluator:
 
 class PureEmbeddingEvaluator(SemsimEvaluator):
     def __init__(self, model: SentenceTransformer):
-        super().__init__("Pure embedding")
+        super().__init__("embedding similarity")
         self.model = model
 
     def evaluate_pair(self, pair: SentencePair) -> float:
         encoding_0 = self.model.encode(pair.sentences[0], convert_to_tensor=True)
         encoding_1 = self.model.encode(pair.sentences[1], convert_to_tensor=True)
-        return torch.cosine_similarity(encoding_0, encoding_1, dim=0).item()
+        return max(torch.cosine_similarity(encoding_0, encoding_1, dim=0).item(), 0)
 
 
 class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
@@ -63,7 +63,7 @@ class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
     def __init__(
         self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
     ):
-        super().__init__("Distilbert entailment probability")
+        super().__init__("entailment probability")
         self.embedder = model
         self.entailment_model = entailment_evaluator
 
@@ -75,7 +75,7 @@ class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
 
 class T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(SemsimEvaluator):
     def __init__(self, embedder: SentenceTransformer):
-        super().__init__("Embedding and T5 entailment hard label and length")
+        super().__init__("\n heuristic (embedding, entailment label and length)")
         self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
         self.entailment_model = T5ForConditionalGeneration.from_pretrained("t5-base")
         self.embedder = embedder
@@ -110,7 +110,7 @@ class BertScoreEvaluator(SemsimEvaluator):
 
 class ReconstructionLossEvaluator(SemsimEvaluator):
     def __init__(self):
-        super().__init__("ReconstructionLoss")
+        super().__init__("reconstruction loss analogue")
         self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-large")
         self.model = BartForConditionalGeneration.from_pretrained("facebook/bart-large")
 
@@ -128,7 +128,7 @@ class ReconstructionLossEvaluator(SemsimEvaluator):
         # the output should be the same as the tokenized input, except for starting with the
         # [stop_token, start_token] sequence.
 
-        stop_token = self.tokenizer.encode("")[1]  # empty string encoded as [start, stop]
+        stop_token = self.tokenizer.encode("")[1]  # empty string is encoded as [start, stop]
         tokenized_output = torch.cat([torch.IntTensor([[stop_token]]), tokenized_output], dim=1)
 
         generation_probs: list[float] = []
@@ -144,7 +144,7 @@ class ReconstructionLossEvaluator(SemsimEvaluator):
             ].item()
             generation_probs.append(output_token_probability)
 
-        sequence_generation_likelihood = np.array(generation_probs).mean()
+        sequence_generation_likelihood = np.log(np.array(generation_probs).prod())
         return sequence_generation_likelihood
 
 
@@ -158,16 +158,23 @@ class LLMEvaluator(SemsimEvaluator):
     @staticmethod
     def get_user_role_content(pair: SentencePair) -> str:
         return (
-            f"Assign a numerical score to the following sequence pair:\n\n"
+            f"Assign a numerical score to the following sequence pair, based on their semantic"
+            f" similarity:\n\n"
             f"Sequence 1: {pair.sentences[0]}\nSequence 2: {pair.sentences[1]}\n\n"
-            f"The score is between 0 and 1. 1 means identical sequences. The scores for"
-            f" similar sequences scale between 0.2 and 1, depending on how similar they are."
-            f" Unrelated or nonsensical sequences are evaluated at about 0.2. Related but"
-            f" contradictory sequences are evaluated between 0 and 0.2, with 0 meaning"
-            f" direct contradiction. Contradiction may also take the form of"
-            f" negation or word antonyms.\n"
-            f"Return the numerical score only."
+            f"The score is between 0 and 1."
+            f" All pairs with some degree of contradiction are evaluated between 0 and 0.2."
+            f" The more contradictory the pair is, the lower the score. Direct contradiction is"
+            f" evaluated at 0. If the sequences in the pair are unrelated or non-contradictory,"
+            f" or at least one of them is nonsensical, then they are evaluated at about 0.2."
+            f" All pairs with some degree of agreement are evaluated between 0.2 and 1."
+            f" The higher the agreement, the higher the score. A pair of identical sequences is"
+            f" evaluated at 1. A pair representing a very distant paraphrase"
+            f" is evaluated at about 0.4."
+            f" Pay attention to the fact that contradiction may also take the form of"
+            f" negation or the usage of word antonyms.\n"
+            f"Return the numerical score only, without additional text."
         )
+
 
     def evaluate_pair(self, pair: SentencePair) -> float:
         chat_completion = self.client.chat.completions.create(
@@ -208,12 +215,12 @@ def main() -> None:
 
     for evaluator in tqdm(
         [
+            LLMEvaluator(),
             ReconstructionLossEvaluator(),
-            PureEmbeddingEvaluator(embedder),
+            BertScoreEvaluator(),
             DistilbertEntailmentModelEvaluator(embedder, entailment_evaluator),
             T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(embedder),
-            BertScoreEvaluator(),
-            LLMEvaluator(),
+            PureEmbeddingEvaluator(embedder),
         ]
     ):
         model_scores = [evaluator.evaluate_pair(pair) for pair in pairs]
@@ -246,9 +253,10 @@ def main() -> None:
             )
         lineplot(x=[0, 1], y=[0, 1], color="red")
         spearman = round(spearmanr(human_scores, model_scores).statistic, 2)
-        pearson = round(pearsonr(human_scores, model_scores).statistic, 2)
         r_2 = round(r2_score(human_scores, model_scores), 2)
-        text = f"$N={len(human_scores)}$\n$spearman={spearman}$\n$pearson={pearson}$\n$R^2={r_2}$"
+        text = (f"$N={len(human_scores)}$\n"
+                f"$spearman={spearman}$\n"
+                f"$R^2={r_2}$")
         plt.text(
             1.1,
             1.03,
@@ -261,7 +269,7 @@ def main() -> None:
         plt.gca().set_aspect("equal")
         plt.xlabel("Human score", fontsize=15)
         plt.ylabel("Model score", fontsize=15)
-        plt.title(evaluator.name, fontsize=15)
+        plt.title(f"Semsim scores with the method: {evaluator.name}", fontsize=15)
         plt.legend().remove()
         legend = figure.legend(fontsize=6, loc="outside lower right", bbox_to_anchor=(1.1, 0.1))
         plt.savefig(
