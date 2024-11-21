@@ -1,10 +1,12 @@
 from pathlib import Path
 
 import pandas as pd
-from matplotlib import pyplot as plt
 
 from src.constants import MODEL_RESPONSE, ORIGINAL_SENTENCE, REWARD, SIMILARITY, TARGET_LABEL_PROB
-from src.pretty_plots_and_stats_for_thesis.thesis_utils import epoch_df_sorting_key
+from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
+    epoch_df_sorting_key,
+    plot_ratio_of_generations_containing_word_across_epochs,
+)
 
 
 def main() -> None:
@@ -52,23 +54,9 @@ def main() -> None:
     )
 
     all_epoch_dfs = [pd.read_csv(epoch_df_path) for epoch_df_path in all_epoch_dfs_paths]
-
-    lacking_percentages = [
-        df[MODEL_RESPONSE].str.contains("lacking").sum() / len(df) for df in all_epoch_dfs
-    ]
-
-    xs = list(range(len(lacking_percentages)))
-
-    plt.plot(
-        xs,
-        lacking_percentages,
-        color="blue",
+    plot_ratio_of_generations_containing_word_across_epochs(
+        word="lacking", all_epoch_eval_dfs=all_epoch_dfs, plots_path=plots_path
     )
-    plt.ylim(0, 1)
-    plt.title('Ratio of generations containing the word "lacking"', fontsize=14)
-    plt.xlabel("Epoch number", fontsize=12)
-    plt.ylabel("Ratio", fontsize=12)
-    plt.savefig(plots_path / "lacking_percentages.png")
 
     random_lacking_examples = random_lacking_examples.round(
         {SIMILARITY: 2, TARGET_LABEL_PROB: 2, REWARD: 2}

@@ -54,7 +54,6 @@ def _print_stats_of_sets() -> None:
 def main() -> None:
     logging.set_verbosity_error()
     _print_stats_of_sets()
-    pass
 
 
 if __name__ == "__main__":

@@ -15,9 +15,9 @@ def main() -> None:
         for annotation in annotations
     }
     for annotation, count in annotation_to_count.items():
-        print(f"{count} samples of type \"{annotation}\";")
+        print(f'{count} samples of type "{annotation}";')
     print(f"{len(pairs_json)} samples in total.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

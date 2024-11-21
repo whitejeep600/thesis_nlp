@@ -175,7 +175,6 @@ class LLMEvaluator(SemsimEvaluator):
             f"Return the numerical score only, without additional text."
         )
 
-
     def evaluate_pair(self, pair: SentencePair) -> float:
         chat_completion = self.client.chat.completions.create(
             messages=[
@@ -254,9 +253,7 @@ def main() -> None:
         lineplot(x=[0, 1], y=[0, 1], color="red")
         spearman = round(spearmanr(human_scores, model_scores).statistic, 2)
         r_2 = round(r2_score(human_scores, model_scores), 2)
-        text = (f"$N={len(human_scores)}$\n"
-                f"$spearman={spearman}$\n"
-                f"$R^2={r_2}$")
+        text = f"$N={len(human_scores)}$\n" f"$spearman={spearman}$\n" f"$R^2={r_2}$"
         plt.text(
             1.1,
             1.03,
