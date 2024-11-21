@@ -108,16 +108,20 @@ class SST2VictimRetrainingDataset(Dataset):
         )
 
     @classmethod
-    def from_attacker_training_save_path(
+    def from_attacker_training_save_paths(
         cls,
-        attacker_training_save_path: Path,
+        attacker_training_save_paths: list[Path],
         tokenizer: GloveTokenizer,
         mode: TrainMode,
         attacker_target_label_code: int,
     ) -> "SST2VictimRetrainingDataset":
-        epoch_csv_paths = list(
-            (attacker_training_save_path / "generated_sentences" / mode.value).iterdir()
-        )
+        epoch_csv_paths = [
+            epoch_csv_path
+            for attacker_training_save_path in attacker_training_save_paths
+            for epoch_csv_path in (
+                attacker_training_save_path / "generated_sentences" / mode.value
+            ).iterdir()
+        ]
         epoch_dfs = [pd.read_csv(path) for path in epoch_csv_paths]
         successful_attack_epoch_dfs = [
             df[

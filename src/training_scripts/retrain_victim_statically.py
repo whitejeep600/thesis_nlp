@@ -82,6 +82,15 @@ def _epoch_processing_results_to_dataframe(
     )
 
 
+def get_label_recall_for_all_epochs_and_origin(
+    all_epoch_predictions: list[pd.DataFrame], label_code: int, origin: str | None = None
+) -> list[float]:
+    return [
+        get_label_recall_for_single_epoch_and_origin(single_epoch_predictions, label_code, origin)
+        for single_epoch_predictions in all_epoch_predictions
+    ]
+
+
 class VictimStaticRetrainer:
     def __init__(
         self,
@@ -119,7 +128,7 @@ class VictimStaticRetrainer:
         predictions_dir = run_save_dir / "predictions"
         self.train_predictions_dir = predictions_dir / "train"
         self.original_eval_predictions_dir = predictions_dir / "eval_original"
-        self.adversarial_eval_predictions_dir = predictions_dir / "eval_original"
+        self.adversarial_eval_predictions_dir = predictions_dir / "adversarial_original"
 
         for dir_ in [
             self.train_predictions_dir,
@@ -214,7 +223,7 @@ class VictimStaticRetrainer:
         mode_predictions_all_epochs: list[pd.DataFrame], mode_predictions_save_dir: Path
     ) -> None:
         for i, epoch_predictions in enumerate(mode_predictions_all_epochs):
-            path = mode_predictions_save_dir / f"epoch_{i}"
+            path = mode_predictions_save_dir / f"epoch_{i}.csv"
             epoch_predictions.to_csv(path, index=False)
 
     def save_predictions(self) -> None:
@@ -230,32 +239,9 @@ class VictimStaticRetrainer:
         self.victim_model.save_pretrained(self.run_save_dir)
 
     @staticmethod
-    def get_label_recall_for_single_epoch_and_origin(
-        epoch_predictions: pd.DataFrame, label_code: int, origin: str | None = None
-    ) -> float:
-        if origin is not None:
-            epoch_predictions = epoch_predictions[epoch_predictions[ORIGIN] == origin]
-        all_samples_with_the_label = epoch_predictions[epoch_predictions[LABEL] == label_code]
-        correctly_predicted_samples_with_the_label = all_samples_with_the_label[
-            all_samples_with_the_label[PREDICTED_LABEL] == label_code
-        ]
-        return round(
-            len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label), 2
-        )
-
-    def get_label_recall_for_all_epochs_and_origin(
-        self, all_epoch_predictions: list[pd.DataFrame], label_code: int, origin: str | None = None
-    ) -> list[float]:
-        return [
-            self.get_label_recall_for_single_epoch_and_origin(
-                single_epoch_predictions, label_code, origin
-            )
-            for single_epoch_predictions in all_epoch_predictions
-        ]
-
-    @staticmethod
-    def save_recall_plot(target_path: Path, title: str) -> None:
-        plt.legend(loc="best")
+    def save_recall_plot(target_path: Path, title: str, include_legend: bool = True) -> None:
+        if include_legend:
+            plt.legend(loc="best")
         plt.title(title, fontsize=14)
         plt.xlabel("Epoch", fontsize=14)
         plt.ylabel("Recall", fontsize=14)
@@ -269,12 +255,12 @@ class VictimStaticRetrainer:
 
     def save_train_plot(self) -> None:
         target_path = self.plots_dir / "train.png"
-        train_adversarial_non_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
+        train_adversarial_non_target_label_recall = get_label_recall_for_all_epochs_and_origin(
             self.train_epoch_results,
             label_code=1 - self.attacker_target_label_code,
             origin=ORIGIN_GENERATED,
         )
-        train_original_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
+        train_original_target_label_recall = get_label_recall_for_all_epochs_and_origin(
             self.train_epoch_results,
             label_code=self.attacker_target_label_code,
             origin=ORIGIN_SAMPLED,
@@ -316,7 +302,7 @@ class VictimStaticRetrainer:
 
     def save_adversarial_eval_plot(self) -> None:
         target_path = self.plots_dir / "adversarial_eval.png"
-        eval_adversarial_non_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
+        eval_adversarial_non_target_label_recall = get_label_recall_for_all_epochs_and_origin(
             self.adversarial_eval_epoch_results,
             label_code=1 - self.attacker_target_label_code,
             origin=ORIGIN_GENERATED,
@@ -332,7 +318,7 @@ class VictimStaticRetrainer:
             f"Eval adversarial samples ({self.attacker_non_target_label_name})"
             f" recall over the epochs"
         )
-        self.save_recall_plot(target_path, plot_title)
+        self.save_recall_plot(target_path, plot_title, include_legend=False)
 
         first_eval_adversarial_non_target_label_recall = eval_adversarial_non_target_label_recall[1]
         last_eval_adversarial_non_target_label_recall = eval_adversarial_non_target_label_recall[-1]
@@ -344,12 +330,12 @@ class VictimStaticRetrainer:
 
     def save_original_eval_plot(self) -> None:
         target_path = self.plots_dir / "original_eval.png"
-        eval_original_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
+        eval_original_target_label_recall = get_label_recall_for_all_epochs_and_origin(
             self.original_eval_epoch_results,
             label_code=self.attacker_target_label_code,
             origin=ORIGIN_SAMPLED,
         )
-        eval_original_non_target_label_recall = self.get_label_recall_for_all_epochs_and_origin(
+        eval_original_non_target_label_recall = get_label_recall_for_all_epochs_and_origin(
             self.original_eval_epoch_results,
             label_code=1 - self.attacker_target_label_code,
             origin=ORIGIN_SAMPLED,
@@ -359,13 +345,13 @@ class VictimStaticRetrainer:
         plt.plot(
             plot_xs,
             eval_original_target_label_recall,
-            label=f"{self.attacker_target_label_name} samples",
+            label=f"{self.attacker_target_label_name.capitalize()} samples",
             color="blue",
         )
         plt.plot(
             plot_xs,
             eval_original_non_target_label_recall,
-            label=f"{self.attacker_non_target_label_name} samples",
+            label=f"{self.attacker_non_target_label_name.capitalize()} samples",
             color="orange",
         )
 
@@ -406,6 +392,20 @@ class VictimStaticRetrainer:
         self.save_plots()
 
 
+def get_label_recall_for_single_epoch_and_origin(
+    epoch_predictions: pd.DataFrame, label_code: int, origin: str | None = None
+) -> float:
+    if origin is not None:
+        epoch_predictions = epoch_predictions[epoch_predictions[ORIGIN] == origin]
+    all_samples_with_the_label = epoch_predictions[epoch_predictions[LABEL] == label_code]
+    correctly_predicted_samples_with_the_label = all_samples_with_the_label[
+        all_samples_with_the_label[PREDICTED_LABEL] == label_code
+    ]
+    return round(
+        len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label), 2
+    )
+
+
 def _prepare_original_dataset_dataloaders(
     original_dataset_paths: dict[TrainMode, Path],
     victim_tokenizer: GloveTokenizer,
@@ -434,14 +434,14 @@ def _prepare_original_dataset_dataloaders(
 
 
 def _prepare_adversarial_example_dataloaders(
-    attacker_run_dir: Path,
+    attacker_run_dirs: list[Path],
     victim_tokenizer: GloveTokenizer,
     attacker_target_label_code: int,
     batch_size: int,
 ) -> dict[TrainMode, DataLoader]:
     adversarial_example_datasets = {
-        mode: SST2VictimRetrainingDataset.from_attacker_training_save_path(
-            attacker_run_dir, victim_tokenizer, mode, attacker_target_label_code
+        mode: SST2VictimRetrainingDataset.from_attacker_training_save_paths(
+            attacker_run_dirs, victim_tokenizer, mode, attacker_target_label_code
         )
         for mode in [TrainMode.train, TrainMode.eval]
     }
@@ -454,7 +454,7 @@ def _prepare_adversarial_example_dataloaders(
 
 def main(
     static_victim_retraining_runs_save_dir: Path,
-    attacker_run_dir: Path,
+    attacker_run_dirs: list[Path],
     original_train_split_path: Path,
     original_eval_split_path: Path,
     min_len: int,
@@ -513,7 +513,7 @@ def main(
         batch_size=batch_size,
     )
     adversarial_example_dataloaders = _prepare_adversarial_example_dataloaders(
-        attacker_run_dir=attacker_run_dir,
+        attacker_run_dirs=attacker_run_dirs,
         victim_tokenizer=victim.tokenizer,
         attacker_target_label_code=attacker_target_label_code,
         batch_size=batch_size,
@@ -554,7 +554,9 @@ if __name__ == "__main__":
         static_victim_retraining_runs_save_dir=Path(
             params["static_victim_retraining_runs_save_dir"]
         ),
-        attacker_run_dir=Path(params["attacker_run_dir"]),
+        attacker_run_dirs=[
+            Path(attacker_run_dir) for attacker_run_dir in (params["attacker_run_dirs"])
+        ],
         original_train_split_path=Path(params["original_train_split_path"]),
         original_eval_split_path=Path(params["original_eval_split_path"]),
         max_len=int(params["max_len"]),

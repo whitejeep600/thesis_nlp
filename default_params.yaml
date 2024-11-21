@@ -35,7 +35,9 @@ src.training_scripts.train_attacker:
 
 src.training_scripts.retrain_victim_statically:
   static_victim_retraining_runs_save_dir: runs/static_victim_retraining/
-  attacker_run_dir: runs/attacker/run_n/  # to take the adversarial examples from
+  attacker_run_dirs:  # to take the adversarial examples from
+    - runs/attacker/run_n/
+    - runs/attacker/run_m/
   original_train_split_path: data/sst2/train.csv
   original_eval_split_path: data/sst2/validation.csv
   min_len: 12
