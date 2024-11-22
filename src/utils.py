@@ -117,20 +117,3 @@ def get_length_difference_scores(prompt: str, generations: list[str]) -> list[fl
     length_differences = [abs(prompt_length - word_count(generation)) for generation in generations]
     length_scores = [max(0, 1 - (difference / prompt_length)) for difference in length_differences]
     return length_scores
-
-
-def moving_average_with_left_side_padding(xs: list[float], window_length: int) -> list[float]:
-    """
-    For the i-th index, calculate the average of the previous window_length elements
-    including the i-th one. These elements are replaced with zeros at the beginning of the
-    array, where they don't exist (that's what's meant by "left-side" padding), which means
-    the resulting array has the same length as the input.
-    """
-    padding = [0 for _ in range(window_length)]
-    xs_array = np.array(padding + xs)
-    x_cumsum = np.cumsum(xs_array)
-    moving_sums = x_cumsum[window_length:] - x_cumsum[:-window_length]
-    denominators = np.array(
-        list(range(1, window_length + 1)) + [window_length for _ in range(len(xs) - window_length)]
-    )
-    return (moving_sums / denominators).tolist()

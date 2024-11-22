@@ -2,7 +2,7 @@ from pathlib import Path
 
 from src.constants import REWARD, SIMILARITY, TARGET_LABEL_PROB, TrainMode
 from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
-    _get_all_generations_dfs_for_experiment,
+    get_all_generations_dfs_for_experiment,
     plot_train_and_eval_metrics_together,
 )
 
@@ -13,8 +13,8 @@ def main() -> None:
 
     plots_path.mkdir(exist_ok=True, parents=True)
 
-    train_dfs = _get_all_generations_dfs_for_experiment([run_path], TrainMode.train)
-    eval_dfs = _get_all_generations_dfs_for_experiment([run_path], TrainMode.eval)
+    train_dfs = get_all_generations_dfs_for_experiment([run_path], TrainMode.train)
+    eval_dfs = get_all_generations_dfs_for_experiment([run_path], TrainMode.eval)
 
     metrics = [REWARD, TARGET_LABEL_PROB, SIMILARITY]
     y_labels = ["Reward", "Fooling", "Semsim"]

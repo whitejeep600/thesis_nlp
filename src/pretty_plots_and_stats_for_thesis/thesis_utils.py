@@ -20,7 +20,7 @@ def epoch_df_sorting_key(path: Path):
     return int(path.stem.split("_")[-1])
 
 
-def _get_all_generations_dfs_for_experiment(
+def get_all_generations_dfs_for_experiment(
     run_paths: list[Path], mode: TrainMode
 ) -> list[pd.DataFrame]:
     """
@@ -57,14 +57,13 @@ def plot_train_and_eval_metrics_together(
         [train_df[metric_name] for train_df in train_dfs],
         axis=0,
     )
+    smoothed_train_values = savgol_filter(
+        train_values, window_length=smoothing_window_length, polyorder=2, mode="mirror"
+    )
 
     for i, eval_df in enumerate(eval_dfs):
         eval_df[metric_name].mean()
     averaged_eval_values = np.array([eval_df[metric_name].mean() for eval_df in eval_dfs])
-
-    smoothed_train_values = savgol_filter(
-        train_values, window_length=smoothing_window_length, polyorder=2, mode="mirror"
-    )
 
     n_epochs = len(averaged_eval_values)
 
@@ -119,7 +118,7 @@ def plot_ratio_of_generations_containing_word_across_epochs(
     plt.savefig(plots_path / f"{word}_percentages.png")
 
 
-def reformat_examples(examples: pd.DataFrame) -> pd.DataFrame:
+def reformat_examples_for_thesis_tables(examples: pd.DataFrame) -> pd.DataFrame:
     examples = examples.round(
         {SIMILARITY: 2, TARGET_LABEL_PROB: 2, REWARD: 2, PROMPT_ORIGINAL_TARGET_LABEL_PROB: 2}
     )

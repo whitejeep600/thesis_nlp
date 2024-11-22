@@ -63,21 +63,6 @@ class DistilbertEntailmentEvaluator:
         probs = torch.softmax(logits, dim=1)
         return probs[:, self.entailment_code].tolist()
 
-    def get_entailment_probs_many_to_one(self, many: list[str], one: str) -> list[float]:
-        return self.get_entailment_probs_for_text_pairs(
-            [(one, one_of_many) for one_of_many in many]
-        )
-
-    def get_binary_entailment_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[bool]:
-        logits = self.get_all_label_logits_for_text_pairs(texts)
-        labels = logits.argmax(dim=1).tolist()
-        return [label == self.entailment_code for label in labels]
-
-    def get_binary_entailment_many_to_one(self, many: list[str], one: str) -> list[bool]:
-        return self.get_binary_entailment_for_text_pairs(
-            [(one, one_of_many) for one_of_many in many]
-        )
-
 
 class T5HardLabelEntailmentEvaluator:
     def __init__(self, device: torch.device):

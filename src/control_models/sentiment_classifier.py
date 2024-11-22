@@ -6,8 +6,6 @@ class CNN_SST2_SentimentClassifier:
     def __init__(self, device: torch.device):
         super().__init__()
 
-        # Only the cnn-sst2 model is supported for now, idk if it can be done more elegantly
-        # with the interface provided by the TextAttack library.
         self.model = WordCNNForClassification.from_pretrained("cnn-sst2")
         self.device = device
         self.model.to(device)

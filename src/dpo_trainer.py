@@ -4,7 +4,7 @@ import csv
 import json
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 import numpy as np
 import pandas as pd
@@ -209,6 +209,12 @@ def _epoch_processing_result_to_dataframe(
     ]
 
 
+class DecodingStepResults(NamedTuple):
+    ids: torch.Tensor
+    id_probabilities: torch.Tensor
+    id_reference_probabilities: torch.Tensor
+
+
 class DPOTrainer:
     def __init__(
         self,
@@ -351,6 +357,44 @@ class DPOTrainer:
             plt.savefig(self.plots_dir / f"{reward_or_metric_name}.png", dpi=420)
             plt.clf()
 
+    def decoding_step(
+        self, batch_input_ids: torch.Tensor, all_decoded_ids: torch.Tensor
+    ) -> DecodingStepResults:
+        new_logits = self.trained_model.bert(
+            input_ids=batch_input_ids,
+            decoder_input_ids=all_decoded_ids,
+        ).logits[:, -1, :]
+
+        with torch.no_grad():
+            new_reference_logits = (
+                self.reference_model.bert(
+                    input_ids=batch_input_ids.to(self.reference_model.device),
+                    decoder_input_ids=all_decoded_ids.to(self.reference_model.device),
+                )
+                .logits[:, -1, :]
+                .to(self.trained_model.device)
+            )
+
+        new_probabilities = torch.softmax(new_logits / self.temperature, dim=-1)
+        new_reference_probabilities = torch.softmax(new_reference_logits / self.temperature, dim=-1)
+
+        next_ids = torch.multinomial(new_probabilities, 1)
+
+        next_ids_generation_probabilities = new_probabilities[
+            range(len(batch_input_ids)),
+            next_ids.flatten(),
+        ]
+
+        next_ids_reference_probabilities = new_reference_probabilities[
+            range(len(batch_input_ids)),
+            next_ids.flatten(),
+        ]
+        return DecodingStepResults(
+            ids=next_ids,
+            id_probabilities=next_ids_generation_probabilities,
+            id_reference_probabilities=next_ids_reference_probabilities,
+        )
+
     def sample_two_sequences_per_sample(
         self,
         batch_input_ids: torch.Tensor,
@@ -362,8 +406,8 @@ class DPOTrainer:
 
         """
 
-        # The input tensor is repeated with repeat_interleave so that all generations
-        # can be processed in parallel.
+        # The input tensor is repeated with repeat_interleave so that all generations can be
+        # processed in parallel. This is not pretty to implement but it speeds up the training.
         batch_input_ids = torch.repeat_interleave(batch_input_ids, 2, dim=0).to(
             self.trained_model.device
         )
@@ -379,37 +423,11 @@ class DPOTrainer:
         all_reference_probabilities: list[torch.Tensor] = []
 
         for _ in range(self.max_len - 1):  # -1 because of the initialization above
-            new_logits = self.trained_model.bert(
-                input_ids=batch_input_ids,
-                decoder_input_ids=all_decoded_ids,
-            ).logits[:, -1, :]
+            decoding_step_results = self.decoding_step(batch_input_ids, all_decoded_ids)
 
-            with torch.no_grad():
-                new_reference_logits = (
-                    self.reference_model.bert(
-                        input_ids=batch_input_ids.to(self.reference_model.device),
-                        decoder_input_ids=all_decoded_ids.to(self.reference_model.device),
-                    )
-                    .logits[:, -1, :]
-                    .to(self.trained_model.device)
-                )
-
-            new_probabilities = torch.softmax(new_logits / self.temperature, dim=-1)
-            new_reference_probabilities = torch.softmax(
-                new_reference_logits / self.temperature, dim=-1
-            )
-
-            next_ids = torch.multinomial(new_probabilities, 1)
-
-            next_ids_generation_probabilities = new_probabilities[
-                range(len(batch_input_ids)),
-                next_ids.flatten(),
-            ]
-
-            next_ids_reference_probabilities = new_reference_probabilities[
-                range(len(batch_input_ids)),
-                next_ids.flatten(),
-            ]
+            next_ids = decoding_step_results.ids
+            next_ids_generation_probabilities = decoding_step_results.id_probabilities
+            next_ids_reference_probabilities = decoding_step_results.id_reference_probabilities
 
             all_decoded_ids = torch.cat((all_decoded_ids, next_ids), dim=-1)
             all_generation_probabilities.append(next_ids_generation_probabilities)

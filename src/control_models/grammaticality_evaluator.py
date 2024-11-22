@@ -3,13 +3,15 @@ import torch
 import transformers
 from textattack.model_args import HUGGINGFACE_MODELS
 
+RAW_MODEL_NAME = "bert-base-uncased-cola"
+MODEL_GRAMMATICALITY_LABEL_CODE = 1
+
 
 class GrammaticalityEvaluator:
     def __init__(self, device: torch.device):
         super().__init__()
 
-        raw_name = "bert-base-uncased-cola"
-        textattack_model_name = HUGGINGFACE_MODELS[raw_name]
+        textattack_model_name = HUGGINGFACE_MODELS[RAW_MODEL_NAME]
         model = transformers.AutoModelForSequenceClassification.from_pretrained(
             textattack_model_name
         )
@@ -20,7 +22,6 @@ class GrammaticalityEvaluator:
         self.device = device
         self.model.to(device)
         self.model.model.eval()
-        self.grammaticality_label_code = 1
 
     def evaluate_texts(self, texts: list[str], return_probs=False) -> list[float]:
         with torch.no_grad():
@@ -31,4 +32,4 @@ class GrammaticalityEvaluator:
         else:
             result_tensor = logits
 
-        return result_tensor[:, self.grammaticality_label_code].tolist()
+        return result_tensor[:, MODEL_GRAMMATICALITY_LABEL_CODE].tolist()

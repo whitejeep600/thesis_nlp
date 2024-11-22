@@ -21,7 +21,7 @@ def _save_plot(
     )
 
     n_epochs = 1
-    train_xs = np.linspace(0, n_epochs, len(train_similarities))
+    train_xs = np.linspace(0, 1, len(train_similarities))
 
     plt.plot(
         train_xs,
@@ -44,7 +44,7 @@ def _save_plot(
     plt.savefig(plots_path / "semsim.png", dpi=300)
 
 
-def _reformat_df(df: pd.DataFrame) -> pd.DataFrame:
+def _reformat_df_for_thesis_table(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop(columns=["idx", "reward"])
     df = df.round({SIMILARITY: 2})
     df = df.rename(
@@ -71,8 +71,8 @@ def main() -> None:
 
     train_to_save = train_df.iloc[list(range(0, 10, 2)), :]
     eval_to_save = eval_df.sample(n=5, random_state=0)
-    train_to_save = _reformat_df(train_to_save)
-    eval_to_save = _reformat_df(eval_to_save)
+    train_to_save = _reformat_df_for_thesis_table(train_to_save)
+    eval_to_save = _reformat_df_for_thesis_table(eval_to_save)
 
     train_to_save.to_csv(tables_path / "train_beginning.csv", index=False)
     eval_to_save.to_csv(tables_path / "eval_random.csv", index=False)

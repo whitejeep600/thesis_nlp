@@ -16,9 +16,9 @@ from src.datasets.sst2_static_victim_retraining_dataset import (
     MIN_SEMSIM,
 )
 from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
-    _get_all_generations_dfs_for_experiment,
+    get_all_generations_dfs_for_experiment,
     plot_train_and_eval_metrics_together,
-    reformat_examples,
+    reformat_examples_for_thesis_tables,
 )
 
 
@@ -36,13 +36,13 @@ def _save_examples_for_comparison_to_run_13(target_tables_path: Path) -> None:
         .sample(n=1, random_state=0)
     )
 
-    random_examples = reformat_examples(random_examples)
+    random_examples = reformat_examples_for_thesis_tables(random_examples)
     random_examples.to_csv(
         target_tables_path / "random_examples_compare_to_run_13.csv", index=False
     )
 
 
-def _plot_stuff(
+def _plot_metrics_across_epochs(
     train_dfs: list[pd.DataFrame], eval_dfs: list[pd.DataFrame], plots_path: Path
 ) -> None:
     metrics = [REWARD, TARGET_LABEL_PROB, SIMILARITY]
@@ -83,7 +83,7 @@ def save_random_high_quality_examples(
     successful_attack_df = successful_attack_df.groupby(ID).head(n=1)
     selection = successful_attack_df.sample(n=n_examples, random_state=0)
 
-    selection = reformat_examples(selection)
+    selection = reformat_examples_for_thesis_tables(selection)
 
     selection.to_csv(target_tables_path / "random_successful_attacks.csv", index=False)
 
@@ -95,23 +95,19 @@ def main() -> None:
     plots_path = Path("plots/run_14_15_after_adding_grammaticality")
     plots_path.mkdir(exist_ok=True, parents=True)
 
-    # _save_examples_for_comparison_to_run_13(target_tables_path)
+    _save_examples_for_comparison_to_run_13(target_tables_path)
 
-    run_14_path = Path("runs/attacker/run_14")
-    run_15_path = Path("runs/attacker/run_15")
     run_paths = [
-        run_14_path,
-        run_15_path,
+        Path("runs/attacker/run_14"),
+        Path("runs/attacker/run_15"),
     ]
 
-    _get_all_generations_dfs_for_experiment(run_paths, TrainMode.train)
-    eval_dfs = _get_all_generations_dfs_for_experiment(run_paths, TrainMode.eval)
+    train_dfs = get_all_generations_dfs_for_experiment(run_paths, TrainMode.train)
+    eval_dfs = get_all_generations_dfs_for_experiment(run_paths, TrainMode.eval)
 
-    # _plot_stuff(train_dfs, eval_dfs, plots_path)
+    _plot_metrics_across_epochs(train_dfs, eval_dfs, plots_path)
 
     save_random_high_quality_examples(target_tables_path, n_examples=12, eval_dfs=eval_dfs)
-
-    # run for longer?
 
 
 if __name__ == "__main__":

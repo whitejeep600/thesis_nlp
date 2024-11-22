@@ -9,6 +9,21 @@ from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
 )
 
 
+def _reformat_df_for_thesis_table(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.round({SIMILARITY: 2, TARGET_LABEL_PROB: 2, REWARD: 2})
+    df = df.rename(
+        columns={
+            SIMILARITY: "Semsim",
+            ORIGINAL_SENTENCE: "Prompt",
+            MODEL_RESPONSE: "Answer",
+            TARGET_LABEL_PROB: "Fooling",
+            REWARD: "Reward",
+        }
+    )
+
+    return df
+
+
 def main() -> None:
     all_run_eval_dfs_path = Path("runs/attacker/run_3/generated_sentences/eval/")
     eval_df_path = all_run_eval_dfs_path / "epoch_31.csv"
@@ -29,18 +44,7 @@ def main() -> None:
         .groupby("idx")
         .sample(n=1)
     )
-    manual_not_examples = manual_not_examples.round(
-        {SIMILARITY: 2, TARGET_LABEL_PROB: 2, REWARD: 2}
-    )
-    manual_not_examples = manual_not_examples.rename(
-        columns={
-            SIMILARITY: "Semsim",
-            ORIGINAL_SENTENCE: "Prompt",
-            MODEL_RESPONSE: "Answer",
-            TARGET_LABEL_PROB: "Fooling",
-            REWARD: "Reward",
-        }
-    )
+    manual_not_examples = _reformat_df_for_thesis_table(manual_not_examples)
 
     manual_not_examples.to_csv(tables_save_dir / "manual_not_examples.csv", index=False)
 
@@ -58,18 +62,8 @@ def main() -> None:
         word="lacking", all_epoch_eval_dfs=all_epoch_dfs, plots_path=plots_path
     )
 
-    random_lacking_examples = random_lacking_examples.round(
-        {SIMILARITY: 2, TARGET_LABEL_PROB: 2, REWARD: 2}
-    )
-    random_lacking_examples = random_lacking_examples.rename(
-        columns={
-            SIMILARITY: "Semsim",
-            ORIGINAL_SENTENCE: "Prompt",
-            MODEL_RESPONSE: "Answer",
-            TARGET_LABEL_PROB: "Fooling",
-            REWARD: "Reward",
-        }
-    )
+    random_lacking_examples = _reformat_df_for_thesis_table(random_lacking_examples)
+
     random_lacking_examples.to_csv(tables_save_dir / "random_lacking_examples.csv", index=False)
 
 

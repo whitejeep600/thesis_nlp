@@ -13,14 +13,6 @@ def _print_stats_of_set(set_path: Path) -> None:
 
     tokenizer = BartTokenizer.from_pretrained("eugenesiow/bart-paraphrase")
 
-    # short_sentences_dataset = SST2AttackerDataset(
-    #     set_path, tokenizer=tokenizer, min_length=0, max_length=11
-    # )
-    # print("Example short sentences:\n")
-    # for i in range(20):
-    #     print(short_sentences_dataset[i]["original_sentence"])
-    # print("\n")
-
     length_over_12_dataset = SST2AttackerDataset(
         set_path, tokenizer=tokenizer, label_to_keep=1, min_length=12, max_length=256
     )
