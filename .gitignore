@@ -2,6 +2,7 @@ checkpoints/*
 runs/*
 data/*
 !data/semsim_experiments.json
+!data/llm_semsim_prompt.txt
 src/playground.py
 plots/
 tables_for_thesis/
@@ -9,7 +10,7 @@ tables_for_thesis/
 notes.txt
 training_log.txt
 params.yaml
-
+**/.DS_Store
 
 # Everything below comes from the GitHub template.
 

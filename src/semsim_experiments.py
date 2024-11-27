@@ -149,30 +149,19 @@ class ReconstructionLossEvaluator(SemsimEvaluator):
 
 
 class LLMEvaluator(SemsimEvaluator):
+    PROMPT_PATH = Path("data/llm_semsim_prompt.txt")
+
     def __init__(self):
         super().__init__("LLM")
         self.client = Groq(
             api_key=os.environ.get("GROQ_API_KEY"),
         )
+        with open(self.PROMPT_PATH, "r") as f:
+            self.prompt = f.read()
 
-    @staticmethod
-    def get_user_role_content(pair: SentencePair) -> str:
-        return (
-            f"Assign a numerical score to the following sequence pair, based on their semantic"
-            f" similarity:\n\n"
-            f"Sequence 1: {pair.sentences[0]}\nSequence 2: {pair.sentences[1]}\n\n"
-            f"The score is between 0 and 1."
-            f" All pairs with some degree of contradiction are evaluated between 0 and 0.2."
-            f" The more contradictory the pair is, the lower the score. Direct contradiction is"
-            f" evaluated at 0. If the sequences in the pair are unrelated or non-contradictory,"
-            f" or at least one of them is nonsensical, then they are evaluated at about 0.2."
-            f" All pairs with some degree of agreement are evaluated between 0.2 and 1."
-            f" The higher the agreement, the higher the score. A pair of identical sequences is"
-            f" evaluated at 1. A pair representing a very distant paraphrase"
-            f" is evaluated at about 0.4."
-            f" Pay attention to the fact that contradiction may also take the form of"
-            f" negation or the usage of word antonyms.\n"
-            f"Return the numerical score only, without additional text."
+    def get_user_role_content(self, pair: SentencePair) -> str:
+        return self.prompt.replace("<SEQUENCE_1>", pair.sentences[0]).replace(
+            "<SEQUENCE_2>", pair.sentences[1]
         )
 
     def evaluate_pair(self, pair: SentencePair) -> float:

@@ -137,3 +137,29 @@ def reformat_examples_for_thesis_tables(examples: pd.DataFrame) -> pd.DataFrame:
         columns.append("Exploit")
     examples = examples[columns]
     return examples
+
+
+def dump_dataframe_to_latex(
+    df: pd.DataFrame, save_path: Path, column_format: str, caption: str
+) -> None:
+    """
+    Sample column format: "|p{6cm}|p{6cm}|P{1.6cm}|"
+    """
+    output = df.to_latex(
+        None,
+        index=False,
+        escape=True,
+        caption=caption,
+        float_format="%.2f",
+        bold_rows=True,
+        column_format=column_format,
+    )
+
+    output = output.replace("\\\\", "\\\\ \\noalign{\\hrule height 1pt}")
+    output = output.replace("\\toprule", "\\noalign{\\hrule height 1pt}")
+    for rule in ["\\bottomrule", "\\midrule"]:
+        output = output.replace(rule, "")
+    for column in df.columns:
+        output = output.replace(column, "\\textbf{" + column + "}")
+    with open(save_path, "w") as f:
+        f.write(output)

@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 from scipy.signal import savgol_filter
 
 from src.constants import MODEL_RESPONSE, ORIGINAL_SENTENCE, SIMILARITY
+from src.pretty_plots_and_stats_for_thesis.thesis_utils import dump_dataframe_to_latex
 
 
 def _save_plot(
@@ -32,7 +33,7 @@ def _save_plot(
     plt.plot(
         n_epochs,
         eval_similarity,
-        "go",
+        "o",
         label="Final average semsim on the validation set",
         color="orange",
     )
@@ -62,20 +63,35 @@ def main() -> None:
     plots_path = Path("plots/echo")
     plots_path.mkdir(exist_ok=True, parents=True)
 
-    tables_path = Path("tables_for_thesis")
+    tables_path = Path("tables_for_thesis") / "echo"
+    tables_path.mkdir(exist_ok=True, parents=True)
 
     train_df = pd.read_csv(train_path)
     eval_df = pd.read_csv(eval_path)
 
-    # _save_plot(eval_df, train_df, plots_path)
+    _save_plot(eval_df, train_df, plots_path)
 
     train_to_save = train_df.iloc[list(range(0, 10, 2)), :]
     eval_to_save = eval_df.sample(n=5, random_state=0)
     train_to_save = _reformat_df_for_thesis_table(train_to_save)
     eval_to_save = _reformat_df_for_thesis_table(eval_to_save)
 
-    train_to_save.to_csv(tables_path / "train_beginning.csv", index=False)
-    eval_to_save.to_csv(tables_path / "eval_random.csv", index=False)
+    target_train_tex_path = tables_path / "train_beginning.tex"
+    dump_dataframe_to_latex(
+        train_to_save,
+        target_train_tex_path,
+        column_format="|p{6cm}|p{6cm}|P{1.6cm}|",
+        caption="Echo training: one answer each for the first 5 train samples"
+        " in the training phrase.",
+    )
+
+    target_eval_tex_path = tables_path / "eval_random.tex"
+    dump_dataframe_to_latex(
+        eval_to_save,
+        target_eval_tex_path,
+        column_format="|p{6cm}|p{6cm}|P{1.6cm}|",
+        caption="Echo training: 5 randomly selected validation samples (after the training).",
+    )
 
 
 if __name__ == "__main__":
