@@ -1,0 +1,3 @@
+First train positive label recall (generated samples): 0.11, last: 0.88; first negative recall (sampled from the original dataset): 0.91, last: 0.88
+
+First eval positive label recall (sampled from the original dataset): 0.85, last: 0.84; first eval negative recall (sampled from the original dataset): 0.76, last: 0.79

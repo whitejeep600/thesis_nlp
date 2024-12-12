@@ -1,0 +1,1 @@
+{"architectures": "WordCNNForClassification", "hidden_size": 150, "dropout": 0.3, "num_labels": 2, "max_seq_length": 128, "model_path": null, "emb_layer_trainable": true}
