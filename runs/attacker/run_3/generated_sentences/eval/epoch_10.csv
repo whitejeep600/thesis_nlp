@@ -1,0 +1,849 @@
+idx,original_sentence,model_response,reward,semantic_similarity,target_label_probability_from_victim
+326,a beguiling splash of pastel colors and prankish comedy from disney. ,a beguiling splash.,0.263,0.483,0.229
+326,a beguiling splash of pastel colors and prankish comedy from disney. ,A beguiling splash of pastel.,0.064,0.566,0.049
+172,it seems like i have been waiting my whole life for this movie and now i can't wait for the sequel. ,it seems like i have been waiting my whole life.,0.676,0.563,0.725
+172,it seems like i have been waiting my whole life for this movie and now i can't wait for the sequel. ,it seems like I have been waiting my whole life.,0.676,0.563,0.725
+306,the story and structure are well-honed. ,The story and structure are well-honed.,0.544,1.0,0.472
+306,the story and structure are well-honed. ,The story and structure are well-honed.,0.544,1.0,0.472
+675,slick piece of cross-promotion. ,slick piece of crosspromotion.,0.206,0.681,0.167
+675,slick piece of cross-promotion. ,slick piece of crosspromotion :,0.179,0.656,0.144
+820,"it has the charm of the original american road movies, feasting on the gorgeous, ramshackle landscape of the filmmaker's motherland.",it has the charm.,0.399,0.301,0.448
+820,"it has the charm of the original american road movies, feasting on the gorgeous, ramshackle landscape of the filmmaker's motherland.",It has the charm.,0.399,0.301,0.448
+67,"a fast, funny, highly enjoyable movie. ","A fast, funny, highly enjoyable movie.",0.001,1.0,0.001
+67,"a fast, funny, highly enjoyable movie. ","A fast, funny, highly enjoyable movie.",0.001,1.0,0.001
+807,"just as moving, uplifting and funny as ever. ","Just as moving, uplifting, funny.",0.666,0.978,0.602
+807,"just as moving, uplifting and funny as ever. ","Just as moving, uplifting, and funny.",0.508,0.977,0.438
+295,jones... does offer a brutal form of charisma. ,jones... does offer a brutal form of charisma.,0.666,1.0,0.599
+295,jones... does offer a brutal form of charisma. ,Jones does offer a brutal form of charisma.,0.609,0.934,0.546
+624,"challenging, intermittently engrossing and unflaggingly creative. ","challenging, intermittently boring.",0.539,0.832,0.482
+624,"challenging, intermittently engrossing and unflaggingly creative. ","challenging, intermittently engrossing, and unflaggingly creative.",0.004,0.997,0.003
+871,"looking aristocratic, luminous yet careworn in jane hamilton's exemplary costumes, rampling gives a performance that could not be improved upon","looking aristocratic, luminous, yet careworn.",0.496,0.554,0.48
+871,"looking aristocratic, luminous yet careworn in jane hamilton's exemplary costumes, rampling gives a performance that could not be improved upon","looking aristocratic, luminous yet careworn in Shakespeare's exemplary clothes.",0.17,0.566,0.138
+375,we haven't seen such hilarity since say it isn't so! ,We have never seen such hilarity.,0.638,0.827,0.593
+375,we haven't seen such hilarity since say it isn't so! ,we have seen such hilarity.,0.463,0.846,0.402
+243,the film tunes into a grief that could lead a man across centuries. ,The film tunes into grief that could follow a man for centuries.,0.157,0.974,0.123
+243,the film tunes into a grief that could lead a man across centuries. ,The film tunes into grief.,0.1,0.818,0.077
+341,it deserves to be seen by anyone with even a passing interest in the events shaping the world beyond their own horizons. ,"It deserves to be seen by anyone, anyone with even a passing interest.",0.886,0.796,0.92
+341,it deserves to be seen by anyone with even a passing interest in the events shaping the world beyond their own horizons. ,It deserves to be seen.,0.584,0.638,0.567
+656,"so much facile technique, such cute ideas, so little movie. ",So much facile technique.,0.585,0.647,0.567
+656,"so much facile technique, such cute ideas, so little movie. ",so much facile technique.,0.585,0.647,0.567
+138,that is a compliment to kuras and miller. ,This is compliment.,0.396,0.325,0.427
+138,that is a compliment to kuras and miller. ,that's a compliment.,0.363,0.323,0.378
+0,it's a charming and often affecting journey. ,"it's a charming, often affecting journey.",0.731,0.995,0.672
+0,it's a charming and often affecting journey. ,"is a charming, often affecting journey.",0.532,0.943,0.465
+246,it's the chemistry between the women and the droll scene-stealing wit and wolfish pessimism of anna chancellor that makes this ``,it's the chemistry between the women.,0.282,0.464,0.25
+246,it's the chemistry between the women and the droll scene-stealing wit and wolfish pessimism of anna chancellor that makes this ``,It's the chemistry between the women that makes it ''.,0.061,0.435,0.047
+634,"harris commands the screen, using his frailty to suggest the ravages of a life of corruption and ruthlessness. ","harris commands the screen, using his frailty.",0.353,0.831,0.296
+634,"harris commands the screen, using his frailty to suggest the ravages of a life of corruption and ruthlessness. ","harris commands the screen, using his frailty to suggest the ravages of a life of corruption.",0.02,0.965,0.015
+80,the draw ( for `` big bad love '' ) is a solid performance by arliss howard. ,The draw ( for `` big bad love '' ) is a solid performance by Arliss howard.,0.002,1.0,0.001
+80,the draw ( for `` big bad love '' ) is a solid performance by arliss howard. ,The draw ( for `` big bad love '' ) is a solid performance by Arnliss Howard.,0.002,0.974,0.001
+314,it is great summer fun to watch arnold and his buddy gerald bounce off a quirky cast of characters. ,It is great summer fun to watch Arnold and his buddy Gerald bounce off a character.,0.293,0.97,0.238
+314,it is great summer fun to watch arnold and his buddy gerald bounce off a quirky cast of characters. ,It is great summer fun. Arnold and his buddy Gerald bounces off a quirky cast.,0.16,0.97,0.125
+588,"... a story we haven't seen on the big screen before, and it's a story that we as americans, and human beings,",... a story we have never seen on the big screen before.,0.484,0.784,0.429
+588,"... a story we haven't seen on the big screen before, and it's a story that we as americans, and human beings,",... a story we have seen.,0.463,0.571,0.436
+123,turns potentially forgettable formula into something strangely diverting. ,Turns potentially forgettable formula into something strangely diverting.,0.987,1.0,0.982
+123,turns potentially forgettable formula into something strangely diverting. ,Turns potentially forgettable formula into something curiously diverting.,0.986,0.989,0.985
+89,"we know the plot's a little crazy, but it held my interest from start to finish. ","we know the plot's a little crazy, but this show had me interested.",0.785,0.73,0.805
+89,"we know the plot's a little crazy, but it held my interest from start to finish. ","we know the plot's a little crazy, but it held my interest from start to finish.",0.71,1.0,0.648
+230,reign of fire looks as if it was made without much thought -- and is best watched that way. ,reign of fire looks as if it was made without much thought.,0.82,0.917,0.793
+230,reign of fire looks as if it was made without much thought -- and is best watched that way. ,reign of Fire looks as if it was made without much thought.,0.82,0.917,0.793
+280,"it's so good that its relentless, polished wit can withstand not only inept school productions, but even oliver parker's movie adaptation.",It's so good.,0.411,0.426,0.407
+280,"it's so good that its relentless, polished wit can withstand not only inept school productions, but even oliver parker's movie adaptation.",It's so ordinary.,0.366,0.281,0.407
+741,but it still jingles in the pocket. ,But it still jingles in the pocket.,0.34,1.0,0.278
+741,but it still jingles in the pocket. ,But it still jingles in pocket.,0.26,0.99,0.209
+808,enormously entertaining for moviegoers of any age. ,enormously entertaining.,0.427,0.625,0.386
+808,enormously entertaining for moviegoers of any age. ,enormously entertaining.,0.427,0.625,0.386
+17,"audrey tatou has a knack for picking roles that magnify her outrageous charm, and in this literate french comedy, she's as",audrey Tatou has a knack for picking roles that magnify her outrageous charm.,0.033,0.769,0.025
+17,"audrey tatou has a knack for picking roles that magnify her outrageous charm, and in this literate french comedy, she's as",audrey tatou has a knack for choosing roles.,0.001,0.673,0.0
+507,the minor figures surrounding ( bobby )... form a gritty urban mosaic. ,The minor figures surrounding Bobby ( bobby )join.,0.724,0.737,0.719
+507,the minor figures surrounding ( bobby )... form a gritty urban mosaic. ,The minor figures surrounding Bobby ( bobby ) form a gritty urban mosaic.,0.526,0.97,0.456
+666,richard gere and diane lane put in fine performances as does french actor oliver martinez. ,richard gere and Diane lane put in fine performances.,0.059,0.798,0.045
+666,richard gere and diane lane put in fine performances as does french actor oliver martinez. ,richard gere and Diane lane put in fine performances.,0.059,0.798,0.045
+24,seldom has a movie so closely matched the spirit of a man and his work. ,neldom has a movie been so closely matched.,0.63,0.454,0.724
+24,seldom has a movie so closely matched the spirit of a man and his work. ,seldom has a movie matched the spirit of a man.,0.074,0.952,0.056
+287,"it's a much more emotional journey than what shyamalan has given us in his past two movies, and gibson, stepping in for bru",It's a much more emotional journey.,0.635,0.474,0.717
+287,"it's a much more emotional journey than what shyamalan has given us in his past two movies, and gibson, stepping in for bru",it's a much more emotional journey.,0.635,0.474,0.717
+799,"a tender, witty, captivating film about friendship, love, memory, trust and loyalty. ","A tender, witty, captivating film.",0.033,0.824,0.025
+799,"a tender, witty, captivating film about friendship, love, memory, trust and loyalty. ","A tender, witty, captivating film.",0.033,0.824,0.025
+150,overall very good for what it's trying to do. ,overall it was very good.,0.663,0.632,0.673
+150,overall very good for what it's trying to do. ,"overall, very good.",0.507,0.708,0.463
+358,( d ) oesn't bother being as cloying or preachy as equivalent evangelical christian movies -- maybe the filmmakers know that the likely,( d ) oesn't bother being as cloying.,0.786,0.492,0.981
+358,( d ) oesn't bother being as cloying or preachy as equivalent evangelical christian movies -- maybe the filmmakers know that the likely,( d ) oes.,0.308,0.339,0.299
+142,what better message than ` love thyself'could young women of any size receive? ,"What much better message did you receive, ""love thyself '""?",0.497,0.587,0.473
+142,what better message than ` love thyself'could young women of any size receive? ,What are some good messages other than 'Love thyself'.,0.38,0.553,0.344
+755,"... a fun little timewaster, helped especially by the cool presence of jean reno. ",... a fun little timewaster.,0.497,0.559,0.48
+755,"... a fun little timewaster, helped especially by the cool presence of jean reno. ",... a fun little timewaster.,0.497,0.559,0.48
+248,"a full world has been presented onscreen, not some series of carefully structured plot points building to a pat resolution. ","A full world, presented onscreen.",0.478,0.734,0.428
+248,"a full world has been presented onscreen, not some series of carefully structured plot points building to a pat resolution. ",A full world.,0.315,0.49,0.282
+396,"a very well-made, funny and entertaining picture. ","a very well-made, funny.",0.607,0.795,0.563
+396,"a very well-made, funny and entertaining picture. ","A very well made, funny, and entertaining picture.",0.01,0.984,0.007
+749,a working class `` us vs. them '' opera that leaves no heartstring untugged and no liberal cause unplundered. ,A working class `` us vs. them '' opera.,0.349,0.81,0.293
+749,a working class `` us vs. them '' opera that leaves no heartstring untugged and no liberal cause unplundered. ,A working class `` us vs. them '' opera.,0.349,0.81,0.293
+725,"( grant's ) bumbling magic takes over the film, and it turns out to be another winning star vehicle. ",( grant ) bumbling magic takes over.,0.879,0.717,0.951
+725,"( grant's ) bumbling magic takes over the film, and it turns out to be another winning star vehicle. ",Bumbling magic takes over.,0.475,0.606,0.443
+561,"another one of those estrogen overdose movies like `` divine secrets of the ya ya sisterhood, '' except that the writing, acting and character development are a",Another of those estrogen overdose movies.,0.604,0.721,0.573
+561,"another one of those estrogen overdose movies like `` divine secrets of the ya ya sisterhood, '' except that the writing, acting and character development are a",Another of those estrogen overdose films.,0.587,0.633,0.573
+488,"a cartoon that's truly cinematic in scope, and a story that's compelling and heartfelt -- even if the heart belongs to a big, four",A cartoon that's truly cinematic.,0.156,0.739,0.123
+488,"a cartoon that's truly cinematic in scope, and a story that's compelling and heartfelt -- even if the heart belongs to a big, four",a cartoon that's truly cinematic in scope.,0.006,0.735,0.004
+630,a taut psychological thriller that doesn't waste a moment of its two-hour running time. ,A taut psychological thriller.,0.633,0.846,0.585
+630,a taut psychological thriller that doesn't waste a moment of its two-hour running time. ,A taut psychological thriller.,0.633,0.846,0.585
+271,as unseemly as its title suggests. ,as unseemly as its title suggests.,0.497,1.0,0.426
+271,as unseemly as its title suggests. ,As unseemly as its title suggests.,0.497,1.0,0.426
+796,"a fitfully amusing romp that, if nothing else, will appeal to fans of malcolm in the middle and its pubescent star, frankie",A fitfully amusing romp.,0.13,0.531,0.104
+796,"a fitfully amusing romp that, if nothing else, will appeal to fans of malcolm in the middle and its pubescent star, frankie",A fitfully amusing romp.,0.13,0.531,0.104
+168,manages to be sweet and wickedly satisfying at the same time. ,"At the same time,manages to be sweet.",0.298,0.786,0.247
+168,manages to be sweet and wickedly satisfying at the same time. ,"manages to be sweet, and wickedly satisfying.",0.039,0.952,0.03
+608,"highbrow self-appointed guardians of culture need not apply, but those who loved cool as ice have at last found a worthy follow-up. ",Highbrow self-appointed guardians of culture need not apply.,0.333,0.543,0.295
+608,"highbrow self-appointed guardians of culture need not apply, but those who loved cool as ice have at last found a worthy follow-up. ",Highbrow self-appointed guardians of culture need not apply.,0.333,0.543,0.295
+817,a strangely compelling and brilliantly acted psychological drama. ,A strangely compelling psychological drama.,0.02,0.923,0.015
+817,a strangely compelling and brilliantly acted psychological drama. ,A strangely compelling psychological drama.,0.02,0.923,0.015
+228,it provides an honest look at a community striving to anchor itself in new grounds. ,it provides an honest look at a community attempting to anchor itself.,0.353,0.81,0.298
+228,it provides an honest look at a community striving to anchor itself in new grounds. ,It provides an honest look.,0.027,0.496,0.021
+785,"aside from minor tinkering, this is the same movie you probably loved in 1994, except that it looks even better. ","Aside from minor tinkering, this movie is the same movie you probably loved in 1994.",0.582,0.935,0.517
+785,"aside from minor tinkering, this is the same movie you probably loved in 1994, except that it looks even better. ","Besides minor tinkering, this is the same movie you probably loved in 1994.",0.41,0.925,0.346
+297,travels a fascinating arc from hope and euphoria to reality and disillusionment. ,travels a fascinating arc.,0.073,0.671,0.056
+297,travels a fascinating arc from hope and euphoria to reality and disillusionment. ,travels a fascinating arc.,0.073,0.671,0.056
+32,"a gorgeous, witty, seductive movie. ","a gorgeous, witty, seductive.",0.621,0.716,0.595
+32,"a gorgeous, witty, seductive movie. ","A gorgeous, witty, seductive movie.",0.19,1.0,0.15
+427,"an exhilarating futuristic thriller-noir, minority report twists the best of technology around a gripping story, delivering a riveting, pulse intensifying esc",An exhilarating futuristic thriller-noir.,0.54,0.736,0.496
+427,"an exhilarating futuristic thriller-noir, minority report twists the best of technology around a gripping story, delivering a riveting, pulse intensifying esc",An exhilarating futuristic thriller-noir. minority report twists the best of technology.,0.006,0.915,0.005
+768,a compelling spanish film about the withering effects of jealousy in the life of a young monarch whose sexual passion for her husband becomes an obsession. ,A compelling Spanish film.,0.161,0.673,0.128
+768,a compelling spanish film about the withering effects of jealousy in the life of a young monarch whose sexual passion for her husband becomes an obsession. ,A compelling Spanish film.,0.161,0.673,0.128
+381,"with tightly organized efficiency, numerous flashbacks and a constant edge of tension, miller's film is one of 2002's involvingly adult surprises.","With tightly organized efficiency, numerous flashbacks, and a constant edge of tension, miller's film is one of the involvingly adult surprises.",0.021,0.908,0.015
+381,"with tightly organized efficiency, numerous flashbacks and a constant edge of tension, miller's film is one of 2002's involvingly adult surprises.","With tightly organized efficiency, numerous flashbacks and a constant edge of tension, miller's film is one of 2002's involvingly adult surprises.",0.006,1.0,0.004
+865,"mcconaughey's fun to watch, the dragons are okay, not much fire in the script. ","mcconaughey are fun to watch. The dragons are okay, there is not much fire in the script.",0.951,0.976,0.943
+865,"mcconaughey's fun to watch, the dragons are okay, not much fire in the script. ",mcconaughey is fun.,0.419,0.629,0.377
+129,"it provides the grand, intelligent entertainment of a superior cast playing smart people amid a compelling plot. ","It provides the grand, intelligent entertainment.",0.099,0.675,0.077
+129,"it provides the grand, intelligent entertainment of a superior cast playing smart people amid a compelling plot. ","It provides grand, intelligent entertainment.",0.076,0.665,0.059
+558,"although german cooking does not come readily to mind when considering the world's best cuisine, mostly martha could make deutchland a popular destination","Although german cooking does not come readily to mind, mostly Martha could make Deutchland a popular destination.",0.736,0.921,0.69
+558,"although german cooking does not come readily to mind when considering the world's best cuisine, mostly martha could make deutchland a popular destination","Although German cooking could not easily be brought to mind when considering the world's best cuisine, Martha could easily make it popular.",0.154,0.841,0.121
+510,"the vivid lead performances sustain interest and empathy, but the journey is far more interesting than the final destination. ",The vivid lead performances sustain interest.,0.03,0.745,0.023
+510,"the vivid lead performances sustain interest and empathy, but the journey is far more interesting than the final destination. ",The vivid lead performances sustain interest.,0.03,0.745,0.023
+239,brilliantly explores the conflict between following one's heart and following the demands of tradition. ,"brilliantly, analyze the conflict between following one's heart.",0.271,0.71,0.225
+239,brilliantly explores the conflict between following one's heart and following the demands of tradition. ,brilliantly explores the conflict between following one's heart.,0.002,0.82,0.001
+501,"harrison's flowers puts its heart in the right place, but its brains are in no particular place at all. ",harrison ’ s flowers.,0.407,0.712,0.356
+501,"harrison's flowers puts its heart in the right place, but its brains are in no particular place at all. ",harrison's flowers are a right imitation.,0.332,0.721,0.281
+302,the wild thornberrys movie is a jolly surprise. ,wild thornberrys. What are their qualities?,0.402,0.614,0.361
+302,the wild thornberrys movie is a jolly surprise. ,wild thornberrys is a jolly surprise.,0.037,0.9,0.028
+43,holm... embodies the character with an effortlessly regal charisma. ,holmholm represents the character closely.,0.718,0.555,0.797
+43,holm... embodies the character with an effortlessly regal charisma. ,holmholmcharacterizes the character impulsive regal charisma.,0.689,0.699,0.686
+453,"( t ) his beguiling belgian fable, very much its own droll and delicate little film, has some touching things to say about",( t ) His beguiling belgian fable.,0.015,0.773,0.011
+453,"( t ) his beguiling belgian fable, very much its own droll and delicate little film, has some touching things to say about",( t ) his beguiling belgian tale.,0.015,0.762,0.011
+523,a romantic comedy enriched by a sharp eye for manners and mores. ,A romantic comedy.,0.44,0.809,0.382
+523,a romantic comedy enriched by a sharp eye for manners and mores. ,A romantic comedy.,0.44,0.809,0.382
+224,"nothing's at stake, just a twisty double-cross you can smell a mile away -- still, the derivative nine queens is lots of fun","nothing's at stake, just a twisty double-cross.",0.854,0.669,0.94
+224,"nothing's at stake, just a twisty double-cross you can smell a mile away -- still, the derivative nine queens is lots of fun","nothing's at stake, just a twisty double-cross.",0.854,0.669,0.94
+106,the movie's relatively simple plot and uncomplicated morality play well with the affable cast. ,The movie's relatively simple plot.,0.82,0.684,0.878
+106,the movie's relatively simple plot and uncomplicated morality play well with the affable cast. ,The movie's relatively simple plot and uncomplicated morality plays well well.,0.784,0.89,0.754
+114,"it haunts you, you can't forget it, you admire its conception and are able to resolve some of the confusions you had while watching","It haunts you, you can't forget it.",0.686,0.724,0.674
+114,"it haunts you, you can't forget it, you admire its conception and are able to resolve some of the confusions you had while watching","It haunts you, you cant forget it, you admire it.",0.012,0.787,0.009
+38,"as surreal as a dream and as detailed as a photograph, as visually dexterous as it is at times imaginatively overwhelming. ",As surreal as dream and as detailed as photo.,0.527,0.876,0.466
+38,"as surreal as a dream and as detailed as a photograph, as visually dexterous as it is at times imaginatively overwhelming. ",As surreal as a dream.,0.476,0.799,0.42
+143,a solid film... but more conscientious than it is truly stirring. ,A solid film.,0.403,0.735,0.35
+143,a solid film... but more conscientious than it is truly stirring. ,A solid film.,0.403,0.735,0.35
+169,leigh's film is full of memorable performances from top to bottom. ,Keefeleigh's film is full of memorable performances.,0.046,0.57,0.035
+169,leigh's film is full of memorable performances from top to bottom. ,The film is full of memorable performances.,0.046,0.685,0.035
+132,scooby dooby doo / and shaggy too / you both look and sound great. ,scooby dooby doo.,0.51,0.694,0.468
+132,scooby dooby doo / and shaggy too / you both look and sound great. ,Scooby dooby doo.,0.51,0.694,0.468
+210,"not only is undercover brother as funny, if not more so, than both austin powers films, but it's also one of the smarter,","not only is undercover brother as funny as both austin powers films, but it's also smarter.",0.586,0.983,0.516
+210,"not only is undercover brother as funny, if not more so, than both austin powers films, but it's also one of the smarter,",not only is undercover brother as funny as both austin powers.,0.247,0.899,0.199
+288,the quality of the art combined with the humor and intelligence of the script allow the filmmakers to present the biblical message of forgiveness without it ever becoming preachy,"The quality of the art. Combined with the humor and intelligence of the script, allows the filmmakers to present the biblical message of forgiveness without it becoming preachy",0.648,0.984,0.582
+288,the quality of the art combined with the humor and intelligence of the script allow the filmmakers to present the biblical message of forgiveness without it ever becoming preachy,The quality of art combined with the humor of the script allow the filmmakers to present the biblical message of forgiveness without becoming preachy.,0.072,0.982,0.055
+739,"oscar wilde's masterpiece, the importance of being earnest, may be the best play of the 19th century. ",oscar Wilde's masterpiece.,0.525,0.678,0.488
+739,"oscar wilde's masterpiece, the importance of being earnest, may be the best play of the 19th century. ",oscar Wilde's masterpiece.,0.525,0.678,0.488
+669,"preaches to two completely different choirs at the same time, which is a pretty amazing accomplishment. ",preaches to two different choirs at the same time.,0.04,0.886,0.03
+669,"preaches to two completely different choirs at the same time, which is a pretty amazing accomplishment. ","preaches two completely different choirs at the same time, which is a pretty amazing accomplishment.",0.002,0.995,0.001
+8,you don't have to know about music to appreciate the film's easygoing blend of comedy and romance. ,"As with all my films, you don't have to know about music.",0.333,0.795,0.279
+8,you don't have to know about music to appreciate the film's easygoing blend of comedy and romance. ,you need to know nothing about music to appreciate the film's easygoing blend.,0.053,0.865,0.04
+866,"the far future may be awesome to consider, but from period detail to matters of the heart, this film is most transporting when it stays put in the",The far future may be awesome.,0.655,0.547,0.7
+866,"the far future may be awesome to consider, but from period detail to matters of the heart, this film is most transporting when it stays put in the",the far future may be awesome to consider.,0.418,0.559,0.386
+277,"it just may inspire a few younger moviegoers to read stevenson's book, which is a treasure in and of itself. ",It just might inspire a few younger moviegoers.,0.423,0.579,0.388
+277,"it just may inspire a few younger moviegoers to read stevenson's book, which is a treasure in and of itself. ",it just may inspire a few younger moviegoers.,0.363,0.595,0.321
+125,a movie that reminds us of just how exciting and satisfying the fantasy cinema can be when it's approached with imagination and flair. ,A movie that reminds us.,0.293,0.618,0.249
+125,a movie that reminds us of just how exciting and satisfying the fantasy cinema can be when it's approached with imagination and flair. ,A movie that reminds us just how exciting and satisfying.,0.008,0.788,0.006
+2,allows us to hope that nolan is poised to embark a major career as a commercial yet inventive filmmaker. ,allows us to hope that Nolan is poised to embark a major career.,0.516,0.847,0.457
+2,allows us to hope that nolan is poised to embark a major career as a commercial yet inventive filmmaker. ,allows us to hope.,0.3,0.449,0.27
+613,... takes the beauty of baseball and melds it with a story that could touch anyone regardless of their familiarity with the sport ,... takes the beauty of baseball.,0.041,0.773,0.031
+613,... takes the beauty of baseball and melds it with a story that could touch anyone regardless of their familiarity with the sport ,... takes the beauty of baseball.,0.041,0.773,0.031
+508,"a poignant and compelling story about relationships, food of love takes us on a bumpy but satisfying journey of the heart. ",A poignant and compelling story.,0.011,0.495,0.008
+508,"a poignant and compelling story about relationships, food of love takes us on a bumpy but satisfying journey of the heart. ",A poignant and compelling story about relationships.,0.002,0.683,0.002
+354,"the film is quiet, threatening and unforgettable. ","The film is quiet, threatening, and unforgettable.",0.311,0.997,0.253
+354,"the film is quiet, threatening and unforgettable. ","The film is quiet, threatening, and unprepared.",0.309,0.924,0.253
+424,a good piece of work more often than not. ,A good work.,0.414,0.5,0.392
+424,a good piece of work more often than not. ,A good piece of work.,0.189,0.654,0.153
+266,"a coda in every sense, the pinochet case splits time between a minute-by-minute account of the british court's extradition","In every sense, the pinochet case splits time.",0.722,0.684,0.735
+266,"a coda in every sense, the pinochet case splits time between a minute-by-minute account of the british court's extradition",A coda in every sense.,0.454,0.331,0.519
+570,"seldahl's barbara is a precise and moving portrait of someone whose world is turned upside down, first by passion and then by illness.",Barbara Seldahl.,0.403,0.651,0.358
+570,"seldahl's barbara is a precise and moving portrait of someone whose world is turned upside down, first by passion and then by illness.",Barbara Seldahl is a precise and moving portrait.,0.04,0.818,0.03
+353,"for movie lovers as well as opera lovers, tosca is a real treat. ","For movie lovers as well as opera lovers, Tosca is a real treat.",0.082,1.0,0.063
+353,"for movie lovers as well as opera lovers, tosca is a real treat. ","For movie lovers as well as opera lovers, Tosca is a real treat.",0.082,1.0,0.063
+860,"stephen rea, aidan quinn, and alan bates play desmond's legal eagles, and when joined by bros","stephen R. Johnson, aidan quinn and alan Bates play desmond's legal escorts.",0.68,0.721,0.667
+860,"stephen rea, aidan quinn, and alan bates play desmond's legal eagles, and when joined by bros","stephen Rea, aidan quinn, and alan Bates play desmond's legal eagle.",0.513,0.936,0.446
+593,the terrific and bewilderingly underrated campbell scott gives a star performance that is nothing short of mesmerizing. ,Campbell Scott gives a star performance.,0.2,0.797,0.16
+593,the terrific and bewilderingly underrated campbell scott gives a star performance that is nothing short of mesmerizing. ,The terrific and bewilderingly underrated campbell scott.,0.011,0.86,0.008
+383,"a warm but realistic meditation on friendship, family and affection. ","A warm, but realistic meditation.",0.606,0.679,0.585
+383,"a warm but realistic meditation on friendship, family and affection. ","A warm, realistic meditation.",0.305,0.691,0.257
+697,not since tom cruise in risky business has an actor made such a strong impression in his underwear. ,not since tom cruise in risky business has an actor made such a strong impression.,0.524,0.89,0.461
+697,not since tom cruise in risky business has an actor made such a strong impression in his underwear. ,Not since Tom cruise in risky business has an actor made such a strong impression in his underwear.,0.359,1.0,0.296
+223,"corny, schmaltzy and predictable, but still manages to be kind of heartwarming, nonetheless. ","corny, schmaltzy.corny, but still kind of heartwarming.",0.499,0.831,0.44
+223,"corny, schmaltzy and predictable, but still manages to be kind of heartwarming, nonetheless. ","corny, schmaltzy.",0.369,0.726,0.317
+482,cq's reflection of artists and the love of cinema-and-self suggests nothing less than a new voice that deserves to be considered as a,cq's reflection of artists and the love of cinema-and-self suggests nothing less than a new voice.,0.467,0.977,0.398
+482,cq's reflection of artists and the love of cinema-and-self suggests nothing less than a new voice that deserves to be considered as a,cq's reflection of artists.,0.233,0.773,0.189
+23,"a delectable and intriguing thriller filled with surprises, read my lips is an original. ",A delectable and intriguing thriller filled with surprises.,0.001,0.662,0.0
+23,"a delectable and intriguing thriller filled with surprises, read my lips is an original. ",A delectable and intriguing thriller filled with surprises.,0.001,0.662,0.0
+206,"an artful, intelligent film that stays within the confines of a well-established genre. ","An artful, intelligent film.",0.356,0.811,0.299
+206,"an artful, intelligent film that stays within the confines of a well-established genre. ","An artful, intelligent film.",0.356,0.811,0.299
+853,"( serry ) wants to blend politics and drama, an admirable ambition. ",( serry ) wants to blend politics.,0.218,0.85,0.175
+853,"( serry ) wants to blend politics and drama, an admirable ambition. ",( serry ) wants to blend politics and drama.,0.048,0.936,0.036
+426,"charles'entertaining film chronicles seinfeld's return to stand-up comedy after the wrap of his legendary sitcom, alongside wannabe comic",charles 'entrancing film chronicles Seinfeld's return to stand-up comedy after the leaving of his legendary sitcom.,0.172,0.821,0.136
+426,"charles'entertaining film chronicles seinfeld's return to stand-up comedy after the wrap of his legendary sitcom, alongside wannabe comic",charles' entertaining film chronicles Seinfeld's return to stand-up comedy after the end of his legendary sitcom.,0.044,0.867,0.033
+27,it's an offbeat treat that pokes fun at the democratic exercise while also examining its significance for those who take part. ,it's an offbeat treat.,0.434,0.575,0.401
+27,it's an offbeat treat that pokes fun at the democratic exercise while also examining its significance for those who take part. ,it's an offbeat treat.,0.434,0.575,0.401
+428,"beautifully observed, miraculously unsentimental comedy-drama. ",Beautifully observed.,0.353,0.302,0.375
+428,"beautifully observed, miraculously unsentimental comedy-drama. ",beautifully observed.,0.353,0.302,0.375
+236,not since japanese filmmaker akira kurosawa's ran have the savagery of combat and the specter of death been visual,Since Japanese filmmaker akira kurosawa ran the genocide.,0.552,0.678,0.52
+236,not since japanese filmmaker akira kurosawa's ran have the savagery of combat and the specter of death been visual,Not since japanese filmmaker akira kurosawa ran have the savagery of combat been visual.,0.446,0.926,0.38
+327,"it proves quite compelling as an intense, brooding character study. ",it proves quite compelling.,0.506,0.655,0.47
+327,"it proves quite compelling as an intense, brooding character study. ",It proves quite compelling.,0.506,0.655,0.47
+671,two hours fly by -- opera's a pleasure when you don't have to endure intermissions -- and even a novice to the form comes away,Both hours fly by.,0.459,0.486,0.451
+671,two hours fly by -- opera's a pleasure when you don't have to endure intermissions -- and even a novice to the form comes away,Two hours fly.,0.414,0.535,0.384
+401,"the film may appear naked in its narrative form... but it goes deeper than that, to fundamental choices that include the complexity of the catholic doctrine ",The film may appear naked.,0.617,0.496,0.671
+401,"the film may appear naked in its narrative form... but it goes deeper than that, to fundamental choices that include the complexity of the catholic doctrine ",The film may appear naked in its narrative form.,0.121,0.632,0.095
+784,very psychoanalytical -- provocatively so -- and also refreshingly literary. ,Very psychoanalytical.,0.44,0.787,0.383
+784,very psychoanalytical -- provocatively so -- and also refreshingly literary. ,very psychoanalytical.,0.44,0.787,0.383
+464,intriguing documentary which is emotionally diluted by focusing on the story's least interesting subject. ,intriguing documentary.,0.415,0.746,0.362
+464,intriguing documentary which is emotionally diluted by focusing on the story's least interesting subject. ,Intriguing documentary.,0.415,0.746,0.362
+220,the socio-histo-political treatise is told in earnest strides... ( and ) personal illusion is deconstructed with poignancy. ,the socio-histo-political treatise is told in earnest steps.,0.167,0.666,0.133
+220,the socio-histo-political treatise is told in earnest strides... ( and ) personal illusion is deconstructed with poignancy. ,The socio-histo political treatise is told in earnest.,0.11,0.707,0.086
+109,it's great escapist fun that recreates a place and time that will never happen again. ,It's great escapist fun.,0.119,0.824,0.092
+109,it's great escapist fun that recreates a place and time that will never happen again. ,It's great escapist fun.,0.119,0.824,0.092
+201,"inside the film's conflict-powered plot there is a decent moral trying to get out, but it's not that, it's the",Inside the film's conflict-powered plot there is a decent moral.,0.14,0.89,0.109
+201,"inside the film's conflict-powered plot there is a decent moral trying to get out, but it's not that, it's the","Inside the film's conflict-powered plot, there is a decent moral.",0.11,0.887,0.086
+699,"... routine, harmless diversion and little else. ","... routine, harmless diversion.",0.741,0.953,0.69
+699,"... routine, harmless diversion and little else. ","... routine, harmless diversion.",0.741,0.953,0.69
+215,"the best revenge may just be living well because this film, unlike other dumas adaptations, is far more likened to a treasure than a lengthy jail",The best revenge may simply be living well.,0.66,0.528,0.719
+215,"the best revenge may just be living well because this film, unlike other dumas adaptations, is far more likened to a treasure than a lengthy jail",The best revenge may just be living well.,0.632,0.53,0.676
+387,director andrew niccol... demonstrates a wry understanding of the quirks of fame. ,director Andrew Niccol... demonstrates a wry understanding.,0.099,0.862,0.076
+387,director andrew niccol... demonstrates a wry understanding of the quirks of fame. ,director andrew niccolesse demonstrates a wry understanding of the quirks.,0.013,0.857,0.01
+418,"the continued good chemistry between carmen and juni is what keeps this slightly disappointing sequel going, with enough amusing banter -- blessedly curse-free --",The continued good chemistry between carmen and juni is what keeps this slightly disappointing sequel going.,0.82,0.853,0.81
+418,"the continued good chemistry between carmen and juni is what keeps this slightly disappointing sequel going, with enough amusing banter -- blessedly curse-free --",The continued good chemistry among carmen and juni is what keeps this slightly disappointing sequel going.,0.816,0.847,0.806
+841,there's a wickedly subversive bent to the best parts of birthday girl. ,There are soft pleasures.,0.401,0.211,0.574
+841,there's a wickedly subversive bent to the best parts of birthday girl. ,There is a wickedly subversive bent.,0.041,0.562,0.032
+821,"exciting and direct, with ghost imagery that shows just enough to keep us on our toes. ",exciting and direct.,0.401,0.627,0.358
+821,"exciting and direct, with ghost imagery that shows just enough to keep us on our toes. ",exciting.,0.362,0.499,0.332
+812,this surreal gilliam-esque film is also a troubling interpretation of ecclesiastes. ,This surreal gilliam-esque film is also contemporary.,0.404,0.682,0.355
+812,this surreal gilliam-esque film is also a troubling interpretation of ecclesiastes. ,This surreal gilliam-esque film is also a troubling interpretation of ecclesiastes.,0.112,1.0,0.087
+815,a delightful coming-of-age story. ,A delightful coming-of-age story.,0.507,1.0,0.435
+815,a delightful coming-of-age story. ,A delightful coming-of-age story.,0.507,1.0,0.435
+397,"it's worth seeing just on the basis of the wisdom, and at times, the startling optimism, of the children. ",It's worth seeing.,0.223,0.399,0.194
+397,"it's worth seeing just on the basis of the wisdom, and at times, the startling optimism, of the children. ",it's worth seeing.,0.223,0.399,0.194
+683,true tale of courage -- and complicity -- at auschwitz is a harrowing drama that tries to tell of the unspeakable. ,true story.,0.357,0.208,0.468
+683,true tale of courage -- and complicity -- at auschwitz is a harrowing drama that tries to tell of the unspeakable. ,true tale of courage -- and complicity.,0.111,0.753,0.086
+87,jaglom... put ( s ) the audience in the privileged position of eavesdropping on his characters ,jaglom ( s ) placed the audience in the privileged position.,0.416,0.752,0.362
+87,jaglom... put ( s ) the audience in the privileged position of eavesdropping on his characters ,jaglom's fantasy.,0.346,0.477,0.317
+594,"building slowly and subtly, the film, sporting a breezy spontaneity and realistically drawn characterizations, develops into a significant character study that is both",The film is building slowly yet subtly.,0.686,0.566,0.738
+594,"building slowly and subtly, the film, sporting a breezy spontaneity and realistically drawn characterizations, develops into a significant character study that is both",The film is building slowly and subtly.,0.455,0.602,0.421
+567,"feature debuter d.j. caruso directs a crack ensemble cast, bringing screenwriter tony gayton's narcotics noir to life",feature debuter d.j. caruso leads a crack ensemble.,0.689,0.668,0.697
+567,"feature debuter d.j. caruso directs a crack ensemble cast, bringing screenwriter tony gayton's narcotics noir to life","The feature debuter, D.j. Caruso, leads a crack ensemble cast.",0.649,0.742,0.623
+726,"it gets onto the screen just about as much of the novella as one could reasonably expect, and is engrossing and moving in its own",it gets onto the screen just about as much of the novel.,0.429,0.801,0.371
+726,"it gets onto the screen just about as much of the novella as one could reasonably expect, and is engrossing and moving in its own",It gets onto the screen just about as much of the novella as one could reasonably expect.,0.27,0.937,0.218
+767,a film about a young man finding god that is accessible and touching to the marrow. ,A film about young man finding God.,0.193,0.863,0.153
+767,a film about a young man finding god that is accessible and touching to the marrow. ,A film about a young man finding God.,0.049,0.871,0.037
+193,"morton uses her face and her body language to bring us morvern's soul, even though the character is almost completely deadpan. ",morton uses her face and her body language to bring us Morvern's soul.,0.528,0.948,0.461
+193,"morton uses her face and her body language to bring us morvern's soul, even though the character is almost completely deadpan. ",morton uses her face and her body language to bring us morvern's soul.,0.528,0.948,0.461
+729,the piece plays as well as it does thanks in large measure to anspaugh's three lead actresses. ,The piece plays well. It is largely responsible ``.,0.83,0.596,0.954
+729,the piece plays as well as it does thanks in large measure to anspaugh's three lead actresses. ,The piece plays as well as it does. ``,0.314,0.639,0.269
+249,huston nails both the glad-handing and the choking sense of hollow despair. ,huston nails both the glad-handing and the choking sense of hollow despair.,0.935,1.0,0.915
+249,huston nails both the glad-handing and the choking sense of hollow despair. ,Huston nails both the glad-handing and the choking sense of hollow despair.,0.935,1.0,0.915
+100,"neither parker nor donovan is a typical romantic lead, but they bring a fresh, quirky charm to the formula. ",neither parker nor donovan is a typical romantic lead.,0.965,0.876,0.999
+100,"neither parker nor donovan is a typical romantic lead, but they bring a fresh, quirky charm to the formula. ",neither parker nor donovan is a typical romantic lead.,0.965,0.876,0.999
+360,` easily my choice for one of the year's best films.',Are there any good films?,0.574,0.524,0.593
+360,` easily my choice for one of the year's best films.',' It's easily my choice.,0.389,0.632,0.345
+467,"ramsay, as in ratcatcher, remains a filmmaker with an acid viewpoint and a real gift for teasing chilly poetry out of lives and settings that","ramsay remains, as in ratcatcher, a filmmaker.",0.511,0.836,0.452
+467,"ramsay, as in ratcatcher, remains a filmmaker with an acid viewpoint and a real gift for teasing chilly poetry out of lives and settings that",ramsay remains in ratcatcher.,0.164,0.728,0.131
+323,a painfully funny ode to bad behavior. ,A painfully funny ode to bad behavior.,0.885,1.0,0.852
+323,a painfully funny ode to bad behavior. ,A painfully funny ode to bad behavior.,0.885,1.0,0.852
+782,the structure the film takes may find matt damon and ben affleck once again looking for residuals as this officially completes a good will hunting trilogy that,The structure the film takes may find Matt damon and Ben affleck once again looking for residuals.,0.762,0.829,0.742
+782,the structure the film takes may find matt damon and ben affleck once again looking for residuals as this officially completes a good will hunting trilogy that,The structure the film takes may find Matt damon and Ben affleck once again looking for residuals.,0.762,0.829,0.742
+447,"generally, clockstoppers will fulfill your wildest fantasies about being a different kind of time traveler, while happily killing 94 minutes. ","generally, clockstoppers will fulfill your wildest fantasies.",0.043,0.812,0.033
+447,"generally, clockstoppers will fulfill your wildest fantasies about being a different kind of time traveler, while happily killing 94 minutes. ","Generally, clockstoppers will fulfill your wildest fantasies.",0.043,0.812,0.033
+200,"the format gets used best... to capture the dizzying heights achieved by motocross and bmx riders, whose balletic hotdogging occasionally ends",The format's used best.,0.264,0.411,0.236
+200,"the format gets used best... to capture the dizzying heights achieved by motocross and bmx riders, whose balletic hotdogging occasionally ends",The format gets used best. It is used to capture the dizzying heights achieved by motocross and bmx riders.,0.004,0.789,0.003
+859,"add yet another hat to a talented head, clooney's a good director. ",add yet another hat.,0.396,0.549,0.363
+859,"add yet another hat to a talented head, clooney's a good director. ",Add yet another hat to a talented head.,0.262,0.705,0.217
+758,"may be far from the best of the series, but it's assured, wonderfully respectful of its past and thrilling enough to make it abundantly clear that",may be far from the best.,0.531,0.401,0.595
+758,"may be far from the best of the series, but it's assured, wonderfully respectful of its past and thrilling enough to make it abundantly clear that",He may be far from the best.,0.471,0.288,0.599
+783,the movie does a good job of laying out some of the major issues that we encounter as we journey through life. ,"The overall feel, the movie does a good job of laying out some issues we encounter as we journey through life.",0.037,0.921,0.028
+783,the movie does a good job of laying out some of the major issues that we encounter as we journey through life. ,The movie does a good job of highlighting the main issues that we encounter as we journey through life.,0.005,0.965,0.004
+686,"more romantic, more emotional and ultimately more satisfying than the teary-eyed original. ","More romantic, more emotional, more satisfying.",0.469,0.725,0.419
+686,"more romantic, more emotional and ultimately more satisfying than the teary-eyed original. ","More romantic, more emotional.",0.426,0.673,0.38
+628,"writer-director's mehta's effort has tons of charm and the whimsy is in the mixture, the intoxicating masala,",The writer-director attempt has tons of charm.,0.851,0.612,0.979
+628,"writer-director's mehta's effort has tons of charm and the whimsy is in the mixture, the intoxicating masala,","The writer-director `` mehta `` effort has tons of charm. The whimsy is hidden in the mix, the intoxicating masala.",0.366,0.965,0.303
+205,falls neatly into the category of good stupid fun. ,falls neatly into the category of stupid fun.,0.989,0.973,0.994
+205,falls neatly into the category of good stupid fun. ,falls neatly into the category of good stupid fun.,0.923,1.0,0.9
+825,candid and comfortable ; a film that deftly balances action and reflection as it lets you grasp and feel the passion others have for their work. ,candid and comfortable.,0.438,0.545,0.411
+825,candid and comfortable ; a film that deftly balances action and reflection as it lets you grasp and feel the passion others have for their work. ,candid and comfortable.,0.438,0.545,0.411
+333,"a pleasant enough romance with intellectual underpinnings, the kind of movie that entertains even as it turns maddeningly predictable. ",A pleasant enough romance.,0.433,0.633,0.391
+333,"a pleasant enough romance with intellectual underpinnings, the kind of movie that entertains even as it turns maddeningly predictable. ",A pleasant enough romance.,0.433,0.633,0.391
+309,the second coming of harry potter is a film far superior to its predecessor. ,The second coming of Harry Potter is far superior.,0.821,0.895,0.799
+309,the second coming of harry potter is a film far superior to its predecessor. ,The second coming of Harry Potter is trophy-laden.,0.553,0.677,0.521
+316,"awesome creatures, breathtaking scenery, and epic battle scenes add up to another ` spectacular spectacle.'","awesome creatures, breathtaking scenery, epic battle scenes add up to another spectacular spectacle.",0.0,0.976,0.0
+316,"awesome creatures, breathtaking scenery, and epic battle scenes add up to another ` spectacular spectacle.'","awesome creatures, breathtaking scenery, and epic battle scenes add up to another `` spectacular spectacle.",0.0,0.994,0.0
+614,"against all odds in heaven and hell, it creeped me out just fine. ",It creeped me out.,0.757,0.549,0.866
+614,"against all odds in heaven and hell, it creeped me out just fine. ",It creeped me out.,0.757,0.549,0.866
+159,"like leon, it's frustrating and still oddly likable. ","Like leon, it is frustrating.",0.552,0.889,0.49
+159,"like leon, it's frustrating and still oddly likable. ","Like leon, it's frustrating.",0.535,0.89,0.473
+103,"a gripping movie, played with performances that are all understated and touching. ","A gripping, understated film.",0.612,0.871,0.557
+103,"a gripping movie, played with performances that are all understated and touching. ",A gripping movie.,0.467,0.793,0.411
+766,"while its careful pace and seemingly opaque story may not satisfy every moviegoer's appetite, the film's final scene is soaringly, transparent","While its careful pace and seemingly opaque story may not satisfy every moviegoer's appetite, the film's final scene is nearly transparent.",0.985,0.964,0.992
+766,"while its careful pace and seemingly opaque story may not satisfy every moviegoer's appetite, the film's final scene is soaringly, transparent",While its careful pace and seemingly opaque story may not satisfy the appetite.,0.823,0.598,0.941
+191,the movie is beautiful to behold and engages one in a sense of epic struggle -- inner and outer -- that's all too rare in hollywood ',The movie is beautiful.,0.483,0.623,0.449
+191,the movie is beautiful to behold and engages one in a sense of epic struggle -- inner and outer -- that's all too rare in hollywood ',The movie is beautiful.,0.483,0.623,0.449
+685,no screen fantasy-adventure in recent memory has the showmanship of clones'last 45 minutes. ,No screen fantasy-adventure in recent memory has the showmanship of clone 'last 45 minutes.,0.223,0.972,0.178
+685,no screen fantasy-adventure in recent memory has the showmanship of clones'last 45 minutes. ,No screen fantasy-adventure in recent memory has the showmanship of clones.,0.185,0.918,0.146
+325,"liotta put on 30 pounds for the role, and has completely transformed himself from his smooth, goodfellas image. ",liotta put on 30 pounds for the role.,0.459,0.821,0.4
+325,"liotta put on 30 pounds for the role, and has completely transformed himself from his smooth, goodfellas image. ",liotta put on 30 pounds.,0.314,0.692,0.266
+698,"an interesting story with a pertinent ( cinematically unique ) message, told fairly well and scored to perfection, i found myself struggling to put my finger on",an interesting story.,0.342,0.435,0.32
+698,"an interesting story with a pertinent ( cinematically unique ) message, told fairly well and scored to perfection, i found myself struggling to put my finger on",An interesting story.,0.342,0.435,0.32
+204,"that dogged good will of the parents and ` vain'jia's defoliation of ego, make the film touching despite some doldrums",Diggory good will of the parents.,0.049,0.376,0.038
+204,"that dogged good will of the parents and ` vain'jia's defoliation of ego, make the film touching despite some doldrums",The film makes some doldrums. That dogged good will of parents.,0.007,0.66,0.006
+541,the most compelling wiseman epic of recent years. ,The most compelling wiseman epic.,0.049,0.956,0.037
+541,the most compelling wiseman epic of recent years. ,The most compelling wiseman epic.,0.049,0.956,0.037
+855,it's fascinating to see how bettany and mcdowell play off each other. ,it's fascinating to see how Bettany and McCCDowell play off each other.,0.059,0.792,0.045
+855,it's fascinating to see how bettany and mcdowell play off each other. ,It's fascinating to see how Bettany and mcdowell play each other.,0.013,0.991,0.01
+437,"immersing us in the endlessly inventive, fiercely competitive world of hip-hop djs, the project is sensational and revelatory, even if scratching makes","immersing us in the endlessly inventive, fiercely competitive world of hip-hop djs.",0.0,0.83,0.0
+437,"immersing us in the endlessly inventive, fiercely competitive world of hip-hop djs, the project is sensational and revelatory, even if scratching makes","immersing us in the endlessly inventive, fiercely competitive world of hip-hop.",0.0,0.732,0.0
+192,"a celebration of quirkiness, eccentricity, and certain individuals'tendency to let it all hang out, and damn the consequences. ","A celebration. Quirkiness, eccentricity.",0.639,0.822,0.595
+192,"a celebration of quirkiness, eccentricity, and certain individuals'tendency to let it all hang out, and damn the consequences. ","A celebration of quirkiness, eccentricity.",0.429,0.854,0.368
+803,bogdanovich tantalizes by offering a peep show into the lives of the era's creme de la celluloid. ,Bogdanovich tantalizes.,0.266,0.572,0.226
+803,bogdanovich tantalizes by offering a peep show into the lives of the era's creme de la celluloid. ,bogdanovich tantalizes.,0.266,0.572,0.226
+410,what distinguishes time of favor from countless other thrillers is its underlying concern with the consequences of words and with the complicated emotions fueling terrorist acts. ,What distinguishes time of favor from countless other thrillers?,0.444,0.811,0.386
+410,what distinguishes time of favor from countless other thrillers is its underlying concern with the consequences of words and with the complicated emotions fueling terrorist acts. ,What distinguishes time of favor from countless other thriller novels?,0.283,0.798,0.233
+835,a giggle-inducing comedy with snappy dialogue and winning performances by an unlikely team of oscar-winners : susan sarandon and gold,A giggle-inducing comedy.,0.477,0.538,0.459
+835,a giggle-inducing comedy with snappy dialogue and winning performances by an unlikely team of oscar-winners : susan sarandon and gold,A giggle-inducing comedy.,0.477,0.538,0.459
+737,my big fat greek wedding uses stereotypes in a delightful blend of sweet romance and lovingly dished out humor. ,My big fat greek wedding uses stereotypes provocatively.,0.943,0.896,0.96
+737,my big fat greek wedding uses stereotypes in a delightful blend of sweet romance and lovingly dished out humor. ,My big fat greek wedding uses stereotypes.,0.605,0.885,0.547
+448,"something akin to a japanese alice through the looking glass, except that it seems to take itself far more seriously. ",Something akin to a Japanese alice through the looking glass.,0.77,0.898,0.734
+448,"something akin to a japanese alice through the looking glass, except that it seems to take itself far more seriously. ",something akin to a Japanese alice through the looking glass.,0.77,0.898,0.734
+60,"this is a story of two misfits who don't stand a chance alone, but together they are magnificent. ",this is a story of two misfits.,0.261,0.78,0.213
+60,"this is a story of two misfits who don't stand a chance alone, but together they are magnificent. ",this is a story of two misfits.,0.261,0.78,0.213
+422,"it moves quickly, adroitly, and without fuss ; it doesn't give you time to reflect on the inanity -- and the cold war","It moves quickly, adroitly, without fuss.",0.561,0.688,0.528
+422,"it moves quickly, adroitly, and without fuss ; it doesn't give you time to reflect on the inanity -- and the cold war","It moves quickly, adroitly, without fuss.",0.561,0.688,0.528
+175,"bleakly funny, its characters all the more touching for refusing to pity or memorialize themselves. ",bleakly funny.,0.331,0.547,0.293
+175,"bleakly funny, its characters all the more touching for refusing to pity or memorialize themselves. ",bleakly funny.,0.331,0.547,0.293
+450,"a moody, multi-dimensional love story and sci-fi mystery, solaris is a thought-provoking, haunting film that allows the seeds","A moody, multi-dimensional love story.",0.119,0.584,0.094
+450,"a moody, multi-dimensional love story and sci-fi mystery, solaris is a thought-provoking, haunting film that allows the seeds","A moody, multi-dimensional love story.",0.119,0.584,0.094
+718,"this is human comedy at its most amusing, interesting and confirming. ",This is human comedy at its most amusing.,0.322,0.864,0.266
+718,"this is human comedy at its most amusing, interesting and confirming. ",This is human comedy at its most eccentric.,0.316,0.712,0.266
+684,"a study in shades of gray, offering itself up in subtle plot maneuvers... ",A study in shades of gray.,0.141,0.791,0.111
+684,"a study in shades of gray, offering itself up in subtle plot maneuvers... ",a study in shades of gray.,0.141,0.791,0.111
+499,"unlike the speedy wham-bam effect of most hollywood offerings, character development -- and more importantly, character empathy -- is at the heart","uncharacter development -- and more importantly, character empathy -- lies at the heart.",0.67,0.691,0.664
+499,"unlike the speedy wham-bam effect of most hollywood offerings, character development -- and more importantly, character empathy -- is at the heart","unlike the speedy wham-bam effect of most hollywood offerings, character development remains at the heart.",0.292,0.795,0.241
+198,"this is a winning ensemble comedy that shows canadians can put gentle laughs and equally gentle sentiments on the button, just as easily as their counterparts anywhere",this is a winning ensemble comedy.,0.006,0.581,0.004
+198,"this is a winning ensemble comedy that shows canadians can put gentle laughs and equally gentle sentiments on the button, just as easily as their counterparts anywhere",this is a winning ensemble comedy.,0.006,0.581,0.004
+809,"a lean, deftly shot, well-acted, weirdly retro thriller that recalls a raft of '60s and '70s european","A lean, deftly shot, well-acted retro thriller.",0.001,0.707,0.0
+809,"a lean, deftly shot, well-acted, weirdly retro thriller that recalls a raft of '60s and '70s european","A lean, deftly shot, well-acted retro thriller.",0.001,0.707,0.0
+122,old-form moviemaking at its best. ,Old-form moviemaking.,0.379,0.939,0.317
+122,old-form moviemaking at its best. ,old form moviemaking.,0.333,0.919,0.275
+174,if you dig on david mamet's mind tricks... rent this movie and enjoy! ,"If you dig on David Mamet's mind tricks, rent this movie and enjoy.",0.944,0.98,0.933
+174,if you dig on david mamet's mind tricks... rent this movie and enjoy! ,"If you dig on David Mamet's mind tricks, rent this movie.",0.775,0.959,0.728
+816,"a spellbinding african film about the modern condition of rootlessness, a state experienced by millions around the globe. ",A spellbinding african film.,0.408,0.736,0.356
+816,"a spellbinding african film about the modern condition of rootlessness, a state experienced by millions around the globe. ",A spellbinding african film.,0.408,0.736,0.356
+655,"birthday girl is an amusing joy ride, with some surprisingly violent moments. ",birthday Girl is an amusing joyride.,0.011,0.862,0.008
+655,"birthday girl is an amusing joy ride, with some surprisingly violent moments. ",birthday girl is an amusing joy ride.,0.0,0.891,0.0
+439,yakusho and shimizu... create engaging characterizations in imamura's lively and enjoyable cultural mix. ,yakusho and Shimizu… create engaging characterizations.,0.006,0.818,0.005
+439,yakusho and shimizu... create engaging characterizations in imamura's lively and enjoyable cultural mix. ,yakusho and shimizu create engaging characterizations.,0.001,0.818,0.001
+293,"at a time when half the so-called real movies are little more than live-action cartoons, it's refreshing to see a cartoon that knows","at a time when half the so-called real films are little more than live action cartoons, it's refreshing to see a cartoon that knows.",0.415,0.972,0.348
+293,"at a time when half the so-called real movies are little more than live-action cartoons, it's refreshing to see a cartoon that knows","At a time when half the so-called real movies are little more than live-action cartoons, it's refreshing to see a cartoon.",0.402,0.95,0.337
+455,"( chaiken's ) talent lies in an evocative, accurate observation of a distinctive milieu and in the lively, convincing dialogue she creates for","( chaiken's ) talent lies in evocative, accurate observation.",0.698,0.784,0.673
+455,"( chaiken's ) talent lies in an evocative, accurate observation of a distinctive milieu and in the lively, convincing dialogue she creates for","( chaiken's ) talent lies in an evocative, accurate observation.",0.653,0.792,0.617
+259,a rarity among recent iranian films : it's a comedy full of gentle humor that chides the absurdity of its protagonist's plight. ,A rare exception among recent Iranian films.,0.808,0.648,0.881
+259,a rarity among recent iranian films : it's a comedy full of gentle humor that chides the absurdity of its protagonist's plight. ,A rarity among recent iranian films.,0.16,0.69,0.127
+339,if you enjoy more thoughtful comedies with interesting conflicted characters ; this one is for you. ,"If you enjoy more thoughtful comedies, then this one is for you.",0.822,0.86,0.81
+339,if you enjoy more thoughtful comedies with interesting conflicted characters ; this one is for you. ,if you enjoy more thoughtful comedies.,0.631,0.806,0.588
+234,affleck and jackson are good sparring partners. ,affleck and jackson are good sparring partners.,0.162,1.0,0.127
+234,affleck and jackson are good sparring partners. ,affleck and Jackson are good sparring partners.,0.162,1.0,0.127
+414,"it has charm to spare, and unlike many romantic comedies, it does not alienate either gender in the audience. ",It has charm.,0.354,0.382,0.346
+414,"it has charm to spare, and unlike many romantic comedies, it does not alienate either gender in the audience. ","It has charm to spare.Unlike many romantic comedies, it does not alienate either gender.",0.021,0.973,0.016
+458,"featuring a dangerously seductive performance from the great daniel auteuil, `` sade '' covers the same period as kaufmann",featuring a dangerously seductive performance.,0.504,0.391,0.558
+458,"featuring a dangerously seductive performance from the great daniel auteuil, `` sade '' covers the same period as kaufmann","eaturinguring a dangerously seductive performance, `` sade '' covers the same period as Kufmann.",0.267,0.648,0.223
+714,( a ) n utterly charming and hilarious film that reminded me of the best of the disney comedies from the 60s. ,( a ) n utterly charming.,0.532,0.456,0.563
+714,( a ) n utterly charming and hilarious film that reminded me of the best of the disney comedies from the 60s. ,( a ) n utterly charming.,0.532,0.456,0.563
+609,"nine queens is not only than a frighteningly capable debut and genre piece, but also a snapshot of a dangerous political situation on the verge of coming to",nine Queens is not only a frighteningly able debut.,0.912,0.774,0.969
+609,"nine queens is not only than a frighteningly capable debut and genre piece, but also a snapshot of a dangerous political situation on the verge of coming to",nine Queens is not only a frighteningly capable debut.,0.895,0.794,0.935
+472,you will emerge with a clearer view of how the gears of justice grind on and the death report comes to share airtime alongside the farm report. ,You will emerge with a clearer view.,0.518,0.398,0.576
+472,you will emerge with a clearer view of how the gears of justice grind on and the death report comes to share airtime alongside the farm report. ,you will emerge with a clearer view.,0.518,0.398,0.576
+404,zhang... has done an amazing job of getting realistic performances from his mainly nonprofessional cast. ,zhangzhang.,0.361,0.489,0.332
+404,zhang... has done an amazing job of getting realistic performances from his mainly nonprofessional cast. ,zhang... has done an amazing job.,0.053,0.777,0.04
+52,"mr. tsai is a very original artist in his medium, and what time is it there? ",mr. tsai is very original.,0.751,0.643,0.796
+52,"mr. tsai is a very original artist in his medium, and what time is it there? ",MR. tsai is a very original artist.,0.159,0.739,0.126
+738,... a magnificent drama well worth tracking down. ,... a magnificent drama.,0.102,0.723,0.079
+738,... a magnificent drama well worth tracking down. ,... A magnificent drama.,0.102,0.723,0.079
+85,the movie achieves as great an impact by keeping these thoughts hidden as... ( quills ) did by showing them. ,The movie achieves as great an impact by keeping these thoughts hidden.,0.015,0.798,0.011
+85,the movie achieves as great an impact by keeping these thoughts hidden as... ( quills ) did by showing them. ,The movie achieves as great an impact by keeping these thoughts hidden.,0.015,0.798,0.011
+794,it confirms fincher's status as a film maker who artfully bends technical know-how to the service of psychological insight. ,It confirms Fincher's status as a film maker.,0.071,0.782,0.054
+794,it confirms fincher's status as a film maker who artfully bends technical know-how to the service of psychological insight. ,It confirms fincher's status as a film maker who artfully bends technical know-how.,0.03,0.905,0.023
+334,"what really makes it special is that it pulls us into its world, gives us a hero whose suffering and triumphs we can share, surrounds him with",What really makes it special?,0.424,0.754,0.37
+334,"what really makes it special is that it pulls us into its world, gives us a hero whose suffering and triumphs we can share, surrounds him with",What makes it special?,0.391,0.732,0.338
+537,"a simple, but gritty and well-acted ensemble drama that encompasses a potent metaphor for a country still dealing with its fascist past. ","A simple, but gritty ensemble drama.",0.351,0.662,0.304
+537,"a simple, but gritty and well-acted ensemble drama that encompasses a potent metaphor for a country still dealing with its fascist past. ","A simple, but gritty ensemble drama.",0.351,0.662,0.304
+367,there has always been something likable about the marquis de sade. ,There is always something likable.,0.511,0.378,0.579
+367,there has always been something likable about the marquis de sade. ,There is always something likable about the marquis de sade.,0.098,0.981,0.076
+336,"having had the good sense to cast actors who are, generally speaking, adored by the movie-going public, khouri then gets terrific performances from",Having had the good sense to cast actors who are generally adored.,0.266,0.707,0.22
+336,"having had the good sense to cast actors who are, generally speaking, adored by the movie-going public, khouri then gets terrific performances from",Khouri then gets terrific performances.,0.01,0.729,0.008
+73,"one of creepiest, scariest movies to come along in a long, long time, easily rivaling blair witch or the others. ",one of the scariest movies.,0.354,0.691,0.305
+73,"one of creepiest, scariest movies to come along in a long, long time, easily rivaling blair witch or the others. ",one of the creepiest.,0.343,0.422,0.322
+372,"the special effects and many scenes of weightlessness look as good or better than in the original, while the oscar-winning sound and james hor",The special effects and many scenes of weightlessness look as good or better in the original.,0.095,0.851,0.073
+372,"the special effects and many scenes of weightlessness look as good or better than in the original, while the oscar-winning sound and james hor",The special effects. Many scenes of weightlessness look as good as the original.,0.042,0.826,0.032
+84,"the band's courage in the face of official repression is inspiring, especially for aging hippies ( this one included ). ",The band's courage in the face of official repression is inspiring.,0.083,0.799,0.064
+84,"the band's courage in the face of official repression is inspiring, especially for aging hippies ( this one included ). ",The band's courage is inspiring.,0.076,0.684,0.059
+509,a movie that successfully crushes a best selling novel into a timeframe that mandates that you avoid the godzilla sized soda. ,A movie that successfully crushes a best selling novel into a timeframe.,0.386,0.781,0.33
+509,a movie that successfully crushes a best selling novel into a timeframe that mandates that you avoid the godzilla sized soda. ,A movie that successfully crushes a best selling novel.,0.32,0.765,0.268
+644,"while locals will get a kick out of spotting cleveland sites, the rest of the world will enjoy a fast-paced comedy with quirks that might make","While locals will get a kick out of stumbling.cleveland sites, the rest of the world may find it slower.",0.192,0.682,0.155
+644,"while locals will get a kick out of spotting cleveland sites, the rest of the world will enjoy a fast-paced comedy with quirks that might make","While locals will get a kick out of checking cleveland sites, the rest of the world will enjoy a fast-paced comedy.",0.011,0.935,0.008
+721,"a poignant, artfully crafted meditation on mortality. ","a poignant, artfullycrafted meditation.",0.626,0.741,0.595
+721,"a poignant, artfully crafted meditation on mortality. ","a poignant, artfully crafted meditation.",0.139,0.76,0.109
+660,"like mike is a winner for kids, and no doubt a winner for lil bow wow, who can now add movies to the list of things he","Like Mike, like Mike.",0.421,0.455,0.411
+660,"like mike is a winner for kids, and no doubt a winner for lil bow wow, who can now add movies to the list of things he","Like Mike, like Mike.",0.421,0.455,0.411
+466,"the inspirational screenplay by mike rich covers a lot of ground, perhaps too much, but ties things together, neatly, by the end. ",The inspirational screenplay by Mike rich covers a lot of ground.,0.121,0.9,0.094
+466,"the inspirational screenplay by mike rich covers a lot of ground, perhaps too much, but ties things together, neatly, by the end. ",The inspirational screenplay by Mike Rich covers a lot of ground.,0.121,0.9,0.094
+120,"warm water under a red bridge is a quirky and poignant japanese film that explores the fascinating connections between women, water, nature, and sexuality.",warm water under a red bridge is a quirky and poignant Japanese film.,0.0,0.902,0.0
+120,"warm water under a red bridge is a quirky and poignant japanese film that explores the fascinating connections between women, water, nature, and sexuality.",Cold water under a red bridge is a quirky and poignant Japanese film.,0.0,0.867,0.0
+235,"whether you like rap music or loathe it, you can't deny either the tragic loss of two young men in the prime of their talent or","whether you like rap music or loathe it, you can't deny either the tragic loss.",0.75,0.84,0.724
+235,"whether you like rap music or loathe it, you can't deny either the tragic loss of two young men in the prime of their talent or","Whether you listen to rap music, or dislike it, doesn't it convey a certain personal message?",0.425,0.549,0.395
+90,"it's a scattershot affair, but when it hits its mark it's brilliant. ",It's a scattershot affair.,0.521,0.694,0.481
+90,"it's a scattershot affair, but when it hits its mark it's brilliant. ",it's a scattershot affair.,0.521,0.694,0.481
+433,"the lion king was a roaring success when it was released eight years ago, but on imax it seems better, not just bigger. ",The lion king was a roaring success when it was released eight years ago.,0.422,0.748,0.368
+433,"the lion king was a roaring success when it was released eight years ago, but on imax it seems better, not just bigger. ",The lion king was a roaring success.,0.165,0.666,0.132
+240,"despite the 2-d animation, the wild thornberrys movie makes for a surprisingly cinematic experience. ","Despite the 2:d animation, the Wild thornberrys movie makes for surprising cinematic experience.",0.188,0.972,0.148
+240,"despite the 2-d animation, the wild thornberrys movie makes for a surprisingly cinematic experience. ","Despite the 2-d animation, the wild thornberrys movie makes for a surprisingly cinematic experience.",0.099,1.0,0.076
+78,"there is nothing outstanding about this film, but it is good enough and will likely be appreciated most by sailors and folks who know their way around a submarine",There is nothing outstanding about this film.,0.71,0.58,0.768
+78,"there is nothing outstanding about this film, but it is good enough and will likely be appreciated most by sailors and folks who know their way around a submarine",There is nothing outstanding about this film.,0.71,0.58,0.768
+636,"offers much to enjoy... and a lot to mull over in terms of love, loyalty and the nature of staying friends. ",offers much to enjoy.,0.378,0.592,0.338
+636,"offers much to enjoy... and a lot to mull over in terms of love, loyalty and the nature of staying friends. ",offers much to enjoy.,0.378,0.592,0.338
+557,one of the best films of the year with its exploration of the obstacles to happiness faced by five contemporary individuals... a psychological masterpiece. ,one of the best films of the year.,0.014,0.619,0.011
+557,one of the best films of the year with its exploration of the obstacles to happiness faced by five contemporary individuals... a psychological masterpiece. ,One of the best films of the year.,0.014,0.619,0.011
+186,"pacino is brilliant as the sleep-deprived dormer, his increasing weariness as much existential as it is physical. ",pacino is brilliant as the sleep-deprived dormer.,0.282,0.921,0.229
+186,"pacino is brilliant as the sleep-deprived dormer, his increasing weariness as much existential as it is physical. ",pacino is brilliant as the sleep-deprived dormer.,0.282,0.921,0.229
+788,"based on a devilishly witty script by heather mcgowan and niels mueller, the film gets great laughs, but never at the expense",Based on a devilishly witty script by Heather mcgowan and Niels mueller.,0.001,0.801,0.001
+788,"based on a devilishly witty script by heather mcgowan and niels mueller, the film gets great laughs, but never at the expense","Based on a devilishly witty script by Heather mcgowan and Niels mueller, the film gets great laughs.",0.001,0.952,0.001
+504,"the film is powerful, accessible and funny. ","The film is powerful, accessible, funny.",0.757,0.995,0.701
+504,"the film is powerful, accessible and funny. ","The film is powerful, accessible, and funny.",0.311,0.997,0.253
+763,"there's something auspicious, and daring, too, about the artistic instinct that pushes a majority-oriented director like steven spielberg to","There are something auspicious, too.",0.573,0.446,0.633
+763,"there's something auspicious, and daring, too, about the artistic instinct that pushes a majority-oriented director like steven spielberg to",There's also something auspicious.,0.446,0.436,0.449
+806,griffiths proves she's that rare luminary who continually raises the standard of her profession. ,griffiths proves she's that rare luminary.,0.267,0.869,0.217
+806,griffiths proves she's that rare luminary who continually raises the standard of her profession. ,griffiths proves that rare luminary.,0.216,0.729,0.175
+577,"though only 60 minutes long, the film is packed with information and impressions. ","Despite being only 60 minutes long, the film is full.",0.885,0.771,0.931
+577,"though only 60 minutes long, the film is packed with information and impressions. ","Although only 60 minutes long, the film is packed.",0.822,0.829,0.819
+389,"thekids will probably stay amused at the kaleidoscope of big, colorful characters. ",Thekids would probably stay amused.,0.603,0.81,0.556
+389,"thekids will probably stay amused at the kaleidoscope of big, colorful characters. ",Thekids will probably stay amused.,0.519,0.831,0.462
+849,trademark american triteness and simplicity are tossed out the window with the intelligent french drama that deftly explores the difficult relationship between a father,Trademark Americanan triteness and simplicity are tossed out the window.,0.192,0.565,0.157
+849,trademark american triteness and simplicity are tossed out the window with the intelligent french drama that deftly explores the difficult relationship between a father,trademark Americanan triteness and simplicity are tossed out the window with the intelligent French drama.,0.042,0.804,0.032
+196,"so, too, is this comedy about mild culture clashing in today's new delhi. ","so, too, is this comedy.",0.436,0.529,0.412
+196,"so, too, is this comedy about mild culture clashing in today's new delhi. ","so, too, is this comedy.",0.436,0.529,0.412
+459,"gives you the steady pulse of life in a beautiful city viewed through the eyes of a character who, in spite of tragic loss and increasing decrep",gives you the steady pulse.,0.507,0.315,0.635
+459,"gives you the steady pulse of life in a beautiful city viewed through the eyes of a character who, in spite of tragic loss and increasing decrep",gives you the constant pulse.,0.49,0.271,0.67
+72,uses high comedy to evoke surprising poignance. ,uses high comedy.,0.518,0.778,0.466
+72,uses high comedy to evoke surprising poignance. ,uses high comedy to evoke surprising poignance.,0.014,1.0,0.01
+104,"it's one of those baseball pictures where the hero is stoic, the wife is patient, the kids are as cute as all get-out","it is one of those baseball pictures. The hero is stoic, the wife is patient, the kids are as cute as.",0.13,0.96,0.101
+104,"it's one of those baseball pictures where the hero is stoic, the wife is patient, the kids are as cute as all get-out","it's one of those baseball pictures. The hero is stoic, the wife is patient. The kids are cute.",0.072,0.966,0.055
+673,"drops you into a dizzying, volatile, pressure-cooker of a situation that quickly snowballs out of control, while focusing on the what much","drops you into a dizzying, volatile, pressure-cooker situation.",0.719,0.749,0.709
+673,"drops you into a dizzying, volatile, pressure-cooker of a situation that quickly snowballs out of control, while focusing on the what much","drops you into a dizzying, volatile, pressure-cooker state.",0.717,0.742,0.709
+603,"first-time writer-director serry shows a remarkable gift for storytelling with this moving, effective little film. ",First-time writer-director Serry shows exceptional humility.,0.0,0.709,0.0
+603,"first-time writer-director serry shows a remarkable gift for storytelling with this moving, effective little film. ",First-time writer-director serry shows a remarkable gift.,0.0,0.866,0.0
+678,"the movie isn't just hilarious : it's witty and inventive, too, and in hindsight, it isn't even all that dumb.",The movie is not just hilarious.,0.917,0.805,0.961
+678,"the movie isn't just hilarious : it's witty and inventive, too, and in hindsight, it isn't even all that dumb.",The movie is not just hilarious.,0.917,0.805,0.961
+696,"for the first time in years, de niro digs deep emotionally, perhaps because he's been stirred by the powerful work of his co-stars","For the first time in years, De Niro emotionally digests.",0.748,0.645,0.79
+696,"for the first time in years, de niro digs deep emotionally, perhaps because he's been stirred by the powerful work of his co-stars","For the first time in years, de Niro begins to dig deeply.",0.705,0.712,0.703
+778,one of the most significant moviegoing pleasures of the year. ,One of the most significant.,0.318,0.396,0.298
+778,one of the most significant moviegoing pleasures of the year. ,one of the most significant movie pleasures.,0.096,0.838,0.074
+858,the film's welcome breeziness and some unbelievably hilarious moments -- most portraying the idiocy of the film industry -- make it mostly worth the trip,The film's welcome breeziness.,0.335,0.753,0.283
+858,the film's welcome breeziness and some unbelievably hilarious moments -- most portraying the idiocy of the film industry -- make it mostly worth the trip,The film's welcome breeziness.,0.335,0.753,0.283
+430,"a breezy romantic comedy that has the punch of a good sitcom, while offering exceptionally well-detailed characters. ",a breezy romantic comedy.,0.435,0.811,0.377
+430,"a breezy romantic comedy that has the punch of a good sitcom, while offering exceptionally well-detailed characters. ",A breezy romantic comedy.,0.435,0.811,0.377
+283,a rewarding work of art for only the most patient and challenge-hungry moviegoers. ,A satisfying work.,0.377,0.475,0.352
+283,a rewarding work of art for only the most patient and challenge-hungry moviegoers. ,For only the most patient and challenge-hungry.,0.203,0.551,0.167
+648,"further proof that the epicenter of cool, beautiful, thought-provoking foreign cinema is smack-dab in the middle of dubya '",Further proof.,0.315,0.236,0.354
+648,"further proof that the epicenter of cool, beautiful, thought-provoking foreign cinema is smack-dab in the middle of dubya '","Further proof that the epicenter of cool, beautiful, thought-provoking foreign cinema is smack-dab in the middle of dubya.",0.183,0.989,0.144
+42,the subtle strength of `` elling '' is that it never loses touch with the reality of the grim situation. ,The subtle strength of `` elling '' is that it never loses touch with the reality.,0.766,0.911,0.727
+42,the subtle strength of `` elling '' is that it never loses touch with the reality of the grim situation. ,The subtle strength of `` elling ''.,0.126,0.743,0.099
+185,"a must-see for the david mamet enthusiast and for anyone who appreciates intelligent, stylish moviemaking. ",A must-see.,0.35,0.452,0.326
+185,"a must-see for the david mamet enthusiast and for anyone who appreciates intelligent, stylish moviemaking. ",A must-see.,0.35,0.452,0.326
+611,the performances take the movie to a higher level. ,The performances take the movie to a higher level.,0.678,1.0,0.613
+611,the performances take the movie to a higher level. ,The performances in this movie.,0.492,0.755,0.441
+665,"and if you're not nearly moved to tears by a couple of scenes, you've got ice water in your veins. ","and, if you're not nearly moved to tears by a couple of scenes, you've got ice water in your veins.",0.364,0.999,0.3
+665,"and if you're not nearly moved to tears by a couple of scenes, you've got ice water in your veins. ","and if you're not nearly moved to tears by a couple of scenes, you've got ice water in your veins.",0.303,1.0,0.246
+324,"you 'll gasp appalled and laugh outraged and possibly, watching the spectacle of a promising young lad treading desperately in a nasty sea, shed an er","You'll gasp appalled, watch outraged, and possibly, horrified.",0.259,0.623,0.217
+324,"you 'll gasp appalled and laugh outraged and possibly, watching the spectacle of a promising young lad treading desperately in a nasty sea, shed an er",you 'll gasp appalled and laugh outrageously.,0.014,0.582,0.011
+71,"exquisitely nuanced in mood tics and dialogue, this chamber drama is superbly acted by the deeply appealing veteran bouquet and the chilling but",This chamber drama is exceptionally nuanced.,0.74,0.68,0.762
+71,"exquisitely nuanced in mood tics and dialogue, this chamber drama is superbly acted by the deeply appealing veteran bouquet and the chilling but","exquisitely nuanced in mood tics and dialogue, this chamber drama is superbly acted.",0.186,0.9,0.147
+290,"deliriously funny, fast and loose, accessible to the uninitiated, and full of surprises ",deliriously funny.,0.266,0.594,0.224
+290,"deliriously funny, fast and loose, accessible to the uninitiated, and full of surprises ",Deliriously funny.,0.266,0.594,0.224
+15,"a gorgeous, high-spirited musical from india that exquisitely blends music, dance, song, and high drama. ","A gorgeous, high-spirited musical from India.",0.031,0.952,0.023
+15,"a gorgeous, high-spirited musical from india that exquisitely blends music, dance, song, and high drama. ","A gorgeous, high-spirited musical from India.",0.031,0.952,0.023
+517,"not far beneath the surface, this reconfigured tale asks disturbing questions about those things we expect from military epics. ","not far beneath the surface, this reconfigured tale asks disturbing questions.",0.833,0.757,0.862
+517,"not far beneath the surface, this reconfigured tale asks disturbing questions about those things we expect from military epics. ","not far beneath the surface, this reconfigured tale tampours disturbing questions.",0.637,0.642,0.636
+742,"it's a demented kitsch mess ( although the smeary digital video does match the muddled narrative ), but it's savvy about",it's a demented kitsch.,0.674,0.636,0.688
+742,"it's a demented kitsch mess ( although the smeary digital video does match the muddled narrative ), but it's savvy about",it's a demented kitsch.,0.674,0.636,0.688
+717,a rigorously structured and exquisitely filmed drama about a father and son connection that is a brief shooting star of love. ,A rigorously structured and exquisitely filmed drama.,0.0,0.666,0.0
+717,a rigorously structured and exquisitely filmed drama about a father and son connection that is a brief shooting star of love. ,A rigorously structured and exquisitely filmed drama.,0.0,0.666,0.0
+244,"dazzles with its fully-written characters, its determined stylishness ( which always relates to characters and story ) and johnny dankworth '",dazzles.,0.344,0.385,0.332
+244,"dazzles with its fully-written characters, its determined stylishness ( which always relates to characters and story ) and johnny dankworth '",dazzles with its fully written characters.,0.255,0.712,0.21
+480,"while undisputed isn't exactly a high, it is a gripping, tidy little movie that takes mr. hill higher than he's been","While undisputed, that film is nothing too extraordinary.",0.831,0.564,0.987
+480,"while undisputed isn't exactly a high, it is a gripping, tidy little movie that takes mr. hill higher than he's been",While undisputed.,0.337,0.394,0.322
+66,"if you're hard up for raunchy college humor, this is your ticket right here. ","If you're hard up for raunchy college humor, this is your ticket.",0.737,0.992,0.679
+66,"if you're hard up for raunchy college humor, this is your ticket right here. ","If you're hard up for raunchy college humor, this's your ticket. ",0.307,0.99,0.25
+826,a quiet treasure -- a film to be savored. ,a quiet treasure.,0.406,0.744,0.353
+826,a quiet treasure -- a film to be savored. ,A quiet treasure.,0.406,0.744,0.353
+124,"( lawrence bounces ) all over the stage, dancing, running, sweating, mopping his face and generally displaying the wacky talent that brought him",( lawrence bounces )All over the stage.,0.755,0.738,0.761
+124,"( lawrence bounces ) all over the stage, dancing, running, sweating, mopping his face and generally displaying the wacky talent that brought him",Lawrence bounces.,0.396,0.667,0.349
+506,"crackerjack entertainment -- nonstop romance, music, suspense and action. ",crackerjack entertainment -- nonstop romance.,0.683,0.937,0.627
+506,"crackerjack entertainment -- nonstop romance, music, suspense and action. ",crackerjack entertainment -- nonstop romance.,0.683,0.937,0.627
+823,it wants to tweak them with a taste of tangy new humor. ,It wants to tweak them.,0.841,0.618,0.956
+823,it wants to tweak them with a taste of tangy new humor. ,It wants to tweak them.,0.841,0.618,0.956
+861,"bennett's naturalistic performance speaks volumes more truth than any ` reality'show, and anybody contemplating their own drastic life changes should watch some body",bennett's naturalistic performance speaks volumes.,0.23,0.637,0.19
+861,"bennett's naturalistic performance speaks volumes more truth than any ` reality'show, and anybody contemplating their own drastic life changes should watch some body",Bennett's naturalistic performance speaks volumes.,0.23,0.637,0.19
+48,has a lot of the virtues of eastwood at his best. ,Eastwood.has a lot of the virtues.,0.424,0.861,0.363
+48,has a lot of the virtues of eastwood at his best. ,has a lot of the virtues of Eastwood.,0.032,0.975,0.025
+438,"the movie has an infectious exuberance that will engage anyone with a passing interest in the skate/surf culture, the l.a. beach",The movie has an infectious exuberance.,0.248,0.548,0.21
+438,"the movie has an infectious exuberance that will engage anyone with a passing interest in the skate/surf culture, the l.a. beach",The film has an infectious exuberance. Any passing interest in skateboarding.,0.141,0.76,0.111
+691,"an effectively creepy, fear-inducing ( not fear-reducing ) film from japanese director hideo nakata, who takes the superst","An effectively creepy, fear-inducing ( not fear-reducing ) film.",0.584,0.672,0.559
+691,"an effectively creepy, fear-inducing ( not fear-reducing ) film from japanese director hideo nakata, who takes the superst","An effectively creepy, fear-inducing ( not fear-reducing ) film by Japanese director hideo nakata.",0.317,0.937,0.26
+36,"the weight of the piece, the unerring professionalism of the chilly production, and the fascination embedded in the lurid topic prove recommendation enough. ","The weight of the piece, the unerring professionalism of chilly production, and the fascination embedded in the lurid topic prove recommendation enough.",0.001,0.997,0.001
+36,"the weight of the piece, the unerring professionalism of the chilly production, and the fascination embedded in the lurid topic prove recommendation enough. ","The weight of the piece, the unerring professionalism of the chilly production, and the fascination embedded in the lurid topic prove recommendation enough.",0.001,1.0,0.001
+369,"without ever becoming didactic, director carlos carrera expertly weaves this novelistic story of entangled interrelationships and complex morality. ","Without ever becoming didactic, director Carlos Carrera expertly weaves this novelistic story.",0.0,0.837,0.0
+369,"without ever becoming didactic, director carlos carrera expertly weaves this novelistic story of entangled interrelationships and complex morality. ","Without being didactic, director Carlos Carrera expertly weaves this novelistic story of entangled interrelationships.",0.0,0.907,0.0
+664,"the film is beautifully mounted, but, more to the point, the issues are subtly presented, managing to walk a fine line with regard to the question","The film is beautifully mounted, but, more to the point, the issues are subtly presented.",0.014,0.927,0.01
+664,"the film is beautifully mounted, but, more to the point, the issues are subtly presented, managing to walk a fine line with regard to the question","The film is beautifully mounted, but, more to the point, the issues are quietly presented.",0.003,0.835,0.002
+63,"on this tricky topic, tadpole is very much a step in the right direction, with its blend of frankness, civility and compassion. ","On this tricky topic, tadpole is very much a step in the right direction.",0.813,0.806,0.815
+63,"on this tricky topic, tadpole is very much a step in the right direction, with its blend of frankness, civility and compassion. ","On this tricky topic, tadpole steps very much in the right direction.",0.525,0.704,0.484
+674,atom egoyan has conjured up a multilayered work that tackles any number of fascinating issues ,atom egoyan conjured up a multilayered work.,0.796,0.867,0.775
+674,atom egoyan has conjured up a multilayered work that tackles any number of fascinating issues ,atom egoyan has conjured up a multilayered work.,0.736,0.888,0.696
+518,michael gerbosi's script is economically packed with telling scenes. ,Michael Gerbosi's script is economically packed.,0.953,0.859,0.99
+518,michael gerbosi's script is economically packed with telling scenes. ,michael gerbosi's script consists of economically packed scenes.,0.051,0.929,0.039
+117,"moody, heartbreaking, and filmed in a natural, unforced style that makes its characters seem entirely convincing even when its script is not. ","moody, heartbreaking.. is filmed in natural, unforced style.",0.476,0.796,0.419
+117,"moody, heartbreaking, and filmed in a natural, unforced style that makes its characters seem entirely convincing even when its script is not. ","moody, heartbreaking.",0.356,0.572,0.317
+276,"for this reason and this reason only -- the power of its own steadfast, hoity-toity convictions -- chelsea walls deserves a medal.","For this reason and this reason only, Chelsea walls deserves a medal.",0.823,0.877,0.807
+276,"for this reason and this reason only -- the power of its own steadfast, hoity-toity convictions -- chelsea walls deserves a medal.",For this reason and only one reason only.,0.583,0.3,0.849
+194,"instead of a hyperbolic beat-charged urban western, it's an unpretentious, sociologically pointed slice of life. ","Instead of a hyperbolic, sociologically unbalanced urban western, it is an unpretentious slice.",0.895,0.847,0.913
+194,"instead of a hyperbolic beat-charged urban western, it's an unpretentious, sociologically pointed slice of life. ","Instead of a hyperbolic, hyperbolic urban western, it is unpretentious, sociologically pointed.",0.769,0.853,0.744
+848,his healthy sense of satire is light and fun... ,His healthy sense of satire is light.,0.472,0.939,0.405
+848,his healthy sense of satire is light and fun... ,His healthy sense of satire.,0.223,0.872,0.179
+868,a movie with a real anarchic flair. ,A movie with real anarchic flair.,0.163,0.996,0.127
+868,a movie with a real anarchic flair. ,A movie with real anarchic flair.,0.163,0.996,0.127
+152,"a difficult, absorbing film that manages to convey more substance despite its repetitions and inconsistencies than do most films than are far more pointed and clear. ","A difficult, absorbing film.",0.3,0.813,0.248
+152,"a difficult, absorbing film that manages to convey more substance despite its repetitions and inconsistencies than do most films than are far more pointed and clear. ","A difficult, absorbing film.",0.3,0.813,0.248
+496,"it's about following your dreams, no matter what your parents think. ","It's not about following your dreams, no matter what your parents think.",0.859,0.86,0.858
+496,"it's about following your dreams, no matter what your parents think. ","It's all about following your dreams, no matter what your parents think.",0.795,0.916,0.761
+530,a superbly acted and funny/gritty fable of the humanizing of one woman at the hands of the unseen forces of fate. ,A superblyacted and funny.,0.486,0.421,0.511
+530,a superbly acted and funny/gritty fable of the humanizing of one woman at the hands of the unseen forces of fate. ,A superbly acted and funny fable.,0.038,0.674,0.029
+39,"escaping the studio, piccoli is warmly affecting and so is this adroitly minimalist movie. ",escaping the studio. piccoli is warmly affecting.,0.003,0.743,0.002
+39,"escaping the studio, piccoli is warmly affecting and so is this adroitly minimalist movie. ",Escaping the studio. piccoli is warmly affecting.,0.003,0.743,0.002
+300,"fun, flip and terribly hip bit of cinematic entertainment. ","fun, flip, and terribly hip.",0.9,0.747,0.966
+300,"fun, flip and terribly hip bit of cinematic entertainment. ","Fun, flip, and terribly hip bit of cinematic entertainment.",0.866,0.994,0.83
+94,"byler reveals his characters in a way that intrigues and even fascinates us, and he never reduces the situation to simple melodrama. ",byler reveal his characters in a way that intrigues and even fascinates.,0.548,0.846,0.49
+94,"byler reveals his characters in a way that intrigues and even fascinates us, and he never reduces the situation to simple melodrama. ",byler revealed his characters in a way that intrigues and fascinates.,0.407,0.826,0.348
+263,"chilling, well-acted, and finely directed : david jacobson's dahmer. ","chilling, well-acted, and finely directed.",0.247,0.672,0.204
+263,"chilling, well-acted, and finely directed : david jacobson's dahmer. ","chilling, well-acted, and finely directed :",0.036,0.69,0.028
+720,worth watching for dong jie's performance -- and for the way it documents a culture in the throes of rapid change. ,The performance is marked as 'dong jie.,0.668,0.642,0.677
+720,worth watching for dong jie's performance -- and for the way it documents a culture in the throes of rapid change. ,Is Dong Jie worth watching.,0.003,0.741,0.002
+677,"majidi is an unconventional storyteller, capable of finding beauty in the most depressing places. ",majidi is an unconventional storyteller.,0.368,0.838,0.311
+677,"majidi is an unconventional storyteller, capable of finding beauty in the most depressing places. ",majidi is an unconventional storyteller.,0.368,0.838,0.311
+170,"it's also, clearly, great fun. ","It's also, clearly, great fun.",0.251,1.0,0.201
+170,"it's also, clearly, great fun. ",it is also clearly great fun.,0.127,0.913,0.099
+589,if your taste runs to ` difficult'films you absolutely can't miss it. ,"If your taste runs to `` difficult races, forget it.",0.722,0.398,0.991
+589,if your taste runs to ` difficult'films you absolutely can't miss it. ,"if your taste runs to `` difficult '', then you absolutely must miss it.",0.636,0.733,0.609
+772,"not the kind of film that will appeal to a mainstream american audience, but there is a certain charm about the film that makes it a suitable entry",Not the kind of film that will appeal to a mainstream american audience.,0.095,0.88,0.073
+772,"not the kind of film that will appeal to a mainstream american audience, but there is a certain charm about the film that makes it a suitable entry",not the kind of film that will appeal to a mainstream american audience.,0.095,0.88,0.073
+415,"an operatic, sprawling picture that's entertainingly acted, magnificently shot and gripping enough to sustain most of its 170-minute length.","An operatic, sprawling picture.",0.557,0.771,0.509
+415,"an operatic, sprawling picture that's entertainingly acted, magnificently shot and gripping enough to sustain most of its 170-minute length.","An operatic, sprawling picture.",0.557,0.771,0.509
+470,reggio's continual visual barrage is absorbing as well as thought-provoking. ,"The continuous visual barrage is absorbing, thought-provoking.",0.887,0.782,0.929
+470,reggio's continual visual barrage is absorbing as well as thought-provoking. ,reggio's continual visual barrage is absorbing as well as thought-provoking.,0.222,1.0,0.176
+540,binoche makes it interesting trying to find out. ,binoche makes it interesting to find out.,0.442,0.979,0.374
+540,binoche makes it interesting trying to find out. ,binoche makes it interesting.,0.348,0.898,0.289
+810,"this is a good script, good dialogue, funny even for adults. ",This is good dialogue.,0.377,0.652,0.331
+810,"this is a good script, good dialogue, funny even for adults. ",This is a good script.,0.042,0.681,0.032
+225,"far more imaginative and ambitious than the trivial, cash-in features nickelodeon has made from its other animated tv series. ","far more imaginative, and ambitious.",0.468,0.343,0.532
+225,"far more imaginative and ambitious than the trivial, cash-in features nickelodeon has made from its other animated tv series. ",far more imaginative.,0.364,0.325,0.379
+445,"even in its most tedious scenes, russian ark is mesmerizing. ",Russian Ark is mesmerizing.,0.442,0.871,0.38
+445,"even in its most tedious scenes, russian ark is mesmerizing. ",Russian Ark is fascinating.,0.436,0.78,0.38
+294,"the old-world - meets-new mesh is incarnated in the movie's soundtrack, a joyful effusion of disco bollywood that, by",The old-world meets-new mesh is expressed in the movie soundtrack.,0.071,0.809,0.055
+294,"the old-world - meets-new mesh is incarnated in the movie's soundtrack, a joyful effusion of disco bollywood that, by",the old-world meets-new mesh is incarnated in the soundtrack.,0.035,0.819,0.026
+16,the emotions are raw and will strike a nerve with anyone who's ever had family trauma. ,The emotions are raw.,0.31,0.673,0.263
+16,the emotions are raw and will strike a nerve with anyone who's ever had family trauma. ,The emotions are raw.,0.31,0.673,0.263
+565,there are some wonderfully fresh moments that smooth the moral stiffness with human kindness and hopefulness. ,There are some wonderfully fresh moments.,0.002,0.621,0.001
+565,there are some wonderfully fresh moments that smooth the moral stiffness with human kindness and hopefulness. ,There are some wonderfully fresh moments.,0.002,0.621,0.001
+352,"a swashbuckling tale of love, betrayal, revenge and above all, faith. ",A swashbuckling tale.,0.434,0.769,0.379
+352,"a swashbuckling tale of love, betrayal, revenge and above all, faith. ",A swashbuckling tale.,0.434,0.769,0.379
+51,"for the most part, director anne-sophie birot's first feature is a sensitive, extraordinarily well-acted drama. ","Directed by anne Sophie Birot, director's first feature is a sensitive, extraordinarily well-acted drama.",0.001,0.932,0.001
+51,"for the most part, director anne-sophie birot's first feature is a sensitive, extraordinarily well-acted drama. ","Director Anne Sophie birot's first feature is a sensitive, extraordinarily well-acted drama.",0.0,0.983,0.0
+317,"all-in-all, the film is an enjoyable and frankly told tale of a people who live among us, but not necessarily with us. ",The film is enjoyable.,0.518,0.635,0.488
+317,"all-in-all, the film is an enjoyable and frankly told tale of a people who live among us, but not necessarily with us. ","all-in-all, the film is an enjoyable and frankly told tale.",0.0,0.869,0.0
+511,lapaglia's ability to convey grief and hope works with weaver's sensitive reactions to make this a two-actor master class. ,lapaglia's ability to convey grief and hope.,0.451,0.797,0.394
+511,lapaglia's ability to convey grief and hope works with weaver's sensitive reactions to make this a two-actor master class. ,"lapaglia's ability to convey grief and hope works, with weaver's sensitive reactions.",0.059,0.912,0.045
+626,this flick is about as cool and crowd-pleasing as a documentary can get. ,This flick is as cool and crowdpleasing as a documentary can get.,0.687,0.944,0.63
+626,this flick is about as cool and crowd-pleasing as a documentary can get. ,This flick is about as cool and crowd-pleasing as a documentary.,0.473,0.99,0.403
+222,"a psychological thriller with a genuinely spooky premise and an above-average cast, actor bill paxton's directing debut is a creepy slice of g",A psychological thriller with a genuinely spooky premise.,0.127,0.655,0.1
+222,"a psychological thriller with a genuinely spooky premise and an above-average cast, actor bill paxton's directing debut is a creepy slice of g",A psychological thriller with a genuinely spooky premise.,0.127,0.655,0.1
+622,few films capture so perfectly the hopes and dreams of little boys on baseball fields as well as the grown men who sit in the stands. ,few films capture so perfectly the hopes and dreams of little boys on baseball fields.,0.011,0.935,0.008
+622,few films capture so perfectly the hopes and dreams of little boys on baseball fields as well as the grown men who sit in the stands. ,few videos capture so perfectly the hopes and dreams of little boys on baseball fields.,0.006,0.816,0.005
+406,"maud and roland's search for an unknowable past makes for a haunting literary detective story, but labute pulls off a neater trick",maud and roland's search for an unknowable past makes for a haunting literary detective story.,0.934,0.925,0.937
+406,"maud and roland's search for an unknowable past makes for a haunting literary detective story, but labute pulls off a neater trick",maud and rolands search for an unknowable past makes for a haunting literary detective story. But labute pulls off a neater trick.,0.72,0.981,0.661
+760,"writer/director joe carnahan's grimy crime drama is a manual of precinct cliches, but it moves fast enough to cover its",writer/director Joe carnahan.,0.573,0.555,0.579
+760,"writer/director joe carnahan's grimy crime drama is a manual of precinct cliches, but it moves fast enough to cover its",writer/director Joey carnahan.,0.558,0.499,0.581
+495,light years / several warp speeds / levels and levels of dilithium crystals better than the pitiful insurrection. ,"In layman's terms, light years, several warp speeds, lows, and levels.",0.613,0.568,0.63
+495,light years / several warp speeds / levels and levels of dilithium crystals better than the pitiful insurrection. ,Light years.{Water},0.358,0.315,0.375
+679,filmmakers who can deftly change moods are treasures and even marvels. ,filmmakers who deftly change moods are treasures.,0.222,0.935,0.177
+679,filmmakers who can deftly change moods are treasures and even marvels. ,filmmakers who can deftly change moods.,0.087,0.829,0.067
+261,"the very definition of the ` small'movie, but it is a good stepping stone for director sprecher. ",The very definition of `` small ''.,0.489,0.559,0.469
+261,"the very definition of the ` small'movie, but it is a good stepping stone for director sprecher. ",The very definition of `` small ''.,0.489,0.559,0.469
+5,"although laced with humor and a few fanciful touches, the film is a refreshingly serious look at young women. ","Although laced with humor, the film is refreshingly serious.",0.212,0.721,0.172
+5,"although laced with humor and a few fanciful touches, the film is a refreshingly serious look at young women. ","Although laced with humor, the film is refreshingly serious.",0.212,0.721,0.172
+740,"jose campanella delivers a loosely autobiographical story brushed with sentimentality but brimming with gentle humor, bittersweet pathos, and lyric moments","jose campanella contains a loosely autobiographical story, brushed with sentimentality.",0.956,0.896,0.978
+740,"jose campanella delivers a loosely autobiographical story brushed with sentimentality but brimming with gentle humor, bittersweet pathos, and lyric moments",jose campanella delivers a loosely autobiographical story.,0.619,0.87,0.564
+505,and that's a big part of why we go to the movies. ,We go to movies. And that is a big part.,0.312,0.787,0.26
+505,and that's a big part of why we go to the movies. ,Another thing that fascinates people.,0.131,0.374,0.108
+344,"there is a fabric of complex ideas here, and feelings that profoundly deepen them. ","Here, there is a fabric of complex ideas.",0.443,0.766,0.389
+344,"there is a fabric of complex ideas here, and feelings that profoundly deepen them. ","Here, there is a fabric of complex ideas.",0.443,0.766,0.389
+857,"visually imaginative, thematically instructive and thoroughly delightful, it takes us on a roller-coaster ride from innocence to experience without even a hint","visually imaginative, thematically instructive.",0.303,0.675,0.256
+857,"visually imaginative, thematically instructive and thoroughly delightful, it takes us on a roller-coaster ride from innocence to experience without even a hint","visually imaginative, thematically instructive, thoroughly delightful.",0.262,0.743,0.216
+77,the son's room is a triumph of gentility that earns its moments of pathos. ,The son's room is a triumph of gentility.,0.008,0.815,0.006
+77,the son's room is a triumph of gentility that earns its moments of pathos. ,The son's room is a triumph of gentility.,0.008,0.815,0.006
+231,"martin and barbara are complex characters -- sometimes tender, sometimes angry -- and the delicate performances by sven wollter and viveka se",martin and Barbara are complex characters.,0.152,0.726,0.12
+231,"martin and barbara are complex characters -- sometimes tender, sometimes angry -- and the delicate performances by sven wollter and viveka se",martin and Barbara are complex characters.,0.152,0.726,0.12
+850,"miller is playing so free with emotions, and the fact that children are hostages to fortune, that he makes the audience hostage to his swaggering",miller is playing so free.,0.627,0.523,0.671
+850,"miller is playing so free with emotions, and the fact that children are hostages to fortune, that he makes the audience hostage to his swaggering",miller is so free with emotions.,0.409,0.622,0.367
+533,"`` mostly martha '' is a bright, light modern day family parable that wears its heart on its sleeve for all to see. ","`` mostly Martha '' is a bright, light modern day family parable.",0.159,0.932,0.124
+533,"`` mostly martha '' is a bright, light modern day family parable that wears its heart on its sleeve for all to see. ","`` mostly Martha '' is a bright, light modern day family parable.",0.159,0.932,0.124
+351,"( næs ) directed the stage version of elling, and gets fine performances from his two leads who originated the characters on stage. ",( næs ) directed the stage version of Elling.,0.694,0.867,0.65
+351,"( næs ) directed the stage version of elling, and gets fine performances from his two leads who originated the characters on stage. ",( næs ) directed the stage version.,0.375,0.675,0.327
+53,sade is an engaging look at the controversial eponymous and fiercely atheistic hero. ,Sade is an engaging look.,0.017,0.716,0.013
+53,sade is an engaging look at the controversial eponymous and fiercely atheistic hero. ,sade is an engaging look.,0.017,0.716,0.013
+457,it inspires a continuing and deeply satisfying awareness of the best movies as monumental ` picture shows.',it inspires a continuing and deeply satisfying awareness.,0.001,0.649,0.001
+457,it inspires a continuing and deeply satisfying awareness of the best movies as monumental ` picture shows.',It inspires a continuing and deeply satisfying awareness.,0.001,0.649,0.001
+128,montias... pumps a lot of energy into his nicely nuanced narrative and surrounds himself with a cast of quirky -- but not stereotyped -- street characters.,montias.,0.369,0.561,0.332
+128,montias... pumps a lot of energy into his nicely nuanced narrative and surrounds himself with a cast of quirky -- but not stereotyped -- street characters.,montias... pumps a lot of energy into his nicely nuanced narrative.,0.004,0.766,0.003
+569,"one of those energetic surprises, an original that pleases almost everyone who sees it. ",One of those energetic surprises.,0.293,0.679,0.246
+569,"one of those energetic surprises, an original that pleases almost everyone who sees it. ",One of those energetic innovations.,0.272,0.392,0.246
+680,"the vitality of the actors keeps the intensity of the film high, even as the strafings blend together. ",The vitality of actor keeps the intensity high.,0.04,0.716,0.03
+680,"the vitality of the actors keeps the intensity of the film high, even as the strafings blend together. ",the vitality of the actors keeps the intensity high.,0.007,0.784,0.005
+479,it's a stunning lyrical work of considerable force and truth. ,it's stunning lyrical work.,0.21,0.85,0.168
+479,it's a stunning lyrical work of considerable force and truth. ,it's a stunning lyrical work.,0.042,0.861,0.032
+747,"what's surprising about full frontal is that despite its overt self-awareness, parts of the movie still manage to break past the artifice and thoroughly",What is surprising about full frontal?,0.27,0.806,0.221
+747,"what's surprising about full frontal is that despite its overt self-awareness, parts of the movie still manage to break past the artifice and thoroughly",full frontal: What are some of the surprising aspects of the movie?,0.038,0.806,0.028
+625,for the most part stevens glides through on some solid performances and witty dialogue. ,"For the most part, stevens glides.",0.545,0.708,0.506
+625,for the most part stevens glides through on some solid performances and witty dialogue. ,For the most part stevens glides through.,0.176,0.745,0.14
+641,the magic of the film lies not in the mysterious spring but in the richness of its performances. ,The magic of the film lies not in the mysterious spring.,0.951,0.881,0.977
+641,the magic of the film lies not in the mysterious spring but in the richness of its performances. ,The magic of the film does not lies in the mysterious spring.,0.808,0.869,0.79
+777,"by candidly detailing the politics involved in the creation of an extraordinary piece of music, ( jones ) calls our attention to the inherent conflict between commerce","by candidly detailing the politics involved in the creation of an extraordinary piece of music, ( jones ) calls attention to the inherent conflict between commerce and art",0.002,0.942,0.001
+777,"by candidly detailing the politics involved in the creation of an extraordinary piece of music, ( jones ) calls our attention to the inherent conflict between commerce","By candidly detailing the politics involved in the creation of an extraordinary piece of music, laughter ( jones ) calls our attention.",0.0,0.714,0.0
+753,it's hard to imagine alan arkin being better than he is in this performance. ,it's hard to imagine Alan Arkin being anything better.,0.914,0.925,0.911
+753,it's hard to imagine alan arkin being better than he is in this performance. ,it's hard to imagine Alan Arkin performed any better.,0.82,0.92,0.791
+708,"director of photography benoit delhomme shot the movie in delicious colors, and the costumes and sets are grand. ",critic director Benoit delhomme shot the movie in clever colors.,0.769,0.799,0.76
+708,"director of photography benoit delhomme shot the movie in delicious colors, and the costumes and sets are grand. ","The director of photography, Benoit delhomme, shot the movie in delicious colors.",0.114,0.897,0.088
+640,"an important movie, a reminder of the power of film to move us and to make us examine our values. ",An important movie.,0.379,0.677,0.331
+640,"an important movie, a reminder of the power of film to move us and to make us examine our values. ",An important movie.,0.379,0.677,0.331
+830,"woody allen's latest is an ambling, broad comedy about all there is to love -- and hate -- about the movie biz.","Woody Allen's latest is an ambling, broad comedy.",0.422,0.86,0.361
+830,"woody allen's latest is an ambling, broad comedy about all there is to love -- and hate -- about the movie biz.","woody Allen's latest is an ambling, broad comedy.",0.422,0.86,0.361
+303,"entertains by providing good, lively company. ","entertains by providing good, lively company.",0.006,1.0,0.005
+303,"entertains by providing good, lively company. ","entertains by providing good, lively company.",0.006,1.0,0.005
+616,"there's really only one good idea in this movie, but the director runs with it and presents it with an unforgettable visual panache. ",There is really only one good idea in this movie.,0.658,0.736,0.636
+616,"there's really only one good idea in this movie, but the director runs with it and presents it with an unforgettable visual panache. ",There are only a few good ideas in this movie.,0.426,0.651,0.382
+602,"instead, he shows them the respect they are due. ","Instead, he shows them the respect they are due.",0.314,1.0,0.255
+602,"instead, he shows them the respect they are due. ","Instead, he shows the respect they deserve.",0.21,0.862,0.168
+275,"an entertaining, colorful, action-filled crime story with an intimate heart. ","an entertaining, colorful, action-filled crime story.",0.583,0.866,0.525
+275,"an entertaining, colorful, action-filled crime story with an intimate heart. ","An entertaining, colorful, action-filled crime story.",0.583,0.866,0.525
+524,the fly-on-the-wall method used to document rural french school life is a refreshing departure from the now more prevalent technique of the docu,"The fly-on-the-wall method used to document rural French school life, is a refreshing departure from the now more prevalent technique.",0.001,0.848,0.0
+524,the fly-on-the-wall method used to document rural french school life is a refreshing departure from the now more prevalent technique of the docu,The fly-on-the-wall method used to document rural French school life is a refreshing departure from the now more prevalent technique.,0.001,0.875,0.001
+308,an intriguing cinematic omnibus and round-robin that occasionally is more interesting in concept than in execution. ,An intriguing cinematic narrative omnibus.,0.331,0.787,0.278
+308,an intriguing cinematic omnibus and round-robin that occasionally is more interesting in concept than in execution. ,An intriguing cinematic omnibus.,0.301,0.813,0.249
+250,one of the more intelligent children's movies to hit theaters this year. ,Many more intelligent children films are expected this year.,0.632,0.793,0.592
+250,one of the more intelligent children's movies to hit theaters this year. ,One of the more intelligent children's movies.,0.469,0.854,0.408
+83,"though it's become almost redundant to say so, major kudos go to leigh for actually casting people who look working-class. ","Though it's become almost redundant to say so, major kudos go to Leigh.",0.829,0.775,0.849
+83,"though it's become almost redundant to say so, major kudos go to leigh for actually casting people who look working-class. ","Though it's become almost redundant to say so, major kudos go to Leigh.",0.829,0.775,0.849
+40,"there's... tremendous energy from the cast, a sense of playfulness and excitement that seems appropriate. ",There's a tremendous energy out there.,0.106,0.434,0.084
+40,"there's... tremendous energy from the cast, a sense of playfulness and excitement that seems appropriate. ",There is extraordinary energy in the cast.,0.062,0.642,0.048
+460,"if you are an actor who can relate to the search for inner peace by dramatically depicting the lives of others onstage, then esther's story is","If you are an actor who can relate to the search for inner peace, then esther is.",0.361,0.848,0.303
+460,"if you are an actor who can relate to the search for inner peace by dramatically depicting the lives of others onstage, then esther's story is",if you are an actor who can relate to the search for inner peace.,0.331,0.701,0.281
+484,"dazzling in its complexity, disturbing for its extraordinary themes, the piano teacher is a film that defies categorisation. ","dazzling in its complexity, disturbing disturbing.",0.644,0.498,0.714
+484,"dazzling in its complexity, disturbing for its extraordinary themes, the piano teacher is a film that defies categorisation. ","Dazzling in its complexity, disturbing for its extraordinary themes.",0.097,0.549,0.076
+485,a literate presentation that wonderfully weaves a murderous event in 1873 with murderous rage in 2002. ,A literate presentation.,0.352,0.487,0.323
+485,a literate presentation that wonderfully weaves a murderous event in 1873 with murderous rage in 2002. ,a literate presentation.,0.352,0.487,0.323
+856,"in a way, the film feels like a breath of fresh air, but only to those that allow it in. ","in a sense, the film feels like a breath of fresh air.",0.258,0.95,0.208
+856,"in a way, the film feels like a breath of fresh air, but only to those that allow it in. ","In a way, the film feels like a breath of fresh air.",0.258,0.964,0.208
+41,"this illuminating documentary transcends our preconceived vision of the holy land and its inhabitants, revealing the human complexities beneath. ",This illuminating documentary transcends our preconceived vision.,0.14,0.697,0.111
+41,"this illuminating documentary transcends our preconceived vision of the holy land and its inhabitants, revealing the human complexities beneath. ",this illuminating documentary transcends our preconceived vision.,0.14,0.697,0.111
+10,the mesmerizing performances of the leads keep the film grounded and keep the audience riveted. ,The mesmerizing performances.,0.299,0.654,0.253
+10,the mesmerizing performances of the leads keep the film grounded and keep the audience riveted. ,The mesmerizing performances.,0.299,0.654,0.253
+304,"a densely constructed, highly referential film, and an audacious return to form that can comfortably sit among jean-luc godard '","a densely constructed, highly referential film.",0.355,0.578,0.315
+304,"a densely constructed, highly referential film, and an audacious return to form that can comfortably sit among jean-luc godard '","a densely constructed, highly referential film.",0.355,0.578,0.315
+398,"despite its title, punch-drunk love is never heavy-handed. ","Despite its title, punch-drunk love is never heavy-handed.",0.61,1.0,0.54
+398,"despite its title, punch-drunk love is never heavy-handed. ","Despite its title, punch-drunk love is never heavy.",0.599,0.891,0.54
+151,"a big, gorgeous, sprawling swashbuckler that delivers its diversions in grand, uncomplicated fashion. ","A big, gorgeous, sprawling swashbuckler.",0.468,0.937,0.402
+151,"a big, gorgeous, sprawling swashbuckler that delivers its diversions in grand, uncomplicated fashion. ","A big, gorgeous, sprawling swashbuckler.",0.468,0.937,0.402
+563,"with rabbit-proof fence, noyce has tailored an epic tale into a lean, economical movie. ","with rabbit-proof fence noyce has tailored an epic tale into a lean, economical movie.",0.104,0.993,0.08
+563,"with rabbit-proof fence, noyce has tailored an epic tale into a lean, economical movie. ","With rabbit-proof fencing, Noyce tailored an epic tale into a lean, economical movie.",0.004,0.964,0.003
+310,"if you can stomach the rough content, it's worth checking out for the performances alone. ","It's okay, if you can stomach the rough content.",0.832,0.585,0.968
+310,"if you can stomach the rough content, it's worth checking out for the performances alone. ","If you can stomach the rough content, it is worth checking out.",0.597,0.773,0.555
+156,"manages to transcend the sex, drugs and show-tunes plot into something far richer. ","manages to transcend the sex, drugs, show-tunes plots.",0.447,0.952,0.38
+156,"manages to transcend the sex, drugs and show-tunes plot into something far richer. ","manages to transcend the sex. drugs, show-tunes plots.",0.446,0.928,0.38
+252,blanchett's performance confirms her power once again. ,blanchett's performance confirms once again her power.,0.259,0.992,0.208
+252,blanchett's performance confirms her power once again. ,blanchett's performance confirms again.,0.233,0.833,0.188
+219,"what the film lacks in general focus it makes up for in compassion, as corcuera manages to find the seeds of hope in the form of collective","Jack Frost (2016 film) says, ""what the film lacks in general focus, compassion.",0.815,0.573,0.949
+219,"what the film lacks in general focus it makes up for in compassion, as corcuera manages to find the seeds of hope in the form of collective","What the film lacks in general focus, it makes up for compassion.",0.779,0.732,0.796
+473,"thanks to haynes'absolute control of the film's mood, and buoyed by three terrific performances, far from heaven actually pulls off this styl",Thanks to Haynes's absolute control.,0.654,0.616,0.668
+473,"thanks to haynes'absolute control of the film's mood, and buoyed by three terrific performances, far from heaven actually pulls off this styl",thanks to Haynes'absolute control of the film's mood. buoyed by three terrific performances.,0.003,0.823,0.003
+468,the characters are interesting and often very creatively constructed from figure to backstory. ,"The characters are interesting, often very creatively constructed.",0.689,0.895,0.64
+468,the characters are interesting and often very creatively constructed from figure to backstory. ,The characters are often interesting.,0.586,0.84,0.532
+621,"kinnear doesn't aim for our sympathy, but rather delivers a performance of striking skill and depth. ","Kinnear does not aim for sympathy, but rather delivers.",0.931,0.864,0.955
+621,"kinnear doesn't aim for our sympathy, but rather delivers a performance of striking skill and depth. ","kinnear does not aim for sympathy, but rather deliver a performance of striking skill.",0.671,0.96,0.61
+75,among the year's most intriguing explorations of alientation. ,Among the year's most intriguing explorations.,0.208,0.823,0.166
+75,among the year's most intriguing explorations of alientation. ,Among the year's most intriguing explorations were this.,0.092,0.797,0.071
+386,it's a remarkably solid and subtly satirical tour de force. ,it's a remarkably solid and subtly satirical tour.,0.0,0.896,0.0
+386,it's a remarkably solid and subtly satirical tour de force. ,It's a remarkably solid and subtly satirical tour.,0.0,0.896,0.0
+359,"displaying about equal amounts of naiveté, passion and talent, beneath clouds establishes sen as a filmmaker of considerable potential. ","displaying about equal amounts naiveté, passion, talent.",0.602,0.539,0.626
+359,"displaying about equal amounts of naiveté, passion and talent, beneath clouds establishes sen as a filmmaker of considerable potential. ","displaying about equal amounts naiveté, passion, and talent, beneath clouds.",0.55,0.686,0.515
+417,"uses sharp humor and insight into human nature to examine class conflict, adolescent yearning, the roots of friendship and sexual identity. ","Using sharp humor, he uses sharp insight.",0.605,0.483,0.661
+417,"uses sharp humor and insight into human nature to examine class conflict, adolescent yearning, the roots of friendship and sexual identity. ", sharp humor uses sharp humor.,0.586,0.466,0.642
+97,"no sophomore slump for director sam mendes, who segues from oscar winner to oscar-winning potential with a smooth sleight of hand",Sam mendes'operatic accompaniment.,0.363,0.44,0.343
+97,"no sophomore slump for director sam mendes, who segues from oscar winner to oscar-winning potential with a smooth sleight of hand",No sophomore slump.,0.357,0.381,0.349
+754,the film will play equally well on both the standard and giant screens. ,The film will remain quite central.,0.729,0.554,0.816
+754,the film will play equally well on both the standard and giant screens. ,The film will play equally well on both the standard and giant screen.,0.194,0.988,0.153
+245,it's a work by an artist so in control of both his medium and his message that he can improvise like a jazzman. ,It's a work by an artist so in control of both his medium.,0.32,0.73,0.269
+245,it's a work by an artist so in control of both his medium and his message that he can improvise like a jazzman. ,It's a work by an artist so in control over both his medium and his message.,0.298,0.767,0.248
+451,"not only are the special effects and narrative flow much improved, and daniel radcliffe more emotionally assertive this time around as harry, but the","Not only are the special effects and narrative flow much improved, and Daniel radcliffe more emotionally assertive.",0.881,0.954,0.859
+451,"not only are the special effects and narrative flow much improved, and daniel radcliffe more emotionally assertive this time around as harry, but the","Special effects, narrative flow much improved.",0.561,0.56,0.562
+546,"on the heels of the ring comes a similarly morose and humorless horror movie that, although flawed, is to be commended for its straight-",on the heels of the ring comes a similarly morose and humorless horror movie.,0.969,0.889,0.999
+546,"on the heels of the ring comes a similarly morose and humorless horror movie that, although flawed, is to be commended for its straight-",On the heels of ring comes a similarly morose and humorless horror movie.,0.968,0.887,0.998
+270,dense with characters and contains some thrilling moments. ,Dense with characters.,0.659,0.755,0.632
+270,dense with characters and contains some thrilling moments. ,dense with characters.,0.659,0.755,0.632
+164,a woman's pic directed with resonance by ilya chaiken. ,A woman's pic directed by Lilya chaiken.,0.883,0.728,0.951
+164,a woman's pic directed with resonance by ilya chaiken. ,A woman's pic directed by ilya chaiken.,0.717,0.913,0.67
+638,my wife is an actress is an utterly charming french comedy that feels so american in sensibility and style it's virtually its own hollywood remake,My wife is an actress.,0.49,0.574,0.467
+638,my wife is an actress is an utterly charming french comedy that feels so american in sensibility and style it's virtually its own hollywood remake,My wife is an actress. What is a charming French comedy.,0.003,0.796,0.003
+514,"this is an egotistical endeavor from the daughter of horror director dario argento ( a producer here ), but her raw performance and utter fear",this is an egotistical endeavor.,0.492,0.197,0.988
+514,"this is an egotistical endeavor from the daughter of horror director dario argento ( a producer here ), but her raw performance and utter fear",this is an egotistical effort.,0.473,0.184,0.988
+93,if steven soderbergh's ` solaris'is a failure it is a glorious failure. ,"If Steve Soderbergh's `` solaris '' is a failure, then what mistakes did they make?",0.937,0.856,0.968
+93,if steven soderbergh's ` solaris'is a failure it is a glorious failure. ,"If steven soderbergh's `` solaris '' was a failure, then how would an honest failure look like.",0.934,0.891,0.949
+534,i just loved every minute of this film. ,I just loved every minute of this film.,0.531,1.0,0.459
+534,i just loved every minute of this film. ,i just loved this movie.,0.354,0.784,0.299
+440,"this is wild surreal stuff, but brilliant and the camera just kind of sits there and lets you look at this and its like you're going from",this is wild surreal stuff. But brilliant.,0.739,0.71,0.749
+440,"this is wild surreal stuff, but brilliant and the camera just kind of sits there and lets you look at this and its like you're going from",this is wild surreal stuff.,0.657,0.646,0.661
+532,"for anyone unfamiliar with pentacostal practices in general and theatrical phenomenon of hell houses in particular, it's an eye-opener. ","For anyone unfamiliar with pentacostal practices, and theatrical phenomenon of hell houses in particular, it is an eye-opener.",0.669,0.993,0.603
+532,"for anyone unfamiliar with pentacostal practices in general and theatrical phenomenon of hell houses in particular, it's an eye-opener. ","for anyone unfamiliar with pentacostal practices, in particular theatrical phenomenon of Hell Houses.",0.491,0.97,0.422
+528,"it haunts, horrifies, startles and fascinates ; it is impossible to look away. ","It haunts, horrifies, startsles.",0.618,0.753,0.584
+528,"it haunts, horrifies, startles and fascinates ; it is impossible to look away. ","It haunts, horrifies, startsles, fascinates.",0.606,0.827,0.556
+332,broomfield turns his distinctive ` blundering'style into something that could really help clear up the case. ,Broomfield turns his distinctive `` blundering '' style into something that could really help clear up the case.,0.918,0.996,0.894
+332,broomfield turns his distinctive ` blundering'style into something that could really help clear up the case. ,Broomfield turns his distinctive `` blundering'style into something that could really help clear up the case.,0.645,0.995,0.577
+400,it's refreshing to see a girl-power movie that doesn't feel it has to prove anything. ,it's refreshing to see a girl-powered movie that does not feel it needs to prove.,0.685,0.947,0.628
+400,it's refreshing to see a girl-power movie that doesn't feel it has to prove anything. ,It's refreshing to see a girl-power movie.,0.167,0.814,0.132
+633,"still, as a visual treat, the film is almost unsurpassed. ","still, as a visual treat, the film is almost unsurpassed.",0.568,1.0,0.497
+633,"still, as a visual treat, the film is almost unsurpassed. ","still, as a visual treat, the film is almost unsurpassed.",0.568,1.0,0.497
+3,"the acting, costumes, music, cinematography and sound are all astounding given the production's austere locales. ","The acting, costumes, music, cinematography.",0.594,0.641,0.58
+3,"the acting, costumes, music, cinematography and sound are all astounding given the production's austere locales. ","The acting, costumes, music, cinematography, sound, and cinematography are all astounding.",0.418,0.769,0.363
+88,fresnadillo's dark and jolting images have a way of plying into your subconscious like the nightmare you had a week ago,"fresnadillo's dark and jolting images have a way of plying into your subconscious, like the nightmare you had a week ago.",0.179,0.992,0.141
+88,fresnadillo's dark and jolting images have a way of plying into your subconscious like the nightmare you had a week ago,fresnadillo's dark and jolting images have a way of trickling into your subconscious.,0.12,0.929,0.093
+425,"while the ideas about techno-saturation are far from novel, they're presented with a wry dark humor. ","While the ideas about techno-saturation are far from novel, they embarassing.",0.581,0.804,0.532
+425,"while the ideas about techno-saturation are far from novel, they're presented with a wry dark humor. ","While the ideas about techno-saturation are far from novel, they are presented with wry dark humor.",0.088,0.995,0.067
+834,collateral damage finally delivers the goods for schwarzenegger fans. ,collateral damage finally delivers.,0.673,0.71,0.662
+834,collateral damage finally delivers the goods for schwarzenegger fans. ,collateral damage finally delivered.,0.665,0.676,0.662
+307,"macdowell, whose wifty southern charm has anchored lighter affairs... brings an absolutely riveting conviction to her role. ",Macdowell.,0.375,0.612,0.332
+307,"macdowell, whose wifty southern charm has anchored lighter affairs... brings an absolutely riveting conviction to her role. ","Macdowell, whose wifty Southern charm anchored lighter affairs.",0.022,0.848,0.017
+345,"this tenth feature is a big deal, indeed -- at least the third-best, and maybe even a notch above the previous runner-up, n",This tenth feature is a big deal.,0.583,0.804,0.534
+345,"this tenth feature is a big deal, indeed -- at least the third-best, and maybe even a notch above the previous runner-up, n",This tenth feature is a big deal.,0.583,0.804,0.534
+154,a solid examination of the male midlife crisis. ,A solid examination.,0.346,0.333,0.35
+154,a solid examination of the male midlife crisis. ,A solid examination.,0.346,0.333,0.35
+837,will amuse and provoke adventurous adults in specialty venues. ,will amuse and provoke adventurous adults in specialty venues.,0.283,1.0,0.229
+837,will amuse and provoke adventurous adults in specialty venues. ,will amuse and provoke adventurous adults in specialty venues.,0.283,1.0,0.229
+149,"the volatile dynamics of female friendship is the subject of this unhurried, low-key film that is so off-hollywood that it seems positively","The volatile dynamics of female friendship are the subject of this unhurried, low-key film.",0.051,0.902,0.039
+149,"the volatile dynamics of female friendship is the subject of this unhurried, low-key film that is so off-hollywood that it seems positively","The volatile dynamics of female friendship is the subject of this unhurried, low-key.",0.006,0.634,0.005
+313,the best film about baseball to hit theaters since field of dreams. ,What are the best baseball movies?,0.023,0.774,0.017
+313,the best film about baseball to hit theaters since field of dreams. ,What will be the best baseball movie ever?,0.006,0.811,0.005
+553,"so unassuming and pure of heart, you can't help but warmly extend your arms and yell ` safe!'",so unassuming.,0.334,0.332,0.335
+553,"so unassuming and pure of heart, you can't help but warmly extend your arms and yell ` safe!'",so unassuming and pure of heart.,0.134,0.418,0.11
+525,rare birds has more than enough charm to make it memorable. ,rare birds has more than enough charm.,0.448,0.891,0.385
+525,rare birds has more than enough charm to make it memorable. ,rare birds have more than enough charm.,0.351,0.882,0.293
+279,... with `` the bourne identity '' we return to the more traditional action genre. ,... With `` the bourne identity ''.,0.154,0.83,0.121
+279,... with `` the bourne identity '' we return to the more traditional action genre. ,"... With `` the bourne identity '', we return to the more traditional action genres.",0.125,0.989,0.096
+371,"for the most part, it's a work of incendiary genius, steering clear of knee-jerk reactions and quick solutions. ","For the most part, it is a work of incendiary genius.",0.687,0.764,0.664
+371,"for the most part, it's a work of incendiary genius, steering clear of knee-jerk reactions and quick solutions. ","For the most part, it's a work of incendiary genius.",0.448,0.755,0.395
+498,"anchored by friel and williams's exceptional performances, the film's power lies in its complexity. ","anchored by friel and williams exceptional performances, the film's power lies in its complexity.",0.066,0.997,0.051
+498,"anchored by friel and williams's exceptional performances, the film's power lies in its complexity. ","anchored by Friel and William Williams's exceptional performances, the film's power lies in its complexity.",0.051,0.985,0.039
+643,"the jabs it employs are short, carefully placed and dead-center. ","The jabs are short, carefully placed.",0.474,0.917,0.408
+643,"the jabs it employs are short, carefully placed and dead-center. ","The jabs it employs are short, carefully placed.",0.413,0.958,0.347
+483,"even if you don't think ( kissinger's ) any more guilty of criminal activity than most contemporary statesmen, he 'd sure make","Even if you don't think kissinger is any more guilty of criminal activity than most contemporary statesmen, he 'd sure make.",0.891,0.971,0.866
+483,"even if you don't think ( kissinger's ) any more guilty of criminal activity than most contemporary statesmen, he 'd sure make",Where has William kissinger gone wrong?,0.594,0.55,0.61
+793,"... an otherwise intense, twist-and-turn thriller that certainly shouldn't hurt talented young gaghan's resume. ","... an otherwise intense, twist-and-turn thriller.",0.771,0.67,0.811
+793,"... an otherwise intense, twist-and-turn thriller that certainly shouldn't hurt talented young gaghan's resume. ","... an otherwise intense, twist-and-turn thriller.",0.771,0.67,0.811
+443,"good car chases, great fight scenes, and a distinctive blend of european, american and asian influences. ","good car chases, great fight scenes.",0.144,0.765,0.114
+443,"good car chases, great fight scenes, and a distinctive blend of european, american and asian influences. ","good car chase scenes, great fight scenes.",0.088,0.726,0.068
+273,"minority report is exactly what the title indicates, a report. ",minority report is exactly what the title indicates.,0.813,0.972,0.771
+273,"minority report is exactly what the title indicates, a report. ",minority report is exactly what the title indicates.,0.813,0.972,0.771
+663,"it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way. ",It will grip even viewers not interested in rap.,0.827,0.915,0.801
+663,"it will grip even viewers who aren't interested in rap, as it cuts to the heart of american society in an unnerving way. ",It will grip even viewers who aren't interested in rap.,0.499,0.933,0.432
+47,a subtle and well-crafted ( for the most part ) chiller. ,"A subtle, well-crafted chiller.",0.143,0.976,0.111
+47,a subtle and well-crafted ( for the most part ) chiller. ,A subtle and well-crafted chiller.,0.009,0.977,0.006
+475,belongs to daniel day-lewis as much as it belongs to martin scorsese ; it's a memorable performance in a,belongs to Daniel Day-lewis.,0.567,0.647,0.544
+475,belongs to daniel day-lewis as much as it belongs to martin scorsese ; it's a memorable performance in a,belongs to Daniel Day-lewis as much as to Martin Scorsese.,0.408,0.862,0.347
+91,"hardly a masterpiece, but it introduces viewers to a good charitable enterprise and some interesting real people. ",hardly a masterpiece.,0.533,0.688,0.496
+91,"hardly a masterpiece, but it introduces viewers to a good charitable enterprise and some interesting real people. ","Hardly a masterpiece, it introduces viewers to a good charitable enterprise.",0.018,0.963,0.013
+492,an exquisitely crafted and acted tale. ,An exquisitely crafted tale.,0.187,0.911,0.148
+492,an exquisitely crafted and acted tale. ,An exquisitely crafted tale.,0.187,0.911,0.148
+227,"as the two leads, lathan and diggs are charming and have chemistry both as friends and lovers. ","As the two leads, lathan and diggs are charming.",0.064,0.891,0.049
+227,"as the two leads, lathan and diggs are charming and have chemistry both as friends and lovers. ",Lathan and diggs are charming as the two leads.,0.001,0.884,0.0
+769,an infectious cultural fable with a tasty balance of family drama and frenetic comedy. ,An infectious cultural fable.,0.177,0.769,0.141
+769,an infectious cultural fable with a tasty balance of family drama and frenetic comedy. ,An infectious cultural fable.,0.177,0.769,0.141
+299,"the sort of film that makes me miss hitchcock, but also feel optimistic that there's hope for popular cinema yet. ","The sort of film that makes me miss hitchcock, but also feels optimistic.",0.894,0.895,0.894
+299,"the sort of film that makes me miss hitchcock, but also feel optimistic that there's hope for popular cinema yet. ","The sort of film that makes me miss hitchcock, but also feel optimistic.",0.8,0.895,0.773
+62,the primitive force of this film seems to bubble up from the vast collective memory of the combatants. ,The primitive force that fills this film.,0.382,0.68,0.333
+62,the primitive force of this film seems to bubble up from the vast collective memory of the combatants. ,The primitive force of this film seems to bubble up from the vast collective memory.,0.115,0.896,0.089
+146,"about a manga-like heroine who fights back at her abusers, it's energetic and satisfying if not deep and psychological. ",about a manga-like heroine.,0.425,0.817,0.366
+146,"about a manga-like heroine who fights back at her abusers, it's energetic and satisfying if not deep and psychological. ",about a manga-like heroine who fights back.,0.206,0.862,0.164
+366,"altogether, this is successful as a film, while at the same time being a most touching reconsideration of the familiar masterpiece. ","altogether, this is successful.",0.5,0.432,0.528
+366,"altogether, this is successful as a film, while at the same time being a most touching reconsideration of the familiar masterpiece. ","altogether, this is successful.",0.5,0.432,0.528
+68,good old-fashioned slash-and-hack is back! ,good old-fashioned slash-and-hackers is back.,0.62,0.869,0.566
+68,good old-fashioned slash-and-hack is back! ,good old-fashioned slash-and-hackers are back!,0.45,0.879,0.387
+187,` de niro... is a veritable source of sincere passion that this hollywood contrivance orbits around.',`` de niro. '',0.364,0.617,0.321
+187,` de niro... is a veritable source of sincere passion that this hollywood contrivance orbits around.',` de niro... is a veritable source of sincere passion.,0.136,0.822,0.106
+394,"whether writer-director anne fontaine's film is a ghost story, an account of a nervous breakdown, a trip down memory lane, all","A ghost story, a nervous breakdown, a trip down memory lane.",0.731,0.585,0.797
+394,"whether writer-director anne fontaine's film is a ghost story, an account of a nervous breakdown, a trip down memory lane, all",Is Martina Gigault's movie ghost story? How does she explain her version of it?,0.428,0.526,0.403
+728,"but taken as a stylish and energetic one-shot, the queen of the damned can not be said to suck. ","But taken as stylish and energetic one shot, The Queen of the damned can not be said.",0.058,0.848,0.044
+728,"but taken as a stylish and energetic one-shot, the queen of the damned can not be said to suck. ",But taken as stylish and energetic one-shot.,0.009,0.481,0.007
+623,"it is amusing, and that's all it needs to be. ","it's amusing, and that is all it needs to be.",0.844,0.989,0.804
+623,"it is amusing, and that's all it needs to be. ","it is amusing, and that's all.",0.452,0.825,0.393
+13,"we root for ( clara and paul ), even like them, though perhaps it's an emotion closer to pity. ",we root for ( clara and paul ).,0.336,0.808,0.281
+13,"we root for ( clara and paul ), even like them, though perhaps it's an emotion closer to pity. ",We root for ( Clara and paul ).,0.336,0.808,0.281
+831,it's made with deftly unsettling genre flair. ,It's made with delicate unsettling genre flair.,0.078,0.932,0.06
+831,it's made with deftly unsettling genre flair. ,It was made rather deftly unsettling genre flair.,0.022,0.951,0.017
+421,it's one heck of a character study -- not of hearst or davies but of the unique relationship between them. ,It's one heck of a character study.,0.617,0.443,0.709
+421,it's one heck of a character study -- not of hearst or davies but of the unique relationship between them. ,it's one heck of a character study.,0.617,0.443,0.709
+102,"does paint some memorable images..., but makhmalbaf keeps her distance from the characters ",He does paint some memorable images.,0.629,0.547,0.662
+102,"does paint some memorable images..., but makhmalbaf keeps her distance from the characters ",does paint some memorable images.,0.395,0.617,0.353
+520,so refreshingly incisive is grant that for the first time he 'll probably appeal more to guys than to their girlfriends who drag them to this movie,"so refreshingly incisive, another unbalanced claim.",0.431,0.293,0.512
+520,so refreshingly incisive is grant that for the first time he 'll probably appeal more to guys than to their girlfriends who drag them to this movie,so refreshingly incisive is this film.,0.169,0.522,0.138
+30,"thanks to scott's charismatic roger and eisenberg's sweet nephew, roger dodger is one of the most compelling variations on","Thanks to Scott's charismatic roger, and Eisenberg's sweet nephew.",0.035,0.824,0.027
+30,"thanks to scott's charismatic roger and eisenberg's sweet nephew, roger dodger is one of the most compelling variations on","thanks to Scott's charismatic roger and Eisenberg's sweet nephew, roger dodger is one of the most compelling variations.",0.029,0.98,0.022
+780,a grimly competent and stolid and earnest military courtroom drama. ,a grimly competent.,0.304,0.564,0.263
+780,a grimly competent and stolid and earnest military courtroom drama. ,A grimly competent. briskly brisk.,0.12,0.511,0.096
+282,"while there's something intrinsically funny about sir anthony hopkins saying ` get in the car, bitch,'this jerry bruckheimer production",While there's something intrinsically funny.,0.257,0.34,0.238
+282,"while there's something intrinsically funny about sir anthony hopkins saying ` get in the car, bitch,'this jerry bruckheimer production",While there's something intrinsically funny about Sir AnthonyHopkins saying `` get in the car ''.,0.205,0.654,0.167
+362,"as a first-time director, paxton has tapped something in himself as an actor that provides frailty with its dark soul. ","Paxton, as a first-time director, tapped something in himself.",0.851,0.848,0.852
+362,"as a first-time director, paxton has tapped something in himself as an actor that provides frailty with its dark soul. ","Paxton, as a first-time director, has tapped something.",0.652,0.812,0.612
+605,puts a human face on a land most westerners are unfamiliar with. ,puts a human face on a land the majority of westerners are not familiar.,0.281,0.942,0.228
+605,puts a human face on a land most westerners are unfamiliar with. ,puts a human face face on a land most Westerners are unaware.,0.222,0.923,0.177
+286,"at its best, queen is campy fun like the vincent price horror classics of the '60s. ","Queen, at its best, is campy fun.",0.774,0.799,0.766
+286,"at its best, queen is campy fun like the vincent price horror classics of the '60s. ","At its best, Queen is campy fun.",0.515,0.818,0.459
+331,the chateau cleverly probes the cross-cultural differences between gauls and yanks. ,The chateau cleverly probes the cross-cultural differences between gauls and yanks.,0.044,1.0,0.034
+331,the chateau cleverly probes the cross-cultural differences between gauls and yanks. ,The chateau cleverly probes the cross-cultural differences.,0.01,0.844,0.007
+762,it's a lovely film with lovely performances by buy and accorsi. ,it's a Lovely film.,0.188,0.695,0.151
+762,it's a lovely film with lovely performances by buy and accorsi. ,It's a lovely film.,0.188,0.695,0.151
+435,a marvel like none you've seen. ,A marvel.,0.381,0.767,0.326
+435,a marvel like none you've seen. ,A marvel.,0.381,0.767,0.326
+116,one of the smartest takes on singles culture i've seen in a long time. ,one of the smartest takes.,0.142,0.549,0.114
+116,one of the smartest takes on singles culture i've seen in a long time. ,one of the smartest takes on singles culture.,0.026,0.957,0.02
+216,the movie understands like few others how the depth and breadth of emotional intimacy give the physical act all of its meaning and most of its pleasure. ,The movie understands like few others how the depth and breadth of emotional intimacy.,0.149,0.896,0.117
+216,the movie understands like few others how the depth and breadth of emotional intimacy give the physical act all of its meaning and most of its pleasure. ,"The film, unlike few others, understands as few others, how the depth and breadth of emotional intimacy.",0.091,0.843,0.07
+847,"... mafia, rap stars and hood rats butt their ugly heads in a regurgitation of cinematic violence that gives brutal birth to an unlikely, but lik","... mafia, rap stars and hood rats butt their ugly heads.",0.93,0.819,0.974
+847,"... mafia, rap stars and hood rats butt their ugly heads in a regurgitation of cinematic violence that gives brutal birth to an unlikely, but lik","... Mafia, rap stars, hood rats.",0.55,0.728,0.509
+723,"vera's three actors -- mollà, gil and bardem -- excel in insightful, empathetic performances. ","vera's three actors. Bil, mollà, gil, and bardem.",0.618,0.848,0.567
+723,"vera's three actors -- mollà, gil and bardem -- excel in insightful, empathetic performances. ","vera's three actors -- mollà, gil and bardem -- excel in insightful, empathetic performances.",0.077,1.0,0.059

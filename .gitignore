@@ -1,5 +1,6 @@
 checkpoints/*
 runs/*
+!runs/attacker/
 data/*
 !data/semsim_experiments.json
 !data/llm_semsim_prompt.txt
