@@ -354,7 +354,7 @@ class DPOTrainer:
             plt.xlabel("Epoch", fontsize=14)
             plt.ylabel(reward_or_metric_name, fontsize=14)
             plt.ylim(0, 1)
-            plt.savefig(self.plots_dir / f"{reward_or_metric_name}.png", dpi=420)
+            plt.savefig(self.plots_dir / f"{reward_or_metric_name}.png", dpi=1000)
             plt.clf()
 
     def decoding_step(

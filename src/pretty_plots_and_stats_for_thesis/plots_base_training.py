@@ -18,20 +18,14 @@ def main() -> None:
 
     metrics = [REWARD, TARGET_LABEL_PROB, SIMILARITY]
     y_labels = ["Reward", "Fooling", "Semsim"]
-    plot_titles = [
-        "Rewards in the base training",
-        "Fooling in the base training",
-        "Semsim in the base training",
-    ]
 
-    for metric, y_label, plot_title in zip(metrics, y_labels, plot_titles):
+    for metric, y_label in zip(metrics, y_labels):
         plot_train_and_eval_metrics_together(
             train_dfs=train_dfs,
             eval_dfs=eval_dfs,
             metric_name=metric,
             save_path=plots_path / f"{metric}.png",
             y_label=y_label,
-            plot_title=plot_title,
             smoothing_window_length=512,
         )
 

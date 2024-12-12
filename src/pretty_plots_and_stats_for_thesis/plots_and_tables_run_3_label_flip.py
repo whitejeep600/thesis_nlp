@@ -4,6 +4,7 @@ import pandas as pd
 
 from src.constants import MODEL_RESPONSE, ORIGINAL_SENTENCE, REWARD, SIMILARITY, TARGET_LABEL_PROB
 from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
+    dump_dataframe_to_latex,
     epoch_df_sorting_key,
     plot_ratio_of_generations_containing_word_across_epochs,
 )
@@ -46,7 +47,16 @@ def main() -> None:
     )
     manual_not_examples = _reformat_df_for_thesis_table(manual_not_examples)
 
-    manual_not_examples.to_csv(tables_save_dir / "manual_not_examples.csv", index=False)
+    column_format = "|P{1cm}|p{5cm}|p{5cm}|P{1.6cm}|P{1.6cm}|P{1.6cm}|"
+
+    dump_dataframe_to_latex(
+        manual_not_examples,
+        tables_save_dir / "manual_not_examples.tex",
+        column_format=column_format,
+        caption="Label flipping: manually selected examples of negations.",
+        label="label_flip_manual_not",
+        resize_points=350,
+    )
 
     random_lacking_examples = eval_df[eval_df[MODEL_RESPONSE].str.contains("lacking")].sample(
         n=5, random_state=0
@@ -64,7 +74,14 @@ def main() -> None:
 
     random_lacking_examples = _reformat_df_for_thesis_table(random_lacking_examples)
 
-    random_lacking_examples.to_csv(tables_save_dir / "random_lacking_examples.csv", index=False)
+    dump_dataframe_to_latex(
+        random_lacking_examples,
+        tables_save_dir / "random_lacking_examples.tex",
+        column_format=column_format,
+        caption="Label flipping: random examples with the word ''lacking''.",
+        label="label_flip_random_lacking",
+        resize_points=350,
+    )
 
 
 if __name__ == "__main__":

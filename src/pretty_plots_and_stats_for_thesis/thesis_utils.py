@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 import numpy as np
@@ -91,7 +93,7 @@ def plot_train_and_eval_metrics_together(
     plt.ylabel(y_label, fontsize=12)
     plt.title(plot_title, fontsize=14)
     plt.legend(fontsize=12, loc="lower right")
-    plt.savefig(save_path, dpi=420)
+    plt.savefig(save_path, dpi=1000, bbox_inches="tight")
     plt.clf()
 
 
@@ -112,10 +114,9 @@ def plot_ratio_of_generations_containing_word_across_epochs(
         color="blue",
     )
     plt.ylim(0, 1)
-    plt.title(f'Ratio of generations containing the word "{word}"', fontsize=14)
     plt.xlabel("Epoch number", fontsize=12)
     plt.ylabel("Ratio", fontsize=12)
-    plt.savefig(plots_path / f"{word}_percentages.png")
+    plt.savefig(plots_path / f"{word}_percentages.png", bbox_inches="tight")
 
 
 def reformat_examples_for_thesis_tables(examples: pd.DataFrame) -> pd.DataFrame:
@@ -133,14 +134,20 @@ def reformat_examples_for_thesis_tables(examples: pd.DataFrame) -> pd.DataFrame:
         }
     )
     columns = ["idx", "Prompt", "Answer", "Semsim", "Fooling", "Victim's original prediction"]
-    if "Exploit" in examples.columns:
-        columns.append("Exploit")
+    for optional_column in "Exploit", "Naturality":
+        if optional_column in examples.columns:
+            columns.append(optional_column)
     examples = examples[columns]
     return examples
 
 
 def dump_dataframe_to_latex(
-    df: pd.DataFrame, save_path: Path, column_format: str, caption: str
+    df: pd.DataFrame,
+    save_path: Path,
+    column_format: str,
+    caption: str = "",
+    resize_points: int | None = None,
+    label: str | None = None,
 ) -> None:
     """
     Sample column format: "|p{6cm}|p{6cm}|P{1.6cm}|"
@@ -161,5 +168,25 @@ def dump_dataframe_to_latex(
         output = output.replace(rule, "")
     for column in df.columns:
         output = output.replace(column, "\\textbf{" + column + "}")
+
+    if label is not None:
+        text_after_tabular_end = f"\\label{{table:{label}}}"
+    else:
+        text_after_tabular_end = ""
+
+    if resize_points is not None:
+        text_before_tabular_start = f"\\resizebox{{{resize_points}pt}}{{!}}{{"
+        text_after_tabular_end += "}"
+    else:
+        text_before_tabular_start = ""
+
+    output = output.replace("\\begin{tabular}", text_before_tabular_start + "\\begin{tabular}")
+    output = output.replace("\\end{tabular}", "\\end{tabular}" + text_after_tabular_end)
+
+    output = output.replace(
+        "\\begin{table}", "\\begin{table} \\centering \\captionsetup{justification=centering}"
+    )
+    # output = output.replace("``", "\\textasciigrave\\textasciigrave")
+
     with open(save_path, "w") as f:
         f.write(output)

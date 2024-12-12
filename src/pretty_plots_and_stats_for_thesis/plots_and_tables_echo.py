@@ -24,6 +24,7 @@ def _save_plot(
     n_epochs = 1
     train_xs = np.linspace(0, 1, len(train_similarities))
 
+    plt.tight_layout()
     plt.plot(
         train_xs,
         train_similarities,
@@ -41,8 +42,8 @@ def _save_plot(
     plt.ylim(0, 1)
     plt.xlabel("Completion of the training phase", fontsize=14)
     plt.ylabel("Semsim", fontsize=14)
-    plt.title("Semsim in echo training", fontsize=16)
-    plt.savefig(plots_path / "semsim.png", dpi=300)
+    # plt.title("Semsim in echo training", fontsize=16)
+    plt.savefig(plots_path / "semsim.png", dpi=1000, bbox_inches="tight")
 
 
 def _reformat_df_for_thesis_table(df: pd.DataFrame) -> pd.DataFrame:
@@ -83,6 +84,8 @@ def main() -> None:
         column_format="|p{6cm}|p{6cm}|P{1.6cm}|",
         caption="Echo training: one answer each for the first 5 train samples"
         " in the training phrase.",
+        resize_points=250,
+        label="echo_train_beginning_samples",
     )
 
     target_eval_tex_path = tables_path / "eval_random.tex"
@@ -91,6 +94,8 @@ def main() -> None:
         target_eval_tex_path,
         column_format="|p{6cm}|p{6cm}|P{1.6cm}|",
         caption="Echo training: 5 randomly selected validation samples (after the training).",
+        resize_points=250,
+        label="echo_eval_random_samples",
     )
 
 

@@ -16,6 +16,7 @@ from src.datasets.sst2_static_victim_retraining_dataset import (
     MIN_SEMSIM,
 )
 from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
+    dump_dataframe_to_latex,
     get_all_generations_dfs_for_experiment,
     plot_train_and_eval_metrics_together,
     reformat_examples_for_thesis_tables,
@@ -24,7 +25,7 @@ from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
 
 def _save_examples_for_comparison_to_run_13(target_tables_path: Path) -> None:
     random_examples_run_13_path = Path(
-        "tables_for_thesis/run_13_first_exploits/random_examples.csv"
+        "tables_for_thesis/run_13_first_exploits/random_example_ids.csv"
     )
     random_examples_idx = pd.read_csv(random_examples_run_13_path)["idx"].values
 
@@ -36,9 +37,39 @@ def _save_examples_for_comparison_to_run_13(target_tables_path: Path) -> None:
         .sample(n=1, random_state=0)
     )
 
+    NATURAL = "Natural"
+    UNNATURAL = "Grammatical, not natural"
+    UNGRAMMATICAL = "Ungrammatical"
+
+    random_examples = random_examples.sort_values(
+        by="idx", key=lambda idx: [random_examples_idx.tolist().index(x) for x in idx]
+    )
+
+    random_examples["Naturality"] = [
+        UNGRAMMATICAL,
+        NATURAL,
+        NATURAL,
+        NATURAL,
+        NATURAL,
+        UNNATURAL,
+        NATURAL,
+        UNNATURAL,
+        NATURAL,
+        NATURAL,
+        UNGRAMMATICAL,
+        UNGRAMMATICAL,
+    ]
+
     random_examples = reformat_examples_for_thesis_tables(random_examples)
-    random_examples.to_csv(
-        target_tables_path / "random_examples_compare_to_run_13.csv", index=False
+
+    column_format = "|p{5cm}|p{5cm}|P{1.6cm}|P{1.6cm}|P{1.8cm}|p{5cm}|"
+    dump_dataframe_to_latex(
+        random_examples.iloc[:, 1:],
+        target_tables_path / "random_examples_compare_to_run_13.tex",
+        column_format=column_format,
+        resize_points=450,
+        label="training_with_grammaticality_random_examples",
+        caption="Training with grammaticality evaluation: paraphrases to compare.",
     )
 
 
@@ -47,20 +78,14 @@ def _plot_metrics_across_epochs(
 ) -> None:
     metrics = [REWARD, TARGET_LABEL_PROB, SIMILARITY]
     y_labels = ["Reward", "Fooling", "Semsim"]
-    plot_titles = [
-        "Rewards in the training after adding grammaticality evaluation",
-        "Fooling in the training after adding grammaticality evaluation",
-        "Semsim in the training after adding grammaticality evaluation",
-    ]
 
-    for metric, y_label, plot_title in zip(metrics, y_labels, plot_titles):
+    for metric, y_label in zip(metrics, y_labels):
         plot_train_and_eval_metrics_together(
             train_dfs=train_dfs,
             eval_dfs=eval_dfs,
             metric_name=metric,
             save_path=plots_path / f"{metric}.png",
             y_label=y_label,
-            plot_title=plot_title,
             scatter_eval_values=False,
         )
 
@@ -85,7 +110,15 @@ def save_random_high_quality_examples(
 
     selection = reformat_examples_for_thesis_tables(selection)
 
-    selection.to_csv(target_tables_path / "random_successful_attacks.csv", index=False)
+    column_format = "|p{5cm}|p{5cm}|P{1.6cm}|P{1.6cm}|P{1.8cm}|"
+    dump_dataframe_to_latex(
+        selection.iloc[:, 1:],
+        target_tables_path / "random_successful_attacks.tex",
+        column_format=column_format,
+        resize_points=400,
+        label="random_successful_attacks",
+        caption="A random selection of successful adversarial examples.",
+    )
 
 
 def main() -> None:
@@ -105,9 +138,8 @@ def main() -> None:
     train_dfs = get_all_generations_dfs_for_experiment(run_paths, TrainMode.train)
     eval_dfs = get_all_generations_dfs_for_experiment(run_paths, TrainMode.eval)
 
-    _plot_metrics_across_epochs(train_dfs, eval_dfs, plots_path)
-
     save_random_high_quality_examples(target_tables_path, n_examples=12, eval_dfs=eval_dfs)
+    _plot_metrics_across_epochs(train_dfs, eval_dfs, plots_path)
 
 
 if __name__ == "__main__":

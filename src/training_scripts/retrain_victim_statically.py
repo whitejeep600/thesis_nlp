@@ -239,14 +239,13 @@ class VictimStaticRetrainer:
         self.victim_model.save_pretrained(self.run_save_dir)
 
     @staticmethod
-    def save_recall_plot(target_path: Path, title: str, include_legend: bool = True) -> None:
+    def save_recall_plot(target_path: Path, include_legend: bool = True) -> None:
         if include_legend:
             plt.legend(loc="best")
-        plt.title(title, fontsize=14)
         plt.xlabel("Epoch", fontsize=14)
         plt.ylabel("Recall", fontsize=14)
         plt.ylim(0, 1)
-        plt.savefig(target_path, dpi=420)
+        plt.savefig(target_path, dpi=1000)
         plt.clf()
 
     def write_to_summary_file(self, text: str) -> None:
@@ -280,8 +279,7 @@ class VictimStaticRetrainer:
             color="blue",
         )
 
-        plot_title = "Train recall over the epochs"
-        self.save_recall_plot(target_path, plot_title)
+        self.save_recall_plot(target_path)
 
         first_train_adversarial_non_target_label_recall = train_adversarial_non_target_label_recall[
             1
@@ -314,11 +312,7 @@ class VictimStaticRetrainer:
             color="orange",
         )
 
-        plot_title = (
-            f"Eval adversarial samples ({self.attacker_non_target_label_name})"
-            f" recall over the epochs"
-        )
-        self.save_recall_plot(target_path, plot_title, include_legend=False)
+        self.save_recall_plot(target_path, include_legend=False)
 
         first_eval_adversarial_non_target_label_recall = eval_adversarial_non_target_label_recall[1]
         last_eval_adversarial_non_target_label_recall = eval_adversarial_non_target_label_recall[-1]
@@ -355,8 +349,7 @@ class VictimStaticRetrainer:
             color="orange",
         )
 
-        plot_title = "Eval original samples recall over the epochs"
-        self.save_recall_plot(target_path, plot_title)
+        self.save_recall_plot(target_path)
 
         first_eval_original_non_target_label_recall = eval_original_non_target_label_recall[1]
         last_eval_original_non_target_label_recall = eval_original_non_target_label_recall[-1]

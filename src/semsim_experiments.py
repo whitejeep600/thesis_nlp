@@ -37,8 +37,9 @@ class SentencePair:
 
 
 class SemsimEvaluator:
-    def __init__(self, name):
+    def __init__(self, name: str, filename: str):
         self.name = name
+        self.filename = filename
 
     def evaluate_pair(self, pair: SentencePair) -> float:
         raise NotImplementedError
@@ -46,7 +47,7 @@ class SemsimEvaluator:
 
 class PureEmbeddingEvaluator(SemsimEvaluator):
     def __init__(self, model: SentenceTransformer):
-        super().__init__("embedding similarity")
+        super().__init__("embedding similarity", "embeddding")
         self.model = model
 
     def evaluate_pair(self, pair: SentencePair) -> float:
@@ -63,7 +64,7 @@ class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
     def __init__(
         self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
     ):
-        super().__init__("entailment probability")
+        super().__init__("entailment probability", "entailment")
         self.embedder = model
         self.entailment_model = entailment_evaluator
 
@@ -75,7 +76,7 @@ class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
 
 class T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(SemsimEvaluator):
     def __init__(self, embedder: SentenceTransformer):
-        super().__init__("\n heuristic (embedding, entailment label and length)")
+        super().__init__("\n heuristic (embedding, entailment label and length)", "heuristic")
         self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
         self.entailment_model = T5ForConditionalGeneration.from_pretrained("t5-base")
         self.embedder = embedder
@@ -101,7 +102,7 @@ class T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(SemsimEvaluato
 
 class BertScoreEvaluator(SemsimEvaluator):
     def __init__(self):
-        super().__init__("BertScore")
+        super().__init__("BertScore", "bertscore")
 
     def evaluate_pair(self, pair: SentencePair) -> float:
         _, _, bert_score = score([pair.sentences[0]], [pair.sentences[1]], lang="en")
@@ -110,7 +111,7 @@ class BertScoreEvaluator(SemsimEvaluator):
 
 class ReconstructionLossEvaluator(SemsimEvaluator):
     def __init__(self):
-        super().__init__("reconstruction loss analogue")
+        super().__init__("reconstruction loss analogue", "reconstruction_loss")
         self.tokenizer = BartTokenizer.from_pretrained("facebook/bart-large")
         self.model = BartForConditionalGeneration.from_pretrained("facebook/bart-large")
 
@@ -144,7 +145,7 @@ class ReconstructionLossEvaluator(SemsimEvaluator):
             ].item()
             generation_probs.append(output_token_probability)
 
-        sequence_generation_likelihood = np.log(np.array(generation_probs).prod())
+        sequence_generation_likelihood = -np.log(np.array(generation_probs).prod())
         return sequence_generation_likelihood
 
 
@@ -152,7 +153,7 @@ class LLMEvaluator(SemsimEvaluator):
     PROMPT_PATH = Path("data/llm_semsim_prompt.txt")
 
     def __init__(self):
-        super().__init__("LLM")
+        super().__init__("LLM", "llm")
         self.client = Groq(
             api_key=os.environ.get("GROQ_API_KEY"),
         )
@@ -181,7 +182,10 @@ def main() -> None:
     load_dotenv()
     pairs_path = Path("data/semsim_experiments.json")
     plots_path = Path("plots/semsim_experiments")
+    results_path = Path("data/results/semsim_experiments")
+
     plots_path.mkdir(exist_ok=True, parents=True)
+    results_path.mkdir(exist_ok=True, parents=True)
 
     with open(pairs_path, "r") as f:
         pairs_json = json.load(f)
@@ -211,6 +215,9 @@ def main() -> None:
             PureEmbeddingEvaluator(embedder),
         ]
     ):
+        plotting_reconstruction_loss = type(evaluator) is ReconstructionLossEvaluator
+        # This plot is a bit different than the others, so it is configured separately.
+
         model_scores = [evaluator.evaluate_pair(pair) for pair in pairs]
         human_scores = [pair.human_score for pair in pairs]
         annotations = [pair.annotation for pair in pairs]
@@ -239,32 +246,39 @@ def main() -> None:
                 s=row_data["id"],
                 fontsize=5,
             )
-        lineplot(x=[0, 1], y=[0, 1], color="red")
         spearman = round(spearmanr(human_scores, model_scores).statistic, 2)
         r_2 = round(r2_score(human_scores, model_scores), 2)
-        text = f"$N={len(human_scores)}$\n" f"$spearman={spearman}$\n" f"$R^2={r_2}$"
+        if not plotting_reconstruction_loss:
+            lineplot(x=[0, 1], y=[0, 1], color="red")
+            plt.gca().set_aspect("equal")
+            text = f"$N={len(human_scores)}$\n" f"$spearman={spearman}$\n" f"$R^2={r_2}$"
+        else:
+            text = f"$N={len(human_scores)}$\n" f"$spearman={spearman}$\n"
         plt.text(
-            1.1,
-            1.03,
+            1.1 if not plotting_reconstruction_loss else 1.09,
+            1.03 if not plotting_reconstruction_loss else 42,
             text,
             ha="left",
             va="top",
             fontsize=8,
             bbox=dict(facecolor="none", edgecolor="black", pad=5),
         )
-        plt.gca().set_aspect("equal")
         plt.xlabel("Human score", fontsize=15)
         plt.ylabel("Model score", fontsize=15)
-        plt.title(f"Semsim scores with the method: {evaluator.name}", fontsize=15)
         plt.legend().remove()
-        legend = figure.legend(fontsize=6, loc="outside lower right", bbox_to_anchor=(1.1, 0.1))
+        legend = figure.legend(
+            fontsize=6,
+            loc="outside lower right",
+            bbox_to_anchor=(1.1, 0.1) if not plotting_reconstruction_loss else (1.2, 0.527),
+        )
         plt.savefig(
-            plots_path / f"{evaluator.name}.png",
-            dpi=400,
+            plots_path / f"{evaluator.filename}.png",
+            dpi=1000,
             bbox_extra_artists=[legend],
             bbox_inches="tight",
         )
         plt.clf()
+        data_to_plot.to_csv(results_path / f"{evaluator.filename}.csv", index=False)
 
 
 if __name__ == "__main__":
