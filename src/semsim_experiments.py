@@ -150,7 +150,7 @@ class ReconstructionLossEvaluator(SemsimEvaluator):
 
 
 class LLMEvaluator(SemsimEvaluator):
-    PROMPT_PATH = Path("data/llm_semsim_prompt.txt")
+    PROMPT_PATH = Path("data/llm_semsim_prompt_semsim_experiments.txt")
 
     def __init__(self):
         super().__init__("LLM", "llm")

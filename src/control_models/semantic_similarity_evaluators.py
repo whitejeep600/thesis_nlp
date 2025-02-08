@@ -1,9 +1,13 @@
+import os
+from pathlib import Path
+
 import textattack
 import torch
 import transformers
 from sentence_transformers import SentenceTransformer
 from textattack.model_args import HUGGINGFACE_MODELS
-from transformers import T5ForConditionalGeneration, T5Tokenizer
+from transformers import T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, \
+    AutoModelForCausalLM
 
 
 class EmbeddingBasedSemanticSimilarityEvaluator:
@@ -103,7 +107,36 @@ class T5HardLabelEntailmentEvaluator:
 class LLMSimilarityEvaluator:
 
     def __init__(self, device: torch.device):
-        pass
+        self.tokenizer = AutoTokenizer.from_pretrained("google/gemma-2-2b-it",
+                                                  token=os.environ.get("GEMMA_KEY"))
+        self.model = AutoModelForCausalLM.from_pretrained(
+            "google/gemma-2-2b-it",
+            device_map=device,
+            torch_dtype=torch.bfloat16,
+            token=os.environ.get("GEMMA_KEY")
+        )
+        self.device = device
+        PROMPT_PATH = Path("data/llm_semsim_prompt_semsim_experiments.txt")
+        with open(PROMPT_PATH, "r") as f:
+            self.prompt = f.read()
 
-    def evaluate_many_to_one(self, many: list[str], one: str) -> list[float]:
-        pass
+
+    def evaluate_one_to_one(self, one: list[str], two: str) -> list[float]:
+        input_text = self.prompt.replace("<SEQUENCE_1>", one).replace(
+            "<SEQUENCE_2>", two
+        )
+        input_ids = self.tokenizer(input_text, return_tensors="pt").to(self.device)
+        outputs = self.model.generate(**input_ids, max_new_tokens=32)
+        print(self.tokenizer.decode(outputs[0]))
+
+
+if __name__ == "__main__":
+    se = LLMSimilarityEvaluator(device="cuda:0")
+    one = "I didn't like this movie at all, it was a waste of money."
+    many = [
+        "I like this movie a lot, it't money well spent",
+        "I didn't enjoy the film altogether, I regret buying the ticket.",
+        "Mitochondrium is the powerhouse of the cell."
+    ]
+    for two in many:
+        se.evaluate_one_to_one(one=one, two=two)

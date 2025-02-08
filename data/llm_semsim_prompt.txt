@@ -1,8 +1,7 @@
- Assign a numerical score to the following sequence pair, based on their semantic similarity:
 
- Sequence 1: <SEQUENCE_1>
- Sequence 2: <SEQUENCE_2>
+You will now be provided with two sentences. Judge the semantic similarity between them as a number between 0 and 1. Assign a low number if the sentences are contradictory. Assign about 0.2 if they are unrelated. Assign a number close to 1 if they are in close agreement. Assign a low score if one sentence is a question, while the other sentence is not.
 
- The score is between 0 and 1. All pairs with some degree of contradiction are evaluated between 0 and 0.2. The more contradictory the pair is, the lower the score. Direct contradiction is evaluated at 0. If the sequences in the pair are unrelated or non-contradictory, or at least one of them is nonsensical, then they are evaluated at about 0.2. All pairs with some degree of agreement are evaluated between 0.2 and 1. The higher the agreement, the higher the score. A pair of identical sequences is evaluated at 1. A pair representing a very distant paraphrase is evaluated at about 0.4. Pay attention to the fact that contradiction may also take the form of negation or the usage of word antonyms.
+First sentences: <SEQUENCE_1>
+Second sentence: <SEQUENCE_2>
 
-Return the numerical score only, without additional text.
+Now provide your answer as a single float, with no additional commentary.

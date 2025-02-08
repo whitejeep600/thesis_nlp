@@ -4,6 +4,7 @@ runs/*
 !runs/static_victim_retraining
 data/*
 !data/semsim_experiments.json
+!data/llm_semsim_prompt_semsim_experiments.txt
 !data/llm_semsim_prompt.txt
 src/playground.py
 plots/
