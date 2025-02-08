@@ -1,142 +1,64 @@
-import os
 from pathlib import Path
 
-import textattack
 import torch
-import transformers
-from sentence_transformers import SentenceTransformer
-from textattack.model_args import HUGGINGFACE_MODELS
-from transformers import T5ForConditionalGeneration, T5Tokenizer, AutoTokenizer, \
-    AutoModelForCausalLM
 
-
-class EmbeddingBasedSemanticSimilarityEvaluator:
-    def __init__(self, model_name: str, device: torch.device):
-        super().__init__()
-        self.model = SentenceTransformer(model_name)
-        self.model.to(device)
-        self.model.eval()
-
-    def evaluate_many_to_one(self, many: list[str], one: str) -> list[float]:
-        one_encoding = self.model.encode(one, convert_to_tensor=True)
-        many_encodings = self.model.encode(many, convert_to_tensor=True)
-
-        return [
-            torch.clip(
-                torch.cosine_similarity(one_encoding, one_of_many_encodings, dim=0), min=0
-            ).item()
-            for one_of_many_encodings in many_encodings
-        ]
-
-    def evaluate_one_to_one(self, one_0: str, one_1: str) -> float:
-        encoding_0 = self.model.encode(one_0, convert_to_tensor=True)
-        encoding_1 = self.model.encode(one_1, convert_to_tensor=True)
-        return max(torch.cosine_similarity(encoding_0, encoding_1, dim=0).item(), 0)
-
-
-class DistilbertEntailmentEvaluator:
-    def __init__(self, device: torch.device):
-        super().__init__()
-
-        textattack_model_name = HUGGINGFACE_MODELS["distilbert-base-cased-snli"]
-        model = transformers.AutoModelForSequenceClassification.from_pretrained(
-            textattack_model_name
-        )
-        tokenizer = transformers.AutoTokenizer.from_pretrained(textattack_model_name, use_fast=True)
-        model = textattack.models.wrappers.HuggingFaceModelWrapper(model, tokenizer)
-        self.model = model
-
-        self.device = device
-        self.model.to(device)
-        self.model.model.eval()
-
-        self.entailment_code = 0
-        self.neutral_code = 1
-        self.contradiction_code = 2
-
-    def get_all_label_logits_for_text_pairs(self, texts: list[tuple[str, str]]) -> torch.Tensor:
-        prepared_inputs = [
-            f"Premise: {premise} \nHypothesis: {hypothesis}" for (premise, hypothesis) in texts
-        ]
-        with torch.no_grad():
-            logits = self.model(prepared_inputs)
-        return logits
-
-    def get_entailment_probs_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
-        logits = self.get_all_label_logits_for_text_pairs(texts)
-        probs = torch.softmax(logits, dim=1)
-        return probs[:, self.entailment_code].tolist()
-
-
-class T5HardLabelEntailmentEvaluator:
-    def __init__(self, device: torch.device):
-        self.device = device
-        self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
-        self.entailment_model = T5ForConditionalGeneration.from_pretrained("t5-base")
-        self.entailment_model.to(device)
-        self.entailment_model.eval()
-
-    @staticmethod
-    def model_hard_label_to_float_score(output: str) -> float:
-        if "entailment" in output:
-            return 1
-        elif "neutral" in output:
-            return 0.5
-        elif "contradiction" in output:
-            return 0
-        else:
-            raise ValueError(f"Unexpected T5 entailment model output {output}")
-
-    def get_hard_labels_for_text_pairs(self, texts: list[tuple[str, str]]) -> list[float]:
-        inputs_to_tokenize = [
-            f"mnli premise: {premise}. hypothesis: {hypothesis}" for (premise, hypothesis) in texts
-        ]
-        input_ids = self.tokenizer(
-            inputs_to_tokenize, return_tensors="pt", padding=True
-        ).input_ids.to(self.device)
-        with torch.no_grad():
-            outputs = self.entailment_model.generate(input_ids=input_ids)
-        decoded = self.tokenizer.batch_decode(outputs)
-        float_scores = [self.model_hard_label_to_float_score(label) for label in decoded]
-        return float_scores
-
-    def get_hard_labels_many_to_one(self, many: list[str], one: str) -> list[float]:
-        return self.get_hard_labels_for_text_pairs([(one, one_of_many) for one_of_many in many])
+from transformers import (
+    pipeline,
+)
 
 
 class LLMSimilarityEvaluator:
 
     def __init__(self, device: torch.device):
-        self.tokenizer = AutoTokenizer.from_pretrained("google/gemma-2-2b-it",
-                                                  token=os.environ.get("GEMMA_KEY"))
-        self.model = AutoModelForCausalLM.from_pretrained(
-            "google/gemma-2-2b-it",
-            device_map=device,
-            torch_dtype=torch.bfloat16,
-            token=os.environ.get("GEMMA_KEY")
-        )
-        self.device = device
-        PROMPT_PATH = Path("data/llm_semsim_prompt_semsim_experiments.txt")
+
+        PROMPT_PATH = Path("data/llm_semsim_prompt.txt")
         with open(PROMPT_PATH, "r") as f:
             self.prompt = f.read()
 
+        CONTEXT_PATH = Path("data/llm_context.txt")
+        with open(CONTEXT_PATH, "r") as f:
+            self.context = f.read()
 
-    def evaluate_one_to_one(self, one: list[str], two: str) -> list[float]:
-        input_text = self.prompt.replace("<SEQUENCE_1>", one).replace(
-            "<SEQUENCE_2>", two
+        self.pipeline = pipeline(
+            "text-generation",
+            model="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+            torch_dtype=torch.bfloat16,
+            device_map="auto",
         )
-        input_ids = self.tokenizer(input_text, return_tensors="pt").to(self.device)
-        outputs = self.model.generate(**input_ids, max_new_tokens=32)
-        print(self.tokenizer.decode(outputs[0]))
+
+
+
+    def evaluate_one_to_one(self, one: list[str], two: str) -> float:
+        input_text = f"First sentence: {one}\nSecond sentence: {two}\n"
+
+        messages = [
+            {
+                "role": "system",
+                "content": self.context,
+            },
+            {"role": "user", "content": input_text},
+        ]
+        prompt = self.pipeline.tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+        outputs = self.pipeline(
+            prompt, max_new_tokens=256, do_sample=True, temperature=0.7, top_k=50, top_p=0.95
+        )
+
+        result = outputs[0]["generated_text"]
+        print(result)
+        return float(result)
+
+    def evaluate_many_to_one(self, one: list[str], many: list[str]) -> list[float]:
+        return [self.evaluate_one_to_one(one, two) for two in many]
 
 
 if __name__ == "__main__":
     se = LLMSimilarityEvaluator(device="cuda:0")
     one = "I didn't like this movie at all, it was a waste of money."
     many = [
-        "I like this movie a lot, it't money well spent",
+        "I liked this movie a lot, it's money well spent.",
         "I didn't enjoy the film altogether, I regret buying the ticket.",
-        "Mitochondrium is the powerhouse of the cell."
+        "Mitochondrium is the powerhouse of the cell.",
     ]
-    for two in many:
-        se.evaluate_one_to_one(one=one, two=two)
+    print(se.evaluate_many_to_one(one=one, many=many))

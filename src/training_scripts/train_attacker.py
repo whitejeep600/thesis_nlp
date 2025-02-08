@@ -20,7 +20,8 @@ from src.constants import (
     TrainMode,
 )
 from src.control_models.semantic_similarity_evaluators import (
-    EmbeddingBasedSemanticSimilarityEvaluator, LLMSimilarityEvaluator,
+    EmbeddingBasedSemanticSimilarityEvaluator,
+    LLMSimilarityEvaluator,
 )
 from src.control_models.sentiment_classifier import SentimentClassifier
 from src.datasets.dataset_utils import prepare_dataloaders
@@ -42,9 +43,7 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
     ):
         super().__init__()
         self.sentiment_classifier = SentimentClassifier(device)
-        self.similarity_evaluator = LLMSimilarityEvaluator(
-            device
-        )
+        self.similarity_evaluator = LLMSimilarityEvaluator(device)
         self.target_label = target_label
 
     def get_similarity_scores_for_generations(

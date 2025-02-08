@@ -6,6 +6,7 @@ data/*
 !data/semsim_experiments.json
 !data/llm_semsim_prompt_semsim_experiments.txt
 !data/llm_semsim_prompt.txt
+!data/llm_context.txt
 src/playground.py
 plots/
 tables_for_thesis/
