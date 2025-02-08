@@ -1,6 +1,6 @@
-You will now be provided with two sentences. Judge the semantic similarity between them as a number between 0 and 1. Assign a number close to 0 if the sentences are contradictory. Assign about 0.2 if they are unrelated. Assign a number close to 1 if they are in close agreement. Assign a low score if one sentence is a question, while the other sentence is not.
+You will now be provided with two sentences. Judge the semantic similarity between them as a number between 0 and 1. Assign a number close to 0 if the sentences are contra>
 
 First sentence: <SEQUENCE_1>
 Second sentence: <SEQUENCE_2>
 
-Now IMPORTANT: provide your answer as a single float, with no additional commentary.
+Now IMPORTANT: provide your answer as a single float expressing the score, and a short explanation, no longer than 20 words.
