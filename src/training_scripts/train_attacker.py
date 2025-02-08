@@ -19,19 +19,16 @@ from src.constants import (
     TARGET_LABEL_PROB,
     TrainMode,
 )
-from src.control_models.grammaticality_evaluator import GrammaticalityEvaluator
 from src.control_models.semantic_similarity_evaluators import (
-    EmbeddingBasedSemanticSimilarityEvaluator,
-    T5HardLabelEntailmentEvaluator,
+    EmbeddingBasedSemanticSimilarityEvaluator, LLMSimilarityEvaluator,
 )
-from src.control_models.sentiment_classifier import CNN_SST2_SentimentClassifier
+from src.control_models.sentiment_classifier import SentimentClassifier
 from src.datasets.dataset_utils import prepare_dataloaders
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
 from src.generative_bart import GenerativeBart
 from src.utils import (
     assign_model_devices,
     get_current_git_commit_id,
-    get_length_difference_scores,
     harmonic_mean,
     prepare_run_save_dir_and_log_file,
 )
@@ -42,15 +39,12 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         self,
         device: torch.device,
         target_label: int,
-        similarity_evaluator_name: str,
     ):
         super().__init__()
-        self.entailment_evaluator = T5HardLabelEntailmentEvaluator(device)
-        self.sentiment_classifier = CNN_SST2_SentimentClassifier(device)
-        self.similarity_evaluator = EmbeddingBasedSemanticSimilarityEvaluator(
-            similarity_evaluator_name, device
+        self.sentiment_classifier = SentimentClassifier(device)
+        self.similarity_evaluator = LLMSimilarityEvaluator(
+            device
         )
-        self.grammaticality_evaluator = GrammaticalityEvaluator(device)
         self.target_label = target_label
 
     def get_similarity_scores_for_generations(
@@ -59,24 +53,8 @@ class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
         similarity_scores = self.similarity_evaluator.evaluate_many_to_one(
             many=generations, one=prompt
         )
-        entailment_scores = self.entailment_evaluator.get_hard_labels_many_to_one(
-            one=prompt, many=generations
-        )
-        grammaticality_scores = self.grammaticality_evaluator.evaluate_texts(
-            generations, return_probs=True
-        )
 
-        length_difference_scores = get_length_difference_scores(prompt, generations)
-
-        return [
-            similarity_score * length_score * entailment_score * grammaticality_score
-            for (similarity_score, entailment_score, length_score, grammaticality_score) in zip(
-                similarity_scores,
-                entailment_scores,
-                length_difference_scores,
-                grammaticality_scores,
-            )
-        ]
+        return similarity_scores
 
     @staticmethod
     def attack_is_successful(
@@ -236,7 +214,6 @@ def main(
     metric_calculator = AttackerDPORewardAndMetricCalculator(
         device=control_models_device,
         target_label=target_label_code,
-        similarity_evaluator_name=sentence_transformer_similarity_evaluator_name,
     )
 
     params_to_save.update(

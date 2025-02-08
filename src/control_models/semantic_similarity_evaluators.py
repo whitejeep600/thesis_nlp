@@ -98,3 +98,12 @@ class T5HardLabelEntailmentEvaluator:
 
     def get_hard_labels_many_to_one(self, many: list[str], one: str) -> list[float]:
         return self.get_hard_labels_for_text_pairs([(one, one_of_many) for one_of_many in many])
+
+
+class LLMSimilarityEvaluator:
+
+    def __init__(self, device: torch.device):
+        pass
+
+    def evaluate_many_to_one(self, many: list[str], one: str) -> list[float]:
+        pass
