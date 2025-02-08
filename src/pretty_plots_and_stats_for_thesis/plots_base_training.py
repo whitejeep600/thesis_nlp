@@ -8,8 +8,8 @@ from src.pretty_plots_and_stats_for_thesis.thesis_utils import (
 
 
 def main() -> None:
-    run_path = Path("runs/attacker/run_1")
-    plots_path = Path("plots/base_training")
+    run_path = Path("runs/attacker/run_19")
+    plots_path = Path("plots/base_training_40_epochs")
 
     plots_path.mkdir(exist_ok=True, parents=True)
 
@@ -27,6 +27,7 @@ def main() -> None:
             save_path=plots_path / f"{metric}.png",
             y_label=y_label,
             smoothing_window_length=512,
+            plot_title=f"{y_label} in the baseline training"
         )
 
 

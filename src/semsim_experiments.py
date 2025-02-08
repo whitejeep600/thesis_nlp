@@ -76,7 +76,7 @@ class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
 
 class T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(SemsimEvaluator):
     def __init__(self, embedder: SentenceTransformer):
-        super().__init__("\n heuristic (embedding, entailment label and length)", "heuristic")
+        super().__init__("EmEn", "heuristic")
         self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
         self.entailment_model = T5ForConditionalGeneration.from_pretrained("t5-base")
         self.embedder = embedder
@@ -271,6 +271,7 @@ def main() -> None:
             loc="outside lower right",
             bbox_to_anchor=(1.1, 0.1) if not plotting_reconstruction_loss else (1.2, 0.527),
         )
+        plt.title(f"Semsim scores with the method: {evaluator.name}")
         plt.savefig(
             plots_path / f"{evaluator.filename}.png",
             dpi=1000,

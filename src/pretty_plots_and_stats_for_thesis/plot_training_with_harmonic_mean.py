@@ -17,7 +17,7 @@ def main() -> None:
     eval_dfs = get_all_generations_dfs_for_experiment([run_path], TrainMode.eval)
 
     metrics = [REWARD, TARGET_LABEL_PROB, SIMILARITY]
-    y_labels = ["Reward", "Fooling", "Semsim"]
+    y_labels = ["Reward", "Fooling", "SemSim"]
 
     for metric, y_label in zip(metrics, y_labels):
         plot_train_and_eval_metrics_together(
@@ -26,6 +26,7 @@ def main() -> None:
             metric_name=metric,
             save_path=plots_path / f"{metric}.png",
             y_label=y_label,
+            plot_title=f"{y_label} in the training after adding harmonic mean"
         )
 
 
