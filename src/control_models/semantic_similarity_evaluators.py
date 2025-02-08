@@ -1,4 +1,6 @@
 import os
+import re
+import warnings
 from pathlib import Path
 
 import torch
@@ -36,10 +38,15 @@ class LLMSimilarityEvaluator:
 
         inputs = self.tokenizer(input_text, return_tensors="pt", return_attention_mask=False).to(self.device)
 
-        outputs = self.model.generate(**inputs, max_length=200)
+        outputs = self.model.generate(**inputs, max_new_tokens=10)
         text = self.tokenizer.batch_decode(outputs)[0]
-        print(text)
-        return text
+
+        score = re.search(r"0\.[0-9]+|0\n|1\n", text)
+        if not score:
+            warnings.warn(f"Couldn't parse the LLM's output: {text}")
+            return 0
+
+        return float(score.group())
 
     def evaluate_many_to_one(self, one: list[str], many: list[str]) -> list[float]:
         return [self.evaluate_one_to_one(one, two) for two in many]
