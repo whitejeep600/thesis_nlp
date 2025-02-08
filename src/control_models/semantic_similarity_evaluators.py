@@ -1,9 +1,12 @@
+import os
 from pathlib import Path
 
 import torch
 
 from transformers import (
     pipeline,
+    AutoModelForCausalLM,
+    AutoTokenizer, BitsAndBytesConfig,
 )
 
 
@@ -15,39 +18,28 @@ class LLMSimilarityEvaluator:
         with open(PROMPT_PATH, "r") as f:
             self.prompt = f.read()
 
-        CONTEXT_PATH = Path("data/llm_context.txt")
-        with open(CONTEXT_PATH, "r") as f:
-            self.context = f.read()
-
-        self.pipeline = pipeline(
-            "text-generation",
-            model="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-            torch_dtype=torch.bfloat16,
-            device_map="auto",
+        self.model = AutoModelForCausalLM.from_pretrained(
+            "google/gemma-2-2b-it",
+            device_map=device,
+            trust_remote_code=True,
+            token=os.environ.get("GEMMA_KEY"),
         )
 
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            "google/gemma-2-2b-it", trust_remote_code=True, token=os.environ.get("GEMMA_KEY")
+        )
 
+        self.device = device
 
     def evaluate_one_to_one(self, one: list[str], two: str) -> float:
-        input_text = f"First sentence: {one}\nSecond sentence: {two}\n"
+        input_text = self.prompt.replace("<SEQUENCE_1>", one).replace("<SEQUENCE_2>", two)
 
-        messages = [
-            {
-                "role": "system",
-                "content": self.context,
-            },
-            {"role": "user", "content": input_text},
-        ]
-        prompt = self.pipeline.tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True
-        )
-        outputs = self.pipeline(
-            prompt, max_new_tokens=256, do_sample=True, temperature=0.7, top_k=50, top_p=0.95
-        )
+        inputs = self.tokenizer(input_text, return_tensors="pt", return_attention_mask=False).to(self.device)
 
-        result = outputs[0]["generated_text"]
-        print(result)
-        return float(result)
+        outputs = self.model.generate(**inputs, max_length=200)
+        text = self.tokenizer.batch_decode(outputs)[0]
+        print(text)
+        return text
 
     def evaluate_many_to_one(self, one: list[str], many: list[str]) -> list[float]:
         return [self.evaluate_one_to_one(one, two) for two in many]

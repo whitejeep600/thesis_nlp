@@ -27,7 +27,7 @@ def main() -> None:
             save_path=plots_path / f"{metric}.png",
             y_label=y_label,
             smoothing_window_length=512,
-            plot_title=f"{y_label} in the baseline training"
+            plot_title=f"{y_label} in the baseline training",
         )
 
 

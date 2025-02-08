@@ -26,7 +26,7 @@ def main() -> None:
             metric_name=metric,
             save_path=plots_path / f"{metric}.png",
             y_label=y_label,
-            plot_title=f"{y_label} in the training after adding harmonic mean"
+            plot_title=f"{y_label} in the training after adding harmonic mean",
         )
 
 
