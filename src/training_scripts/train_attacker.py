@@ -9,8 +9,6 @@ from typing import Any, Literal
 
 import torch
 import yaml
-from torch.optim import AdamW
-
 from src.constants import (
     LABEL_NAME_TO_CODE,
     PROMPT_ORIGINAL_TARGET_LABEL_PROB,
@@ -19,10 +17,7 @@ from src.constants import (
     TARGET_LABEL_PROB,
     TrainMode,
 )
-from src.control_models.semantic_similarity_evaluators import (
-    EmbeddingBasedSemanticSimilarityEvaluator,
-    LLMSimilarityEvaluator,
-)
+from src.control_models.semantic_similarity_evaluators import LLMSimilarityEvaluator
 from src.control_models.sentiment_classifier import SentimentClassifier
 from src.datasets.dataset_utils import prepare_dataloaders
 from src.dpo_trainer import DPORewardAndMetricCalculator, DPOTrainer, RewardAndMetrics
@@ -33,6 +28,7 @@ from src.utils import (
     harmonic_mean,
     prepare_run_save_dir_and_log_file,
 )
+from torch.optim import AdamW
 
 
 class AttackerDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):
@@ -172,7 +168,10 @@ def main(
         source_bart_model_name, attacker_device, weights_path=source_bart_weights_path
     )
     attacker_optimizer = AdamW(
-        attacker.parameters(), lr=lr, fused=attacker_device == torch.device("cuda"), foreach=False
+        attacker.parameters(),
+        lr=lr,
+        fused=attacker_device == torch.device("cuda"),
+        foreach=False,
     )
 
     # It is allowed to explicitly pass the weights to a reference model (used for reference
@@ -184,7 +183,9 @@ def main(
     # as they were in that previous training.
     if reference_bart_weights_path:
         reference_model = GenerativeBart(
-            source_bart_model_name, attacker_device, weights_path=reference_bart_weights_path
+            source_bart_model_name,
+            attacker_device,
+            weights_path=reference_bart_weights_path,
         )
     else:
         reference_model = copy.deepcopy(attacker)

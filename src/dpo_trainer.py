@@ -12,11 +12,6 @@ import torch
 from matplotlib import pyplot as plt
 from numpy import mean
 from scipy.signal import savgol_filter
-from torch.nn.functional import logsigmoid
-from torch.optim import Optimizer
-from torch.utils.data import DataLoader
-from tqdm import tqdm
-
 from src.constants import ID, INPUT_IDS, MODEL_RESPONSE, ORIGINAL_SENTENCE, REWARD, TrainMode
 from src.generative_bart import GenerativeBart
 from src.utils import (
@@ -24,6 +19,10 @@ from src.utils import (
     sequence_log_prob,
     undo_batch_torch_repeat_interleave_2,
 )
+from torch.nn.functional import logsigmoid
+from torch.optim import Optimizer
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 
 class RewardAndMetrics:
@@ -165,7 +164,9 @@ def _calculate_mean_metrics(metrics: list[RewardAndMetrics]) -> RewardAndMetrics
     )
 
 
-def _calculate_smoothed_metrics(metrics: list[RewardAndMetrics]) -> list[RewardAndMetrics]:
+def _calculate_smoothed_metrics(
+    metrics: list[RewardAndMetrics],
+) -> list[RewardAndMetrics]:
     metric_names = list(metrics[0].metrics.keys())
     smoothed_rewards = savgol_filter([m.reward for m in metrics], window_length=256, polyorder=2)
     smoothed_metrics = {
@@ -298,7 +299,10 @@ class DPOTrainer:
         torch.save(self.trained_model.bert.state_dict(), self.checkpoints_dir / save_filename)
 
     def save_model_responses_and_metrics(
-        self, epoch_processing_result: list[BatchProcessingResult], mode: TrainMode, epoch_no: int
+        self,
+        epoch_processing_result: list[BatchProcessingResult],
+        mode: TrainMode,
+        epoch_no: int,
     ) -> None:
         df = pd.DataFrame(_epoch_processing_result_to_dataframe(epoch_processing_result))
         save_path = self.generated_sentences_dirs[mode] / f"epoch_{epoch_no}.csv"
@@ -454,7 +458,11 @@ class DPOTrainer:
                     self.reference_model.stop_token_id,
                 ),
             )
-            for (sample_decoded_ids, sample_generation_probs, sample_reference_probs) in zip(
+            for (
+                sample_decoded_ids,
+                sample_generation_probs,
+                sample_reference_probs,
+            ) in zip(
                 undo_batch_torch_repeat_interleave_2(all_decoded_ids),
                 undo_batch_torch_repeat_interleave_2(generation_probs_tensor),
                 undo_batch_torch_repeat_interleave_2(reference_probs_tensor),

@@ -5,9 +5,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
-from textattack.models.tokenizers import GloveTokenizer
-from torch.utils.data import Dataset
-
 from src.constants import (
     ID,
     INPUT_IDS,
@@ -22,6 +19,8 @@ from src.constants import (
     TARGET_LABEL_PROB,
     TrainMode,
 )
+from textattack.models.tokenizers import GloveTokenizer
+from torch.utils.data import Dataset
 
 MAX_PROMPT_ORIGINAL_TARGET_LABEL_PROB = 0.5
 MIN_GENERATION_TARGET_LABEL_PROB = 0.8

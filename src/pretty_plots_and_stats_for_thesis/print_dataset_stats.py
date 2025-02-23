@@ -1,11 +1,10 @@
 from pathlib import Path
 
 import pandas as pd
-from transformers import BartTokenizer
-from transformers.utils import logging
-
 from src.constants import LABEL
 from src.datasets.sst2_attacker_dataset import SST2AttackerDataset
+from transformers import BartTokenizer
+from transformers.utils import logging
 
 
 def _print_stats_of_set(set_path: Path) -> None:

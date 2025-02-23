@@ -5,8 +5,6 @@ from typing import Any
 
 import torch
 import yaml
-from torch.optim import AdamW
-
 from src.constants import SIMILARITY, TrainMode
 from src.control_models.semantic_similarity_evaluators import (
     EmbeddingBasedSemanticSimilarityEvaluator,
@@ -19,6 +17,7 @@ from src.utils import (
     get_current_git_commit_id,
     prepare_run_save_dir_and_log_file,
 )
+from torch.optim import AdamW
 
 
 class EchoDPORewardAndMetricCalculator(DPORewardAndMetricCalculator):

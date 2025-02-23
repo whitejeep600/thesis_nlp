@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.signal import savgol_filter
-
 from src.constants import (
     MODEL_RESPONSE,
     ORIGINAL_SENTENCE,
@@ -121,7 +120,12 @@ def plot_ratio_of_generations_containing_word_across_epochs(
 
 def reformat_examples_for_thesis_tables(examples: pd.DataFrame) -> pd.DataFrame:
     examples = examples.round(
-        {SIMILARITY: 2, TARGET_LABEL_PROB: 2, REWARD: 2, PROMPT_ORIGINAL_TARGET_LABEL_PROB: 2}
+        {
+            SIMILARITY: 2,
+            TARGET_LABEL_PROB: 2,
+            REWARD: 2,
+            PROMPT_ORIGINAL_TARGET_LABEL_PROB: 2,
+        }
     )
     examples = examples.rename(
         columns={
@@ -133,7 +137,14 @@ def reformat_examples_for_thesis_tables(examples: pd.DataFrame) -> pd.DataFrame:
             PROMPT_ORIGINAL_TARGET_LABEL_PROB: "Victim's original prediction",
         }
     )
-    columns = ["idx", "Prompt", "Answer", "Semsim", "Fooling", "Victim's original prediction"]
+    columns = [
+        "idx",
+        "Prompt",
+        "Answer",
+        "Semsim",
+        "Fooling",
+        "Victim's original prediction",
+    ]
     for optional_column in "Exploit", "Naturality":
         if optional_column in examples.columns:
             columns.append(optional_column)
@@ -184,7 +195,8 @@ def dump_dataframe_to_latex(
     output = output.replace("\\end{tabular}", "\\end{tabular}" + text_after_tabular_end)
 
     output = output.replace(
-        "\\begin{table}", "\\begin{table} \\centering \\captionsetup{justification=centering}"
+        "\\begin{table}",
+        "\\begin{table} \\centering \\captionsetup{justification=centering}",
     )
     # output = output.replace("``", "\\textasciigrave\\textasciigrave")
 

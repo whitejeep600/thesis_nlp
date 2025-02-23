@@ -3,9 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import torch
-from transformers import BartForConditionalGeneration, BartTokenizer
-
 from src.constants import TrainMode
+from transformers import BartForConditionalGeneration, BartTokenizer
 
 
 class GenerativeBart:

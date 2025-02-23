@@ -8,13 +8,6 @@ import pandas as pd
 import torch
 import yaml
 from matplotlib import pyplot as plt
-from textattack.models.helpers import WordCNNForClassification
-from textattack.models.tokenizers import GloveTokenizer
-from torch.nn import CrossEntropyLoss
-from torch.optim import SGD
-from torch.utils.data import DataLoader
-from tqdm import tqdm
-
 from src.constants import (
     INPUT_IDS,
     LABEL,
@@ -28,6 +21,12 @@ from src.constants import (
 )
 from src.datasets.sst2_static_victim_retraining_dataset import SST2VictimRetrainingDataset
 from src.utils import get_available_torch_devices, get_next_run_subdir_name
+from textattack.models.helpers import WordCNNForClassification
+from textattack.models.tokenizers import GloveTokenizer
+from torch.nn import CrossEntropyLoss
+from torch.optim import SGD
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 MAX_LABEL_SAMPLES_PER_TRAIN_EPOCH = 256
 
@@ -83,7 +82,9 @@ def _epoch_processing_results_to_dataframe(
 
 
 def get_label_recall_for_all_epochs_and_origin(
-    all_epoch_predictions: list[pd.DataFrame], label_code: int, origin: str | None = None
+    all_epoch_predictions: list[pd.DataFrame],
+    label_code: int,
+    origin: str | None = None,
 ) -> list[float]:
     return [
         get_label_recall_for_single_epoch_and_origin(single_epoch_predictions, label_code, origin)
@@ -395,7 +396,8 @@ def get_label_recall_for_single_epoch_and_origin(
         all_samples_with_the_label[PREDICTED_LABEL] == label_code
     ]
     return round(
-        len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label), 2
+        len(correctly_predicted_samples_with_the_label) / len(all_samples_with_the_label),
+        2,
     )
 
 

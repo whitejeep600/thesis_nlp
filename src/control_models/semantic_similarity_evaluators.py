@@ -4,12 +4,7 @@ import warnings
 from pathlib import Path
 
 import torch
-
-from transformers import (
-    pipeline,
-    AutoModelForCausalLM,
-    AutoTokenizer, BitsAndBytesConfig,
-)
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 class LLMSimilarityEvaluator:
@@ -25,18 +20,24 @@ class LLMSimilarityEvaluator:
             device_map=device,
             trust_remote_code=True,
             token=os.environ.get("GEMMA_KEY"),
+            load_in_4b=True,
         )
+        self.model.eval()
 
         self.tokenizer = AutoTokenizer.from_pretrained(
-            "google/gemma-2-2b-it", trust_remote_code=True, token=os.environ.get("GEMMA_KEY")
+            "google/gemma-2-2b-it",
+            trust_remote_code=True,
+            token=os.environ.get("GEMMA_KEY"),
         )
 
         self.device = device
 
-    def evaluate_one_to_one(self, one: list[str], two: str) -> float:
+    def evaluate_one_to_one(self, one: str, two: str) -> float:
         input_text = self.prompt.replace("<SEQUENCE_1>", one).replace("<SEQUENCE_2>", two)
 
-        inputs = self.tokenizer(input_text, return_tensors="pt", return_attention_mask=False).to(self.device)
+        inputs = self.tokenizer(input_text, return_tensors="pt", return_attention_mask=False).to(
+            self.device
+        )
 
         outputs = self.model.generate(**inputs, max_new_tokens=10)
         text = self.tokenizer.batch_decode(outputs)[0]
@@ -48,16 +49,5 @@ class LLMSimilarityEvaluator:
 
         return float(score.group())
 
-    def evaluate_many_to_one(self, one: list[str], many: list[str]) -> list[float]:
+    def evaluate_many_to_one(self, one: str, many: list[str]) -> list[float]:
         return [self.evaluate_one_to_one(one, two) for two in many]
-
-
-if __name__ == "__main__":
-    se = LLMSimilarityEvaluator(device="cuda:0")
-    one = "I didn't like this movie at all, it was a waste of money."
-    many = [
-        "I liked this movie a lot, it's money well spent.",
-        "I didn't enjoy the film altogether, I regret buying the ticket.",
-        "Mitochondrium is the powerhouse of the cell.",
-    ]
-    print(se.evaluate_many_to_one(one=one, many=many))

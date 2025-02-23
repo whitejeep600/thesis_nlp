@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.signal import savgol_filter
-
 from src.constants import MODEL_RESPONSE, ORIGINAL_SENTENCE, SIMILARITY
 from src.pretty_plots_and_stats_for_thesis.thesis_utils import dump_dataframe_to_latex
 
@@ -50,7 +49,11 @@ def _reformat_df_for_thesis_table(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop(columns=["idx", "reward"])
     df = df.round({SIMILARITY: 2})
     df = df.rename(
-        columns={SIMILARITY: "Semsim", ORIGINAL_SENTENCE: "Prompt", MODEL_RESPONSE: "Answer"}
+        columns={
+            SIMILARITY: "Semsim",
+            ORIGINAL_SENTENCE: "Prompt",
+            MODEL_RESPONSE: "Answer",
+        }
     )
     return df
 

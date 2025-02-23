@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from torch.utils.data import DataLoader
-from transformers import PreTrainedTokenizer
-
 from src.constants import TrainMode
 from src.datasets.sst2_attacker_dataset import SST2AttackerDataset
+from torch.utils.data import DataLoader
+from transformers import PreTrainedTokenizer
 
 
 def prepare_dataloaders(
@@ -19,7 +18,11 @@ def prepare_dataloaders(
 ) -> dict[TrainMode, DataLoader]:
     datasets = {
         mode: SST2AttackerDataset(
-            dataset_paths[mode], tokenizer, max_len, min_len, label_to_keep=label_to_keep
+            dataset_paths[mode],
+            tokenizer,
+            max_len,
+            min_len,
+            label_to_keep=label_to_keep,
         )
         for mode in dataset_paths.keys()
     }

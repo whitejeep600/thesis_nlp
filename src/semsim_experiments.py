@@ -13,6 +13,8 @@ from scipy.stats import spearmanr
 from seaborn import lineplot, scatterplot
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import r2_score
+from src.constants import INPUT_IDS
+from src.utils import get_length_difference_scores
 from tqdm import tqdm
 from transformers import (
     BartForConditionalGeneration,
@@ -21,14 +23,15 @@ from transformers import (
     T5Tokenizer,
 )
 
-from src.constants import INPUT_IDS
-from src.control_models.semantic_similarity_evaluators import DistilbertEntailmentEvaluator
-from src.utils import get_length_difference_scores
-
 
 class SentencePair:
     def __init__(
-        self, sentence_0: str, sentence_1: str, score: float, id_: int, annotation: str = ""
+        self,
+        sentence_0: str,
+        sentence_1: str,
+        score: float,
+        id_: int,
+        annotation: str = "",
     ):
         self.sentences = sentence_0, sentence_1
         self.human_score = score
@@ -54,24 +57,6 @@ class PureEmbeddingEvaluator(SemsimEvaluator):
         encoding_0 = self.model.encode(pair.sentences[0], convert_to_tensor=True)
         encoding_1 = self.model.encode(pair.sentences[1], convert_to_tensor=True)
         return max(torch.cosine_similarity(encoding_0, encoding_1, dim=0).item(), 0)
-
-
-class DistilbertEntailmentModelEvaluator(SemsimEvaluator):
-    """
-    Has to be this one because t5 won't return the probs
-    """
-
-    def __init__(
-        self, model: SentenceTransformer, entailment_evaluator: DistilbertEntailmentEvaluator
-    ):
-        super().__init__("entailment probability", "entailment")
-        self.embedder = model
-        self.entailment_model = entailment_evaluator
-
-    def evaluate_pair(self, pair: SentencePair) -> float:
-        return self.entailment_model.get_entailment_probs_for_text_pairs(
-            [(pair.sentences[0], pair.sentences[1])]
-        )[0]
 
 
 class T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(SemsimEvaluator):
@@ -203,14 +188,11 @@ def main() -> None:
     embedder = SentenceTransformer("flax-sentence-embeddings/all_datasets_v4_MiniLM-L6")
     embedder.eval()
 
-    entailment_evaluator = DistilbertEntailmentEvaluator(torch.device("cpu"))
-
     for evaluator in tqdm(
         [
             LLMEvaluator(),
             ReconstructionLossEvaluator(),
             BertScoreEvaluator(),
-            DistilbertEntailmentModelEvaluator(embedder, entailment_evaluator),
             T5EntailmentHardLabelAndSentenceEmbeddingAndLengthEvaluator(embedder),
             PureEmbeddingEvaluator(embedder),
         ]
@@ -269,7 +251,7 @@ def main() -> None:
         legend = figure.legend(
             fontsize=6,
             loc="outside lower right",
-            bbox_to_anchor=(1.1, 0.1) if not plotting_reconstruction_loss else (1.2, 0.527),
+            bbox_to_anchor=((1.1, 0.1) if not plotting_reconstruction_loss else (1.2, 0.527)),
         )
         plt.title(f"Semsim scores with the method: {evaluator.name}")
         plt.savefig(

@@ -4,10 +4,9 @@ from pathlib import Path
 
 import pandas as pd
 import torch
+from src.constants import ID, INPUT_IDS, LABEL, ORIGINAL_SENTENCE, SENTENCE
 from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
-
-from src.constants import ID, INPUT_IDS, LABEL, ORIGINAL_SENTENCE, SENTENCE
 
 
 class SST2AttackerDataset(Dataset):
