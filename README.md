@@ -5,3 +5,5 @@ Data including generated text, plots and checkpoints is saved during training ru
 
 A log of attacker training runs is automatically maintained (`runs/attacker/log`). This includes information about the Git commit on which a given training run was executed, as  well as the parameters of the training script (`src/training_scripts/train_attacker.py`) and a summary of the run. Note that due to randomness in the training, rerunning with the same configuration (Git commit and script parameters) is _not_ guaranteed to yield the same results.
 
+See `setup.sh` for further information on how to set up work with the repository (or just run it).
+
